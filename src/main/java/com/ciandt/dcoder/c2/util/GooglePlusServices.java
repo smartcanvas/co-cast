@@ -33,8 +33,7 @@ public class GooglePlusServices {
     /** Google API key */
     private static String GOOGLE_API_KEY;
     
-    @Inject
-    private ConfigurationServices configurationServices;
+    private static ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
     
     /**
      * Constructor
@@ -42,7 +41,7 @@ public class GooglePlusServices {
     public GooglePlusServices() {
     	GOOGLE_API_KEY = configurationServices.get("google_api_key");
     	//GOOGLE_API_KEY = "AIzaSyDZIKKCZiHmIyki0yyPWnEUrkgFzw09zUs";
-        this.initialize("GooglePlusConnectorLab");
+        this.initialize("C2");
 
     }
 	
@@ -111,7 +110,7 @@ public class GooglePlusServices {
      */
     public Person getPerson(String userId) throws IOException {
         Person person = null;
-        person = plus.people().get("me").execute();
+        person = plus.people().get(userId).execute();
         return person;
     }
     

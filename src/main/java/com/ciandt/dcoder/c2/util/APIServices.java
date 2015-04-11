@@ -20,8 +20,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 @Singleton
 public class APIServices {
 	
-	@Inject
-	private ConfigurationServices configurationServices;
+	private ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
 
 	/** Base URL for API calls */
     private String BASE_URI;

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.ciandt.dcoder.c2.config.CommonModule;
 import com.ciandt.dcoder.c2.entity.Attachment;
 import com.ciandt.dcoder.c2.entity.Card;
-import com.ciandt.dcoder.c2.util.ConfigurationServices;
+import com.ciandt.dcoder.c2.util.ConfigurationUtils;
 import com.ciandt.dcoder.c2.util.GooglePlusServices;
 import com.ciandt.dcoder.c2.util.HTMLUtils;
 import com.ciandt.dcoder.c2.util.HashtagsUtils;
@@ -30,8 +30,7 @@ public class GooglePlusConnector {
 	@Inject
 	private CardServices cardServices;
 
-    @Inject
-    private ConfigurationServices configurationServices;
+	private static ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
     
     @Inject
     private GooglePlusServices googlePlusServices;

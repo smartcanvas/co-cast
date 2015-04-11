@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ciandt.dcoder.c2.entity.Person;
 import com.ciandt.dcoder.c2.entity.Profile;
 import com.ciandt.dcoder.c2.service.PeopleServices;
-import com.ciandt.dcoder.c2.util.ConfigurationServices;
+import com.ciandt.dcoder.c2.util.ConfigurationUtils;
 import com.ciandt.dcoder.c2.util.GooglePlusServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,8 +28,7 @@ public class PeopleIngestionServiet extends HttpServlet {
 	@Inject
 	private Logger logger;
 	
-	@Inject
-    private ConfigurationServices configurationServices;
+    private static ConfigurationUtils configurationServices = ConfigurationUtils .getInstance();
 	
 	@Inject
     private GooglePlusServices googlePlusServices;
@@ -45,6 +44,7 @@ public class PeopleIngestionServiet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException, ServletException {
 		
+		long initTime = System.currentTimeMillis();
 		logger.info( "Executing PeopleIngestionServiet" );
 		List<String> publisherIds = this.getPublishersIds();
 		
@@ -65,6 +65,8 @@ public class PeopleIngestionServiet extends HttpServlet {
 			}
 			
 		}
+		long endTime = System.currentTimeMillis();
+		logger.info( "Process finalized in " + (endTime - initTime) + " msecs");
 		
 	}
 	
@@ -75,7 +77,7 @@ public class PeopleIngestionServiet extends HttpServlet {
 	private Person createPerson( com.google.api.services.plus.model.Person googlePlusPerson ) throws ParseException {
 		Person person = new Person();
 		
-		person.setId( Long.parseLong(googlePlusPerson.getId()) );
+		person.setId( Long.parseLong(googlePlusPerson.getId().substring(0,10)) );
 		person.setActive( true );
 		if ( googlePlusPerson.getBirthday() != null ) {
 			person.setBirthdate( sdf.parse(googlePlusPerson.getBirthday()) );

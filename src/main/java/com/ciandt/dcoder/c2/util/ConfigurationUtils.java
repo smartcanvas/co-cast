@@ -13,8 +13,9 @@ import com.google.inject.Singleton;
  * 
  * @author Daniel Viveiros
  */
-@Singleton
-public class ConfigurationServices {
+public class ConfigurationUtils {
+	
+	private static ConfigurationUtils instance;
 	
 	/** Property file: c2.properties */
     private ResourceBundle properties;
@@ -22,8 +23,18 @@ public class ConfigurationServices {
     /**
      * Constructor
      */
-	public ConfigurationServices() {
+	private ConfigurationUtils() {
 		properties = ResourceBundle.getBundle("c2");
+	}
+	
+	/**
+	 * Return the singleton instance of this class
+	 */
+	public static ConfigurationUtils getInstance() {
+		if ( instance == null ) {
+			instance = new ConfigurationUtils();
+		}
+		return instance;
 	}
 	
 	/**
