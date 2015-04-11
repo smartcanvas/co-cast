@@ -8,6 +8,7 @@ public class Constants {
 	
 	/** System queues */
 	public static final String INGESTION_QUEUE = "content-ingestion-queue";
+	public static final String PERSON_QUEUE = "person-ingestion-queue";
 	
 	/** Email constants */
     public static final String[] statusEmails = { "viveiros@ciandt.com", "fmir@ciandt.com" };

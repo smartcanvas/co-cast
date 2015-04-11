@@ -16,4 +16,10 @@
         <bucket-size>100</bucket-size>
         <max-concurrent-requests>10</max-concurrent-requests>
     </queue>
+    <queue>
+        <name>person-ingestion-queue</name>
+        <rate>5/s</rate>
+        <bucket-size>100</bucket-size>
+        <max-concurrent-requests>10</max-concurrent-requests>
+    </queue>
 </queue-entries>

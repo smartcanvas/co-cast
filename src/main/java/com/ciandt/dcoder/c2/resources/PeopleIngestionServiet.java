@@ -1,23 +1,23 @@
 package com.ciandt.dcoder.c2.resources;
 
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
+
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 
-import com.ciandt.dcoder.c2.entity.Person;
-import com.ciandt.dcoder.c2.entity.Profile;
-import com.ciandt.dcoder.c2.service.PeopleServices;
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
-import com.ciandt.dcoder.c2.util.GooglePlusServices;
+import com.ciandt.dcoder.c2.util.Constants;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,14 +35,6 @@ public class PeopleIngestionServiet extends HttpServlet {
 	
     private static ConfigurationUtils configurationServices = ConfigurationUtils .getInstance();
 	
-	@Inject
-    private GooglePlusServices googlePlusServices;
-	
-	@Inject
-	private PeopleServices peopleServices;
-	
-	private static SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd" );
-	
 	/**
 	 * Executes the servlet
 	 */
@@ -51,71 +43,23 @@ public class PeopleIngestionServiet extends HttpServlet {
 		
 		long initTime = System.currentTimeMillis();
 		logger.info( "Executing PeopleIngestionServiet" );
-		List<String> publisherIds = this.getPublishersIds();
+	
+		//gets the publishers
+        List<String> publisherIds = getPublishersIds();
+        if ( publisherIds != null ) {
+            logger.info("We found " + publisherIds.size() + " publisher(s)");
+            for (String publisherId: publisherIds) {
 		
-		for ( String publisherId: publisherIds ) {
-			com.google.api.services.plus.model.Person googlePlusPerson = googlePlusServices.getPerson(publisherId);
-			if (googlePlusPerson != null) {
-				try {
-					Person person = createPerson( googlePlusPerson );
-					peopleServices.createPerson(person);
-					
-					Profile profile = peopleServices.createProfileFromPerson(person, false, true);
-					this.completeProfile( profile, googlePlusPerson );
-					peopleServices.createProfile(person, profile);
-				} catch (ParseException e) {
-					logger.log(Level.SEVERE, "Error creating person for publisher id = " + publisherId, e);
-					e.printStackTrace();
-				}
-			}
-			
-		}
+				//put the date in a task queue
+				Queue queue = QueueFactory.getQueue(Constants.PERSON_QUEUE);
+				queue.add(withUrl("/tasks/personingestion/inbound")
+						.header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).method(TaskOptions.Method.POST)
+				        .payload(publisherId));
+            }
+        }
+		
 		long endTime = System.currentTimeMillis();
 		logger.info( "Process finalized in " + (endTime - initTime) + " msecs");
-		
-	}
-	
-	/**
-	 * Creates a Smart Canvas person based on Google Plus Person
-	 * @throws ParseException 
-	 */
-	private Person createPerson( com.google.api.services.plus.model.Person googlePlusPerson ) throws ParseException {
-		Person person = new Person();
-		
-		person.setId( googlePlusServices.getIdAsLong(googlePlusPerson.getId()) );
-		person.setActive( true );
-		if ( googlePlusPerson.getBirthday() != null ) {
-			person.setBirthdate( sdf.parse(googlePlusPerson.getBirthday()) );
-		}
-		person.setCompany( "CI&T" );
-		person.setDisplayName(googlePlusPerson.getDisplayName());
-		person.setGender(googlePlusPerson.getGender());
-		person.setLastUpdate( new Date() );
-		if ( googlePlusPerson.getPlacesLived() != null ) {
-			person.setLocale(googlePlusPerson.getPlacesLived().get(0).getValue());
-		}
-		person.setMaritalStatus(googlePlusPerson.getRelationshipStatus());
-		person.setPosition(googlePlusPerson.getCurrentLocation());
-		
-		return person;
-	}
-	
-	/**
-	 * Complete profile based on Google Plus information
-	 */
-	private void completeProfile( Profile profile, com.google.api.services.plus.model.Person googlePlusPerson ) {
-		profile.setBraggingRights( googlePlusPerson.getBraggingRights() );
-		if ( googlePlusPerson.getCover() != null ) {
-			profile.setCoverURL(googlePlusPerson.getCover().getCoverPhoto().getUrl() );
-		}
-		if (googlePlusPerson.getImage() != null ) {
-			profile.setImageURL(googlePlusPerson.getImage().getUrl());
-		}
-		profile.setLastUpdated(new Date());
-		profile.setProfileURL(googlePlusPerson.getUrl());
-		profile.setProviderId("c2");
-		profile.setProviderUserId(googlePlusPerson.getId());
-		profile.setIntroduction(googlePlusPerson.getAboutMe());
 	}
 	
 	/**
