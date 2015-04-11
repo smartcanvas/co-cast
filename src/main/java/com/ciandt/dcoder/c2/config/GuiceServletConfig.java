@@ -1,12 +1,12 @@
-package com.danielviveiros.config;
+package com.ciandt.dcoder.c2.config;
 
 import java.util.logging.Logger;
 
-import com.danielviveiros.api.CommonResource;
-import com.danielviveiros.dao.GreetingDAO;
-import com.danielviveiros.dao.ObjectifyGreetingDAO;
-import com.danielviveiros.resources.GuestbookServlet;
-import com.danielviveiros.resources.SignGuestbookServlet;
+import com.ciandt.dcoder.c2.api.CommonResource;
+import com.ciandt.dcoder.c2.dao.GreetingDAO;
+import com.ciandt.dcoder.c2.dao.ObjectifyGreetingDAO;
+import com.ciandt.dcoder.c2.resources.GuestbookServlet;
+import com.ciandt.dcoder.c2.resources.SignGuestbookServlet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;

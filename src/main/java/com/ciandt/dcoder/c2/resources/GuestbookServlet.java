@@ -1,4 +1,4 @@
-package com.danielviveiros.resources;
+package com.ciandt.dcoder.c2.resources;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.danielviveiros.dao.GreetingDAO;
-import com.danielviveiros.entity.Greeting;
+import com.ciandt.dcoder.c2.dao.GreetingDAO;
+import com.ciandt.dcoder.c2.entity.Greeting;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;

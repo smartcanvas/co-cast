@@ -1,8 +1,8 @@
-package com.danielviveiros.dao;
+package com.ciandt.dcoder.c2.dao;
 
 import java.util.List;
 
-import com.danielviveiros.entity.Greeting;
+import com.ciandt.dcoder.c2.entity.Greeting;
 
 public interface GreetingDAO {
 	

@@ -1,6 +1,6 @@
-package com.danielviveiros.dao;
+package com.ciandt.dcoder.c2.dao;
 
-import com.danielviveiros.entity.Greeting;
+import com.ciandt.dcoder.c2.entity.Greeting;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;

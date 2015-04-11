@@ -1,4 +1,4 @@
-package com.danielviveiros.dao;
+package com.ciandt.dcoder.c2.dao;
 
 import java.util.Date;
 
@@ -6,10 +6,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.danielviveiros.dao.GreetingDAO;
-import com.danielviveiros.dao.ObjectifyGreetingDAO;
-import com.danielviveiros.entity.Greeting;
-import com.danielviveiros.test.AbstractTestClass;
+import com.ciandt.dcoder.c2.dao.GreetingDAO;
+import com.ciandt.dcoder.c2.dao.ObjectifyGreetingDAO;
+import com.ciandt.dcoder.c2.entity.Greeting;
+import com.ciandt.dcoder.c2.test.AbstractTestClass;
 import com.google.appengine.api.users.User;
 
 public class GreetingDAOTest extends AbstractTestClass {

@@ -1,11 +1,11 @@
-package com.danielviveiros.config;
+package com.ciandt.dcoder.c2.config;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.danielviveiros.api.CommonResource;
-import com.danielviveiros.dao.GreetingDAO;
-import com.danielviveiros.dao.ObjectifyGreetingDAO;
+import com.ciandt.dcoder.c2.api.CommonResource;
+import com.ciandt.dcoder.c2.dao.GreetingDAO;
+import com.ciandt.dcoder.c2.dao.ObjectifyGreetingDAO;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 

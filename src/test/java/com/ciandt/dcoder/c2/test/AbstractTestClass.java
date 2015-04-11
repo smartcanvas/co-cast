@@ -1,9 +1,9 @@
-package com.danielviveiros.test;
+package com.ciandt.dcoder.c2.test;
 
 import org.junit.After;
 import org.junit.Before;
 
-import com.danielviveiros.config.CommonModule;
+import com.ciandt.dcoder.c2.config.CommonModule;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;

@@ -1,4 +1,4 @@
-package com.danielviveiros.entity;
+package com.ciandt.dcoder.c2.entity;
 
 import java.util.Date;
 
