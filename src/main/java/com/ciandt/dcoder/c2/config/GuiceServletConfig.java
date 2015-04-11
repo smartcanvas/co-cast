@@ -2,10 +2,8 @@ package com.ciandt.dcoder.c2.config;
 
 import java.util.logging.Logger;
 
-import com.ciandt.dcoder.c2.api.CommonResource;
-import com.ciandt.dcoder.c2.dao.GreetingDAO;
-import com.ciandt.dcoder.c2.dao.ObjectifyGreetingDAO;
 import com.ciandt.dcoder.c2.resources.GuestbookServlet;
+import com.ciandt.dcoder.c2.resources.PeopleIngestionServiet;
 import com.ciandt.dcoder.c2.resources.SignGuestbookServlet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -24,10 +22,8 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 		    protected void configureServlets() {
 				serve("/guestbook").with(GuestbookServlet.class);
 				serve("/sign").with(SignGuestbookServlet.class);
-				bind(CommonResource.class);
-				bind(GreetingDAO.class).to(ObjectifyGreetingDAO.class);
-		    }
-			
+				serve("/people").with(PeopleIngestionServiet.class);
+		    }			
 		});
 	}
 }

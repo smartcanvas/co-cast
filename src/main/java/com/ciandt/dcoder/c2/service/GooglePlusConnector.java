@@ -1,7 +1,5 @@
 package com.ciandt.dcoder.c2.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -15,21 +13,14 @@ import com.ciandt.dcoder.c2.config.CommonModule;
 import com.ciandt.dcoder.c2.entity.Attachment;
 import com.ciandt.dcoder.c2.entity.Card;
 import com.ciandt.dcoder.c2.util.ConfigurationServices;
+import com.ciandt.dcoder.c2.util.GooglePlusServices;
 import com.ciandt.dcoder.c2.util.HTMLUtils;
 import com.ciandt.dcoder.c2.util.HashtagsUtils;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.util.DateTime;
-import com.google.api.services.plus.Plus;
-import com.google.api.services.plus.PlusRequestInitializer;
 import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.Activity.PlusObject.Attachments;
 import com.google.api.services.plus.model.Activity.PlusObject.Attachments.FullImage;
 import com.google.api.services.plus.model.Activity.PlusObject.Attachments.Image;
-import com.google.api.services.plus.model.ActivityFeed;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -43,10 +34,11 @@ public class GooglePlusConnector {
     private ConfigurationServices configurationServices;
     
     @Inject
+    private GooglePlusServices googlePlusServices;
+    
+    @Inject
 	private Logger logger;
 
-    /** Google API key */
-    private static String GOOGLE_API_KEY;
 
     /** Default values for C2 */
     private static String C2_CATEGORY = "c2";
@@ -54,17 +46,11 @@ public class GooglePlusConnector {
     
     private static final String GOOGLE_DRIVE_URL_REGEX = "https?://(drive|docs)\\.google\\.com[^\\s]*/(spreadsheets?|file|drawings?|documents?|presentations?)/[^\\s]*";
 
-    /** Google Plus access stub */
-    private Plus plus;
 
     /**
      * Constructor
      */
     public GooglePlusConnector() {
-    	//TODO: resolver isso aqui
-    	//GOOGLE_API_KEY = configurationServices.get("google_api_key");
-    	GOOGLE_API_KEY = "AIzaSyDZIKKCZiHmIyki0yyPWnEUrkgFzw09zUs";
-        this.initialize("GooglePlusConnectorLab");
     }
 
     /**
@@ -83,7 +69,7 @@ public class GooglePlusConnector {
             logger.info("We found " + publisherIds.size() + " publisher(s)");
             for (String publisherId: publisherIds) {
             	logger.info( "Reading posts for publisher with ID = " + publisherId );
-                List<Activity> activities = this.listActivities(publisherId, maxResults);
+                List<Activity> activities = googlePlusServices.listActivities(publisherId, maxResults);
                 if (activities != null) {
                 	logger.info( activities.size() + " activities found. Let's create some cards!");
                     for (Activity activity: activities) {
@@ -103,21 +89,6 @@ public class GooglePlusConnector {
             }
         }
     }
-    
-    /**
-     * Gets the profile info based on profiles email
-     * 
-     * @throws URISyntaxException
-     * @throws IOException
-     * @throws GeneralSecurityException
-     */
-    /*
-    private Person getPerson(String userId) throws IOException {
-        Person person = null;
-        person = plus.people().get("me").execute();
-        return person;
-    }
-    */
     
     /**
      * Convert an Activity (Google Plus specific object) to a Card
@@ -412,77 +383,9 @@ public class GooglePlusConnector {
         return result;
     }
 
-    /**
-     * List the public activities based on the userId
-     * 
-     * @param userId
-     *            Google Plus user id
-     * @param maxResults
-     *            Maximum number of results
-     */
-    private List<Activity> listActivities(String userId, Integer maxResults) throws IOException {
-        List<Activity> activities = new ArrayList<Activity>();
-        Plus.Activities.List listActivities = this.plus.activities().list(userId, "public");
+    
 
-        listActivities.setMaxResults(new Long(maxResults));
-
-        // get the 1st page of activity objects
-        ActivityFeed activityFeed = listActivities.execute();
-
-        // unwrap the request and extract the pieces we want
-        List<Activity> pageOfActivities = activityFeed.getItems();
-
-        boolean endReached = false;
-
-        // loop through until we arrive at an empty page
-        while ((pageOfActivities != null) && (!endReached)) {
-            for (Activity activity : pageOfActivities) {
-                // it seems that the API is ignoring MaxResults... lets deal
-                // with it explicitly
-                if (activities.size() < maxResults.intValue()) {
-                    activities.add(activity);
-                    if (activities.size() == maxResults.intValue()) {
-                        endReached = true;
-                    }
-                } else {
-                    break;
-                }
-            }
-
-            if (!endReached) {
-                // we will know we are on the last page when the next page token
-                // is null (in which case, break).
-                if (activityFeed.getNextPageToken() == null) {
-                    break;
-                }
-
-                // prepare to request the next page of activities
-                listActivities.setPageToken(activityFeed.getNextPageToken());
-
-                // execute and process the next page request
-                activityFeed = listActivities.execute();
-                pageOfActivities = activityFeed.getItems();
-            }
-        }
-
-        return activities;
-    }
-
-    /**
-     * Initialization
-     * 
-     * @param googleApiKey
-     * @param applicationName
-     */
-    private void initialize(String applicationName) {
-        GoogleCredential credential = new GoogleCredential();
-        // initializes Google Plus
-        JsonFactory jsonFactory = new JacksonFactory();
-        HttpTransport httpTransport = new NetHttpTransport();
-        this.plus = new Plus.Builder(httpTransport, jsonFactory, credential).setApplicationName(applicationName)
-                .setHttpRequestInitializer(credential)
-                .setPlusRequestInitializer(new PlusRequestInitializer(GOOGLE_API_KEY)).build();
-    }
+    
 
     /**
      * Triggers the connector execution
