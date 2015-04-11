@@ -114,6 +114,12 @@ public class GooglePlusServices {
         return person;
     }
     
+    /**
+     * Gets and Long ID based on a String ID coming from Google Plus 
+     */
+    public Long getIdAsLong( String userId ) {
+    	return Long.parseLong(userId.substring(0,10));
+    }
     
     /**
      * Initialization

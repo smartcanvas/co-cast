@@ -21,6 +21,11 @@ import com.ciandt.dcoder.c2.util.GooglePlusServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+/**
+ * Servlet to create Person and Profile entities inside Smart Canvas
+ * 
+ * @author Daniel Viveiros
+ */
 @SuppressWarnings("serial")
 @Singleton
 public class PeopleIngestionServiet extends HttpServlet {
@@ -77,7 +82,7 @@ public class PeopleIngestionServiet extends HttpServlet {
 	private Person createPerson( com.google.api.services.plus.model.Person googlePlusPerson ) throws ParseException {
 		Person person = new Person();
 		
-		person.setId( Long.parseLong(googlePlusPerson.getId().substring(0,10)) );
+		person.setId( googlePlusServices.getIdAsLong(googlePlusPerson.getId()) );
 		person.setActive( true );
 		if ( googlePlusPerson.getBirthday() != null ) {
 			person.setBirthdate( sdf.parse(googlePlusPerson.getBirthday()) );
@@ -110,6 +115,7 @@ public class PeopleIngestionServiet extends HttpServlet {
 		profile.setProfileURL(googlePlusPerson.getUrl());
 		profile.setProviderId("c2");
 		profile.setProviderUserId(googlePlusPerson.getId());
+		profile.setIntroduction(googlePlusPerson.getAboutMe());
 	}
 	
 	/**

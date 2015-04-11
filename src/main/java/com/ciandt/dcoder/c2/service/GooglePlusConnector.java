@@ -76,7 +76,7 @@ public class GooglePlusConnector {
                         	logger.info("Processing activity with id = " + activity.getId() );
                             
                             //converts the activity into a card
-                            Card card = convertActivity( activity );
+                            Card card = convertActivity( activity, publisherId );
                             
                             //sends the card to Smart Canvas
                             cardServices.createCard( card );
@@ -93,7 +93,7 @@ public class GooglePlusConnector {
      * Convert an Activity (Google Plus specific object) to a Card
      * @throws Exception 
      */
-    private Card convertActivity( Activity activity ) throws Exception {
+    private Card convertActivity( Activity activity, String publisherId ) throws Exception {
         Card card = new Card();
         
         card.setContent(this.getContent(activity));
@@ -104,6 +104,7 @@ public class GooglePlusConnector {
         card.setProviderId( C2_PROVIDER_ID );
         if (activity.getActor() != null) {
             card.setProviderUserId(activity.getActor().getId());
+            card.setAuthorId(googlePlusServices.getIdAsLong(publisherId));
             card.setAuthorImageURL(activity.getActor().getImage().getUrl());
             card.setAuthorDisplayName(activity.getActor().getDisplayName());
         }
