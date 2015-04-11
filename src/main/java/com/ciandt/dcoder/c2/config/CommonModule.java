@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ciandt.dcoder.c2.api.CommonResource;
-import com.ciandt.dcoder.c2.dao.GreetingDAO;
-import com.ciandt.dcoder.c2.dao.ObjectifyGreetingDAO;
 import com.ciandt.dcoder.c2.resources.TaskQueueResource;
 import com.ciandt.dcoder.c2.service.CardServices;
+import com.ciandt.dcoder.c2.service.CastViewServices;
 import com.ciandt.dcoder.c2.service.GooglePlusConnector;
 import com.ciandt.dcoder.c2.service.PeopleServices;
 import com.ciandt.dcoder.c2.util.APIServices;
@@ -28,7 +27,7 @@ public class CommonModule extends ServletModule {
 		bind(GooglePlusServices.class);
 		bind(GooglePlusConnector.class);
 		bind(APIServices.class);
-		bind(GreetingDAO.class).to(ObjectifyGreetingDAO.class);
+		bind(CastViewServices.class);
 		bind(TaskQueueResource.class);
 		
 		filter("/api/*").through(GuiceContainer.class, initParams);

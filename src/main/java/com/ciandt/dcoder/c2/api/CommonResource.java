@@ -1,7 +1,5 @@
 package com.ciandt.dcoder.c2.api;
 
-import java.util.List;
-
 import javax.annotation.concurrent.ThreadSafe;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -10,8 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import com.ciandt.dcoder.c2.dao.GreetingDAO;
-import com.ciandt.dcoder.c2.entity.Greeting;
+import com.ciandt.dcoder.c2.entity.Card;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -21,19 +18,16 @@ import com.google.inject.Singleton;
 @Singleton
 public class CommonResource {
 
-	private final GreetingDAO greetingDAO;
-
 	@Inject
-	public CommonResource(GreetingDAO greetingDAO) {
+	public CommonResource() {
 		super();
-		this.greetingDAO = greetingDAO;
 	}
 
 	@GET
-	@Path("/listGreetings")
-	public List<Greeting> listGreetings(@Context HttpServletRequest request) {
-		List<Greeting> listGreetings = greetingDAO.findGreetings();
-		return listGreetings;
+	@Path("/hot-card")
+	public Card hotCard(@Context HttpServletRequest request) {
+		
+		return null;
 	}
 
 }
