@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries> 
+    <cron>
+        <url>/people</url>
+        <description>Read people information from Google Plus</description>
+        <schedule>every day 7:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
+    </cron>  
+
+    <cron>
+        <url>/content</url>
+        <description>Read content from Google Plus and send it to Smart Canvas</description>
+        <schedule>every 10 minutes</schedule>
+    </cron>
+</cronentries>

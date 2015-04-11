@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.ciandt.dcoder.c2.config.CommonModule;
 import com.ciandt.dcoder.c2.entity.Attachment;
 import com.ciandt.dcoder.c2.entity.Card;
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
@@ -21,9 +20,7 @@ import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.Activity.PlusObject.Attachments;
 import com.google.api.services.plus.model.Activity.PlusObject.Attachments.FullImage;
 import com.google.api.services.plus.model.Activity.PlusObject.Attachments.Image;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 
 public class GooglePlusConnector {
 	
@@ -56,36 +53,29 @@ public class GooglePlusConnector {
      * Runs the connector
      * @throws Exception 
      */
-    public void execute() throws Exception {
+    public void execute( String publisherId ) throws Exception {
         
         // gets the max number of activities to be retrieved from Google+
         // for this lab, this number is a configuration inside the property file
         Integer maxResults = configurationServices.getInt("max_results");
 
-        //gets the publishers
-        List<String> publisherIds = getPublishersIds();
-        if ( publisherIds != null ) {
-            logger.info("We found " + publisherIds.size() + " publisher(s)");
-            for (String publisherId: publisherIds) {
-            	logger.info( "Reading posts for publisher with ID = " + publisherId );
-                List<Activity> activities = googlePlusServices.listActivities(publisherId, maxResults);
-                if (activities != null) {
-                	logger.info( activities.size() + " activities found. Let's create some cards!");
-                    for (Activity activity: activities) {
-                        if (activity.getObject() != null) {
-                        	logger.info("Processing activity with id = " + activity.getId() );
-                            
-                            //converts the activity into a card
-                            Card card = convertActivity( activity, publisherId );
-                            
-                            //sends the card to Smart Canvas
-                            cardServices.createCard( card );
-                        }
-                    }
-                } else {
-                	logger.info( "No cards found for publisher with ID = " + publisherId );
+    	logger.info( "Reading posts for publisher with ID = " + publisherId );
+        List<Activity> activities = googlePlusServices.listActivities(publisherId, maxResults);
+        if (activities != null) {
+        	logger.info( activities.size() + " activities found. Let's create some cards!");
+            for (Activity activity: activities) {
+                if (activity.getObject() != null) {
+                	logger.info("Processing activity with id = " + activity.getId() );
+                    
+                    //converts the activity into a card
+                    Card card = convertActivity( activity, publisherId );
+                    
+                    //sends the card to Smart Canvas
+                    cardServices.createCard( card );
                 }
             }
+        } else {
+        	logger.info( "No cards found for publisher with ID = " + publisherId );
         }
     }
     
@@ -165,11 +155,9 @@ public class GooglePlusConnector {
             attachment = new Attachment();
             attachment.setType("video");
             setAttachmentImageData(attachments, attachment);
-            try {
+            if (attachments.getEmbed() != null ) {
                 attachment.setEmbedType(attachments.getEmbed().getType());
                 attachment.setEmbedURL(attachments.getEmbed().getUrl());
-            } catch (Exception e) {
-                throw new Exception("Video attachment embedded object is NULL.", e);
             }
         } else if (attachments.getObjectType().equals("article")) {
             attachment = new Attachment();
@@ -374,37 +362,4 @@ public class GooglePlusConnector {
 
         return result;
     }
-
-    /**
-     * Get the user id for all the publishers
-     */
-    private List<String> getPublishersIds() {
-        List<String> result = configurationServices.getValues("publisher_ids");
-        return result;
-    }
-
-    
-
-    
-
-    /**
-     * Triggers the connector execution
-     * 
-     * @param args
-     *            Command line parameters
-     */
-    public static void main(String args[]) {
-        try {
-        	Injector injector = Guice.createInjector(new CommonModule());
-            GooglePlusConnector conn = injector.getInstance(GooglePlusConnector.class);
-            conn.execute();
-        } catch (Exception exc) {
-            exc.printStackTrace();
-            System.exit(-1);
-        }
-
-        System.out.println( "Done!" );
-        System.exit(0);
-    }
-
 }
