@@ -10,6 +10,7 @@
     <cron>
         <url>/content</url>
         <description>Read content from Google Plus and send it to Smart Canvas</description>
-        <schedule>every 10 minutes</schedule>
+        <schedule>every 10 minutes from 8:00 to 18:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
     </cron>
 </cronentries>

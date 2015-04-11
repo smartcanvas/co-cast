@@ -63,7 +63,7 @@ public class MailUtils {
         for (int i = 0; i < recipientEmails.length; i++) {
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmails[i], recipientNames[i]));
         }
-        msg.setSubject("[D1-Billing] " + subject);
+        msg.setSubject("[C2 D-Coder] " + subject);
         if ( !isHTML ) {
             msg.setText(body);
         } else {
