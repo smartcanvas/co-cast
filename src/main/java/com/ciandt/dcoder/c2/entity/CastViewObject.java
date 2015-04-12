@@ -1,7 +1,9 @@
 package com.ciandt.dcoder.c2.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
@@ -10,8 +12,10 @@ import com.googlecode.objectify.annotation.Id;
  * 
  * @author Daniel Viveiros
  */
+@SuppressWarnings("serial")
 @Entity
-public class CastViewObject {
+@Cache
+public class CastViewObject implements Serializable {
 	
 	@Id
 	private String id;

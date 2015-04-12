@@ -16,7 +16,15 @@ import com.ciandt.dcoder.c2.service.WhatsHotCastView;
 import com.ciandt.dcoder.c2.service.WhatsNewCastView;
 import com.ciandt.dcoder.c2.util.APIServices;
 import com.ciandt.dcoder.c2.util.GooglePlusServices;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
+import com.googlecode.objectify.ObjectifyFilter;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class CommonModule extends ServletModule {
@@ -25,6 +33,8 @@ public class CommonModule extends ServletModule {
 	protected void configureServlets() {
 		
 		Map<String, String> initParams = new HashMap<String, String>();
+		initParams.put("com.sun.jersey.config.feature.Trace","true");
+        initParams.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
 		
 		bind(CommonResource.class);
 		bind(CardServices.class);

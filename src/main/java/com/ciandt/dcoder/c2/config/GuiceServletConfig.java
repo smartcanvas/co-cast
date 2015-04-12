@@ -23,6 +23,13 @@ public class GuiceServletConfig extends GuiceServletContextListener {
 				serve("/people").with(PeopleIngestionServiet.class);
 				serve("/content").with(ContentIngestionServlet.class);
 				serve("/refreshcache").with(RefreshCacheServlet.class);
+				
+				/*
+				Map<String, String> initParams = new HashMap<String, String>();
+                initParams.put("com.sun.jersey.config.feature.Trace","true");
+                initParams.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
+                serve("/api/*").with(GuiceContainer.class,initParams);
+                */
 		    }			
 		});
 	}
