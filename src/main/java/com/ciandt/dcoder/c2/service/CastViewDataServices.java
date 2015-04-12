@@ -41,6 +41,7 @@ public class CastViewDataServices {
 		ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(cardJson);
         logger.info( "# de cards returned = " + node.size() );
+        //logger.info( "Json returned = " + node );
         
         Iterator<JsonNode> nodes = node.elements();
         CastViewObject castViewObject = null;
@@ -71,15 +72,26 @@ public class CastViewDataServices {
 		if (authorBlock == null) {
 			return null;
 		}
+		
 		JsonNode attachBlock = getBlockByType( node, "article" );
 		if (attachBlock == null) {
-			attachBlock = getBlockByType( node, "image" );
+			attachBlock = getBlockByType( node, "photo" );
 		}
 		if (attachBlock == null) {
 			attachBlock = getBlockByType( node, "youtube" );
 		}
 		if (attachBlock == null) {
 			attachBlock = getBlockByType( node, "vimeo" );
+		}
+		if (attachBlock == null) {
+			attachBlock = getBlockByType( node, "googleplusvideo" );
+		}
+		//if null and size = 3, it's just a post
+		if (attachBlock == null) {
+			JsonNode blocksNode = node.get("blocks");
+			if (blocksNode.size() == 3) {
+				castViewObject.setType("post");
+			}
 		}
 		
 		JsonNode userActivitiesBlock = getBlockByType( node, "userActivity" );
@@ -96,14 +108,11 @@ public class CastViewDataServices {
 		castViewObject.setCreateDate(new Date(authorBlock.get("publishDate").asLong()));
 		
 		//content
-		Boolean isCasted = false;
 		if (contentBlock != null) {
 			castViewObject.setContent(contentBlock.get("content").asText());
 			castViewObject.setSummary( contentBlock.get("summary").asText() );
 			castViewObject.setTitle( contentBlock.get("title").asText() );
-			isCasted = (castViewObject.getContent() != null) && (castViewObject.getContent().contains("#cast"));
 		}
-		castViewObject.setIsCasted(isCasted);
 		
 		//attach
 		if (attachBlock != null) {
@@ -116,8 +125,8 @@ public class CastViewDataServices {
 		}
 		
 		//activity
-		castViewObject.setLikeCounter(userActivitiesBlock.get("like").asInt());
-		castViewObject.setPinCounter(userActivitiesBlock.get("pin").asInt());
+		castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
+		castViewObject.setPinCounter(userActivitiesBlock.get("pinCounter").asInt());
 		castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
 		
 		return castViewObject;
@@ -152,9 +161,15 @@ public class CastViewDataServices {
 	        }
 	        castViewObject.setProviderUserId(authorNode.get("providerUserId").asText());
 	        //activity
-			castViewObject.setLikeCounter(userActivitiesBlock.get("like").asInt());
-			castViewObject.setPinCounter(userActivitiesBlock.get("pin").asInt());
+			castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
+			castViewObject.setPinCounter(userActivitiesBlock.get("pinCounter").asInt());
 			castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
+			
+			Boolean isCasted = false;
+			if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains("cast")) {
+				isCasted = true;
+			}
+			castViewObject.setIsCasted(isCasted);
 		}
 	}
 	
