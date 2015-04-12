@@ -22,8 +22,7 @@ public class CastViewObject implements Serializable {
 	
 	/* Basic Info */
 	private String mnemonic;
-	private Date createDate;
-	private Date updateDate;
+	private Date date;
 	private String title;
 	private String summary;
 	private String content;
@@ -63,17 +62,11 @@ public class CastViewObject implements Serializable {
 	public void setMnemonic(String mnemonic) {
 		this.mnemonic = mnemonic;
 	}
-	public Date getCreateDate() {
-		return createDate;
+	public Date getDate() {
+		return date;
 	}
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-	public Date getUpdateDate() {
-		return updateDate;
-	}
-	public void setUpdateDate(Date updateDate) {
-		this.updateDate = updateDate;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	public String getTitle() {
 		return title;

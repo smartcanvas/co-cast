@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.ciandt.dcoder.c2.dao.CastViewObjectDAO;
 import com.ciandt.dcoder.c2.entity.CastViewObject;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
@@ -31,7 +32,10 @@ public class CastViewObjectCache {
 	
 	private boolean isLoaded;
 	
-	private UpdateDateComparator comparator;
+	private DateComparator comparator;
+	
+	@Inject
+	private CastViewObjectDAO castViewObjectDAO;
 	
 	/**
 	 * Constructor
@@ -39,7 +43,7 @@ public class CastViewObjectCache {
 	public CastViewObjectCache() {
 		observers = new ArrayList<CastViewObjectCacheObserver>();
 		isLoaded = false;
-		comparator = new UpdateDateComparator();
+		comparator = new DateComparator();
 	}
 	
 	/**
@@ -60,6 +64,30 @@ public class CastViewObjectCache {
 		}
 		
 		isLoaded = true;
+	}
+	
+	/**
+	 * Notify the observers
+	 */
+	@SuppressWarnings("unchecked")
+	public void notifyObservers() {
+		List<CastViewObject> listObjects = null;
+		if (isLoaded) {
+			MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+			listObjects = (List<CastViewObject>) cache.get(CASTVIEW_CACHE_KEY);
+			if (listObjects != null) {
+				for ( CastViewObjectCacheObserver observer: observers ) {
+					logger.info("Calling observer: " + observer);
+					observer.onCacheLoad(listObjects);
+				}
+			} else {
+				listObjects = castViewObjectDAO.findAll();
+				this.loadCache(listObjects);
+			}
+		} else {
+			listObjects = castViewObjectDAO.findAll();
+			this.loadCache(listObjects);
+		}
 	}
 	
 	/**

@@ -41,15 +41,15 @@ public class WhatsHotCastView extends CastView {
 		
 		//the list is already ordered by date. first, let's discard the entries older than "max age"
 		for ( CastViewObject castObj: listObjects ) { 
-			if ( castObj.getUpdateDate() != null ) {
-				Long ageInMilliSeconds = System.currentTimeMillis() - castObj.getUpdateDate().getTime();
+			if ( castObj.getDate() != null ) {
+				Long ageInMilliSeconds = System.currentTimeMillis() - castObj.getDate().getTime();
 				if ( ageInMilliSeconds <= (maxAgeInHours * 60 * 60 * 1000) ) {
 					listCastedObjects.add(castObj);
 					logger.info("Object " + castObj.getMnemonic() + " added to 'what is hot' list. Update date = " 
-							+ castObj.getUpdateDate() );
+							+ castObj.getDate() );
 				} else {
 					logger.info("Discarding object " + castObj.getMnemonic() + " because it's too old. Date = " 
-							+ castObj.getUpdateDate());
+							+ castObj.getDate());
 				}
 			}
 		}

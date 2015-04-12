@@ -9,11 +9,11 @@ import com.ciandt.dcoder.c2.entity.CastViewObject;
  * 
  * @author Daniel Viveiros
  */
-public class UpdateDateComparator implements Comparator<CastViewObject> {
+public class DateComparator implements Comparator<CastViewObject> {
 
 	@Override
 	public int compare(CastViewObject o1, CastViewObject o2) {
-		return new Long(o2.getUpdateDate().getTime() - o1.getUpdateDate().getTime()).intValue();
+		return o2.getDate().compareTo(o1.getDate());
 	}
 
 }

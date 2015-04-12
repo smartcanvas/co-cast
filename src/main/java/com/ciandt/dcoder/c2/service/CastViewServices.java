@@ -43,6 +43,21 @@ public class CastViewServices {
 	
 	@Inject
 	private CastedCastView castedCastView;
+	
+	private List<String> supportedTypes;
+	
+	private boolean firstTime;
+	
+	/**
+	 * Constructor
+	 */
+	public CastViewServices() {
+		firstTime = true;
+		supportedTypes = new ArrayList<String>();
+		supportedTypes.add("post");
+		supportedTypes.add("photo");
+		supportedTypes.add("article");
+	}
 
 	/**
 	 * Return the cast objects to be shown in a castable device
@@ -50,16 +65,14 @@ public class CastViewServices {
 	public List<CastViewObject> getCastViewObjects( String mnemonic ) {
 		CastView castView = null;
 		
-		//checks if the cache is created
-		if ( !castViewObjectCache.isLoaded() ) {
+		if (firstTime) {
 			//register the observers
 			castViewObjectCache.registerObserver(whatsHotCastView);
 			castViewObjectCache.registerObserver(whatsNewCastView);
 			castViewObjectCache.registerObserver(castedCastView);
 			
-			//updates the cache
-			List<CastViewObject> listObjects = castViewObjectDAO.findAll();
-	        castViewObjectCache.loadCache(listObjects);
+			castViewObjectCache.notifyObservers();
+			firstTime = false;
 		}
 		
 		if ( mnemonic.equals(whatsHotCastView.getMnemonic() ) ) {
@@ -96,7 +109,7 @@ public class CastViewServices {
         while ( nodes.hasNext() ) {
         	JsonNode innerNode = nodes.next();
         	castViewObject = this.createCastViewObject( innerNode );
-        	if (castViewObject != null) {
+        	if ((castViewObject != null) && isSupported(castViewObject)) { 
 	        	this.enrichData(castViewObject);
 	        	if (castViewObject.getType() == null) {
 	        		logger.info("Unable to define the type. Json = " + innerNode);
@@ -110,6 +123,13 @@ public class CastViewServices {
         
         //updates the cache
         castViewObjectCache.loadCache(listObjects);
+	}
+	
+	/**
+	 * Checks if this card is supported by C2 or not
+	 */
+	private Boolean isSupported( CastViewObject obj ) {
+		return (obj.getType() != null) && (supportedTypes.contains(obj.getType()));
 	}
 	
 	/**
@@ -157,7 +177,7 @@ public class CastViewServices {
 		castViewObject.setAuthorDisplayName( authorBlock.get("authorDisplayName").asText());
 		castViewObject.setAuthorId(authorBlock.get("authorId").asText());
 		castViewObject.setAuthorImageURL(authorBlock.get("authorImageURL").asText());
-		castViewObject.setCreateDate(new Date(authorBlock.get("publishDate").asLong()));
+		castViewObject.setDate(new Date(authorBlock.get("publishDate").asLong()));
 		
 		//content
 		if (contentBlock != null) {
@@ -198,14 +218,13 @@ public class CastViewServices {
 		if (cardJson != null) {
 			ObjectMapper mapper = new ObjectMapper();
 	        JsonNode node = mapper.readTree(cardJson);
+	        logger.info( "Node = " + node );
 	        JsonNode contentNode = getBlockByType( node, "content" );
 	        JsonNode authorNode = getBlockByType( node, "author" );
 	        JsonNode userActivitiesBlock = getBlockByType( node, "userActivity" );
 	        JsonNode categoriesNode = node.get("categoryNames");
 	        String strCategories = getCategories( categoriesNode );
-	        
-	        castViewObject.setCreateDate(new Date(node.get("createDate").asLong()));
-	        castViewObject.setUpdateDate(new Date(node.get("updateDate").asLong()));
+
 	        castViewObject.setCategoryNames(strCategories);
 	        if (contentNode != null) {
 	        	castViewObject.setProviderContentURL(contentNode.get("providerContentURL").asText());
