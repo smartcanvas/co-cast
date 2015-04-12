@@ -36,6 +36,7 @@ public class WhatsNewCastView extends CastView {
 			} else {
 				break;
 			}
+			i++;
 		}
 	}
 

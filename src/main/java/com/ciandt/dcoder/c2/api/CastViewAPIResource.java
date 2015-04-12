@@ -52,10 +52,6 @@ public class CastViewAPIResource {
 				listObjects = new ArrayList<CastViewObject>();
 			}
 			logger.info("Returning " + listObjects.size() + " itens: " );
-			for ( CastViewObject obj: listObjects ) {
-				logger.info( "Mnemonic: " + obj.getMnemonic() + ", Update date = " + obj.getUpdateDate() 
-						+ ", Popularity = " + obj.getPopularity() );
-			}
 		} catch ( Exception exc ) {
 			logger.log(Level.SEVERE, "Error executing cast view API", exc);
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).build());

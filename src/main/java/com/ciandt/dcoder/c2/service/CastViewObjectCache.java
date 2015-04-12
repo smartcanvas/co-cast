@@ -1,6 +1,7 @@
 package com.ciandt.dcoder.c2.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -30,12 +31,15 @@ public class CastViewObjectCache {
 	
 	private boolean isLoaded;
 	
+	private UpdateDateComparator comparator;
+	
 	/**
 	 * Constructor
 	 */
 	public CastViewObjectCache() {
 		observers = new ArrayList<CastViewObjectCacheObserver>();
 		isLoaded = false;
+		comparator = new UpdateDateComparator();
 	}
 	
 	/**
@@ -43,6 +47,8 @@ public class CastViewObjectCache {
 	 */
 	public void loadCache( List<CastViewObject> listObjects ) {
 		logger.info("Loading cast view objects cache with " + listObjects.size() + " entities");
+		
+		Collections.sort(listObjects, comparator);
 		
 		//gets the memcache service
 		MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
