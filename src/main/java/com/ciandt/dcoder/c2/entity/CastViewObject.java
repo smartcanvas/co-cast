@@ -43,10 +43,9 @@ public class CastViewObject {
 	private String providerContentURL;
 	
 	/* Counters */
-	private Integer likeCounter;
-	private Integer shareCounter;
-	private Integer pinCounter;
-	
+	private Integer likeCounter = 0;
+	private Integer shareCounter = 0;
+	private Integer pinCounter = 0;
 	
 	public String getId() {
 		return id;
@@ -180,7 +179,9 @@ public class CastViewObject {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+	public Integer getPopularity() {
+		return getLikeCounter() + getPinCounter() + getShareCounter();
+	}
 	
 	
 }

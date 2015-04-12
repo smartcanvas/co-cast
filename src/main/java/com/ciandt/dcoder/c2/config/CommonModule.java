@@ -8,6 +8,7 @@ import com.ciandt.dcoder.c2.dao.CastViewObjectDAO;
 import com.ciandt.dcoder.c2.resources.TaskQueueResource;
 import com.ciandt.dcoder.c2.service.CardServices;
 import com.ciandt.dcoder.c2.service.CastViewDataServices;
+import com.ciandt.dcoder.c2.service.CastViewObjectCache;
 import com.ciandt.dcoder.c2.service.GooglePlusConnector;
 import com.ciandt.dcoder.c2.service.PeopleServices;
 import com.ciandt.dcoder.c2.util.APIServices;
@@ -31,6 +32,7 @@ public class CommonModule extends ServletModule {
 		bind(CastViewDataServices.class);
 		bind(CastViewObjectDAO.class);
 		bind(TaskQueueResource.class);
+		bind(CastViewObjectCache.class);
 		
 		filter("/api/*").through(GuiceContainer.class, initParams);
 		filter("/tasks/*").through(GuiceContainer.class, initParams);

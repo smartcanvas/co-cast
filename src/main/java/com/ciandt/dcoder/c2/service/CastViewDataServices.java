@@ -1,8 +1,10 @@
 package com.ciandt.dcoder.c2.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.ciandt.dcoder.c2.dao.CastViewObjectDAO;
@@ -38,6 +40,7 @@ public class CastViewDataServices {
 	public void refreshCardCache() throws JsonProcessingException, IOException {
 		String cardJson = cardServices.searchCards("c2", "pt-br", null);
 		
+		List<CastViewObject> listObjects = new ArrayList<CastViewObject>();
 		ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(cardJson);
         logger.info( "# de cards returned = " + node.size() );
@@ -54,6 +57,7 @@ public class CastViewDataServices {
 	        		logger.info("Unable to define the type. Json = " + innerNode);
 	        	}
 	        	castViewObjectDAO.save(castViewObject);
+	        	listObjects.add(castViewObject);
         	} else {
         		logger.info("Discarding card: " + innerNode );
         	}
