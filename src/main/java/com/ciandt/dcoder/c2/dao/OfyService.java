@@ -1,5 +1,6 @@
 package com.ciandt.dcoder.c2.dao;
 
+import com.ciandt.dcoder.c2.entity.CastViewObject;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
@@ -7,7 +8,7 @@ import com.googlecode.objectify.ObjectifyService;
 public class OfyService {
 
 	static {
-		//factory().register(Greeting.class);
+		factory().register(CastViewObject.class);
 	}
 
 	/**

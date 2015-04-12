@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ciandt.dcoder.c2.service.CastViewServices;
+import com.ciandt.dcoder.c2.service.CastViewDataServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -26,7 +26,7 @@ public class RefreshCacheServlet extends HttpServlet {
 	private Logger logger;
 	
 	@Inject
-	private CastViewServices castServices;
+	private CastViewDataServices castServices;
 
 	/**
 	 * Executes the servlet

@@ -16,7 +16,6 @@ import com.google.api.services.plus.PlusRequestInitializer;
 import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.ActivityFeed;
 import com.google.api.services.plus.model.Person;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**

@@ -6,8 +6,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-import com.google.inject.Singleton;
-
 /**
  * Handle systems configuration
  * 

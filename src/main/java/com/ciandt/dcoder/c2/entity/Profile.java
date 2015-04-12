@@ -1,8 +1,6 @@
 package com.ciandt.dcoder.c2.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class Profile {
 

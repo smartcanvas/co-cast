@@ -3,7 +3,6 @@ package com.ciandt.dcoder.c2.util;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
