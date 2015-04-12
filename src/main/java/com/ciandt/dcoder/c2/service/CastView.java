@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.ciandt.dcoder.c2.entity.CastViewObject;
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
@@ -21,13 +19,12 @@ import com.google.inject.Inject;
 public abstract class CastView implements CastViewObjectCacheObserver {
 	
 	@Inject
-	private static Logger logger;
-	
-	@Inject
-	private static CastViewDataServices castDataServices;
+	private CastViewDataServices castViewDataServices;
 	
 	/** Maps the mnemonics to the implementations */
 	private static Map<String,CastView> implementationMap;
+	
+	private static boolean hasCachedItens = false;
 	
 	/** Initializes the Cast View mechanism */
 	static {
@@ -38,17 +35,10 @@ public abstract class CastView implements CastViewObjectCacheObserver {
 			try {
 				Class cImplementation = Class.forName(strImplementation);
 				CastView castView = (CastView) cImplementation.newInstance();
-				logger.info("Registering cast view with mnemonic: " + castView.getMnemonic());
 				implementationMap.put(castView.getMnemonic(), castView);
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-				logger.log(Level.SEVERE, "Error initializing Cast View mechanism", e);
+				throw new RuntimeException(e);
 			}
-		}
-		
-		try {
-			castDataServices.refreshCardCache();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Error initializing the cache", e);
 		}
 	}
 	
@@ -65,13 +55,42 @@ public abstract class CastView implements CastViewObjectCacheObserver {
 	}
 	
 	/**
+	 * Performs lazy initialization on the cache
+	 */
+	@Override
+	public void onCacheLoad(List<CastViewObject> listObjects) {
+		hasCachedItens = true;
+		this.innerOnCacheLoad(listObjects);
+	}
+	
+	/**
 	 * Cast objects: return the list of objects that must be shown in the castable device
 	 */
-	public abstract List<CastViewObject> castObjects();
+	public List<CastViewObject> castObjects() {
+		if (!hasCachedItens) {
+			try {
+				castViewDataServices.refreshCardCache();
+				hasCachedItens = true;
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		return innerCastObjects();
+	}
+	
+	/**
+	 * Performs lazy initialization on the cache
+	 */
+	protected abstract void innerOnCacheLoad(List<CastViewObject> listObjects);
+	
+	/**
+	 * Cast objects: return the list of objects that must be shown in the castable device
+	 */
+	protected abstract List<CastViewObject> innerCastObjects();
 	
 	/**
 	 * Returns the mnemonic for this Cast View. This mnemonic is going to be used in the API.
 	 */
 	protected abstract String getMnemonic();
-
 }

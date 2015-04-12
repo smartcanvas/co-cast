@@ -37,7 +37,7 @@ public class CastViewDataServices {
 	 * @throws IOException 
 	 * @throws JsonProcessingException 
 	 */
-	public void refreshCardCache() throws JsonProcessingException, IOException {
+	public void refreshCardCache() throws IOException {
 		String cardJson = cardServices.searchCards("c2", "pt-br", null);
 		
 		List<CastViewObject> listObjects = new ArrayList<CastViewObject>();
