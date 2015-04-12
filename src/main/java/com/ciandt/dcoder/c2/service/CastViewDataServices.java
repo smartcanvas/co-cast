@@ -30,6 +30,9 @@ public class CastViewDataServices {
 	private CardServices cardServices;
 	
 	@Inject
+	private CastViewObjectCache castViewObjectCache;
+	
+	@Inject
 	private CastViewObjectDAO castViewObjectDAO;
 
 	/**
@@ -62,6 +65,20 @@ public class CastViewDataServices {
         		logger.info("Discarding card: " + innerNode );
         	}
         }
+        
+        //updates the cache
+        castViewObjectCache.loadCache(listObjects);
+	}
+	
+	/**
+	 * Builds the cache based on the last saved state
+	 * @throws IOException 
+	 * @throws JsonProcessingException 
+	 */
+	public void createExpressCache() throws IOException {
+		List<CastViewObject> listObjects = castViewObjectDAO.findAll();
+		//updates the cache
+        castViewObjectCache.loadCache(listObjects);
 	}
 	
 	/**

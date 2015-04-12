@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ciandt.dcoder.c2.config.CommonModule;
 import com.ciandt.dcoder.c2.entity.CastViewObject;
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 /**
  * Abstract class for all Cast Views. A "Cast View" is an strategy that includes card selection to be shown in
@@ -15,7 +18,7 @@ import com.google.inject.Inject;
  *  
  * @author Daniel Viveiros
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class CastView implements CastViewObjectCacheObserver {
 	
 	@Inject
@@ -34,9 +37,11 @@ public abstract class CastView implements CastViewObjectCacheObserver {
 		for (String strImplementation: strImplementations) {
 			try {
 				Class cImplementation = Class.forName(strImplementation);
-				CastView castView = (CastView) cImplementation.newInstance();
+				//CastView castView = (CastView) cImplementation.newInstance();
+				Injector injector = Guice.createInjector( new CommonModule() );
+				CastView castView = injector.getInstance(cImplementation);
 				implementationMap.put(castView.getMnemonic(), castView);
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			} catch (ClassNotFoundException e) {
 				throw new RuntimeException(e);
 			}
 		}
@@ -69,7 +74,7 @@ public abstract class CastView implements CastViewObjectCacheObserver {
 	public List<CastViewObject> castObjects() {
 		if (!hasCachedItens) {
 			try {
-				castViewDataServices.refreshCardCache();
+				castViewDataServices.createExpressCache();
 				hasCachedItens = true;
 			} catch (IOException e) {
 				throw new RuntimeException(e);
