@@ -38,8 +38,6 @@ public class CastViewDataServices {
 	public void refreshCardCache() throws JsonProcessingException, IOException {
 		String cardJson = cardServices.searchCards("c2", "pt-br", null);
 		
-		logger.info( cardJson );
-		
 		ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(cardJson);
         logger.info( "# de cards returned = " + node.size() );
@@ -49,8 +47,15 @@ public class CastViewDataServices {
         while ( nodes.hasNext() ) {
         	JsonNode innerNode = nodes.next();
         	castViewObject = this.createCastViewObject( innerNode );
-        	this.enrichData(castViewObject);
-        	castViewObjectDAO.save(castViewObject);
+        	if (castViewObject != null) {
+	        	this.enrichData(castViewObject);
+	        	if (castViewObject.getType() == null) {
+	        		logger.info("Unable to define the type. Json = " + innerNode);
+	        	}
+	        	castViewObjectDAO.save(castViewObject);
+        	} else {
+        		logger.info("Discarding card: " + innerNode );
+        	}
         }
 	}
 	
@@ -58,31 +63,62 @@ public class CastViewDataServices {
 	 * Creates a new CastViewObject based on the JSON returned from the Card API search method
 	 */
 	private CastViewObject createCastViewObject( JsonNode node ) {
+		//logger.info( "Processing card = " + node.toString());
 		CastViewObject castViewObject = new CastViewObject();
-		JsonNode blocks = node.get("blocks");
-		JsonNode contentBlock = blocks.get(0);
-		JsonNode authorBlock = blocks.get(1);
-		JsonNode attachBlock = blocks.get(2);
-		JsonNode userActivitiesBlock = blocks.get(3);
+
+		JsonNode contentBlock = getBlockByType( node, "content" );
+		JsonNode authorBlock = getBlockByType( node, "author" );
+		if (authorBlock == null) {
+			return null;
+		}
+		JsonNode attachBlock = getBlockByType( node, "article" );
+		if (attachBlock == null) {
+			attachBlock = getBlockByType( node, "image" );
+		}
+		if (attachBlock == null) {
+			attachBlock = getBlockByType( node, "youtube" );
+		}
+		if (attachBlock == null) {
+			attachBlock = getBlockByType( node, "vimeo" );
+		}
 		
+		JsonNode userActivitiesBlock = getBlockByType( node, "userActivity" );
+		
+		//basic info
 		castViewObject.setId(node.get("id").asText());
+		castViewObject.setMnemonic(node.get("mnemonic").asText());
+		castViewObject.setProviderId(node.get("providerId").asText());
+		
+		//author
 		castViewObject.setAuthorDisplayName( authorBlock.get("authorDisplayName").asText());
 		castViewObject.setAuthorId(authorBlock.get("authorId").asText());
 		castViewObject.setAuthorImageURL(authorBlock.get("authorImageURL").asText());
-		castViewObject.setContent(contentBlock.get("content").asText());
-		castViewObject.setContentImageHeight(attachBlock.get("imageHeight").asInt());
-		castViewObject.setContentImageWidth(attachBlock.get("imageWidth").asInt());
-		castViewObject.setContentImageURL(attachBlock.get("imageURL").asText());
 		castViewObject.setCreateDate(new Date(authorBlock.get("publishDate").asLong()));
-		Boolean isCasted = (castViewObject.getContent() != null) && (castViewObject.getContent().contains("#cast"));
+		
+		//content
+		Boolean isCasted = false;
+		if (contentBlock != null) {
+			castViewObject.setContent(contentBlock.get("content").asText());
+			castViewObject.setSummary( contentBlock.get("summary").asText() );
+			castViewObject.setTitle( contentBlock.get("title").asText() );
+			isCasted = (castViewObject.getContent() != null) && (castViewObject.getContent().contains("#cast"));
+		}
 		castViewObject.setIsCasted(isCasted);
+		
+		//attach
+		if (attachBlock != null) {
+			castViewObject.setType(attachBlock.get("type").asText());
+			castViewObject.setContentImageHeight(attachBlock.get("imageHeight").asInt());
+			castViewObject.setContentImageWidth(attachBlock.get("imageWidth").asInt());
+			if (attachBlock.get("imageURL") != null) {
+				castViewObject.setContentImageURL(attachBlock.get("imageURL").asText());
+			}
+		}
+		
+		//activity
 		castViewObject.setLikeCounter(userActivitiesBlock.get("like").asInt());
-		castViewObject.setMnemonic(node.get("mnemonic").asText());
 		castViewObject.setPinCounter(userActivitiesBlock.get("pin").asInt());
-		castViewObject.setProviderId(node.get("providerId").asText());
 		castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
-		castViewObject.setSummary( contentBlock.get("summary").asText() );
-		castViewObject.setTitle( contentBlock.get("title").asText() );
 		
 		return castViewObject;
 	}
@@ -101,16 +137,24 @@ public class CastViewDataServices {
 		if (cardJson != null) {
 			ObjectMapper mapper = new ObjectMapper();
 	        JsonNode node = mapper.readTree(cardJson);
-	        JsonNode contentNode = node.get(0);
-	        JsonNode authorNode = node.get(1);
+	        JsonNode contentNode = getBlockByType( node, "content" );
+	        JsonNode authorNode = getBlockByType( node, "author" );
+	        JsonNode userActivitiesBlock = getBlockByType( node, "userActivity" );
 	        JsonNode categoriesNode = node.get("categoryNames");
 	        String strCategories = getCategories( categoriesNode );
 	        
 	        castViewObject.setCreateDate(new Date(node.get("createDate").asLong()));
 	        castViewObject.setUpdateDate(new Date(node.get("updateDate").asLong()));
 	        castViewObject.setCategoryNames(strCategories);
-	        castViewObject.setProviderContentURL(contentNode.get("providerContentURL").asText());
+	        if (contentNode != null) {
+	        	castViewObject.setProviderContentURL(contentNode.get("providerContentURL").asText());
+	        	castViewObject.setContent(contentNode.get("content").asText());
+	        }
 	        castViewObject.setProviderUserId(authorNode.get("providerUserId").asText());
+	        //activity
+			castViewObject.setLikeCounter(userActivitiesBlock.get("like").asInt());
+			castViewObject.setPinCounter(userActivitiesBlock.get("pin").asInt());
+			castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
 		}
 	}
 	
@@ -130,5 +174,24 @@ public class CastViewDataServices {
 			}
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Return the node based on the block with specific type
+	 */
+	private JsonNode getBlockByType(JsonNode parent, String type) {
+		JsonNode blocksNode = parent.get("blocks");
+		if (blocksNode == null) {
+			return null;
+		}
+		Iterator<JsonNode> nodes = blocksNode.elements();
+        while ( nodes.hasNext() ) {
+            JsonNode innerNode = nodes.next();
+            if (type.equals(innerNode.get("type").asText())) {
+            	return innerNode;
+            }
+        }
+        
+        return null;
 	}
 }

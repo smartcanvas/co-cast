@@ -2,17 +2,21 @@ package com.ciandt.dcoder.c2.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 
 /**
  * Entity that represents an object that will be shown in a cast view by C2
  * 
  * @author Daniel Viveiros
  */
+@Entity
 public class CastViewObject {
 	
-	/* Basic Info */
+	@Id
 	private String id;
+	
+	/* Basic Info */
 	private String mnemonic;
 	private Date createDate;
 	private Date updateDate;
@@ -21,6 +25,7 @@ public class CastViewObject {
 	private String content;
 	private Boolean isCasted;
 	private String categoryNames;
+	private String type;
 	
 	/* Author */
 	private String authorId;
@@ -168,6 +173,12 @@ public class CastViewObject {
 	}
 	public void setPinCounter(Integer pinCounter) {
 		this.pinCounter = pinCounter;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

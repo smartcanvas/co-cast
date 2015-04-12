@@ -61,7 +61,7 @@ public class CardServices {
         
         //invoke the API
         String response = builder.get(String.class);
-        logger.info( "Search cards response = " + response);
+        //logger.info( "Search cards response = " + response);
         
         return response;
     }
@@ -79,7 +79,7 @@ public class CardServices {
         
         //invoke the API
         String response = builder.get(String.class);
-        logger.info( "Card for mnemonic " + mnemonic + " = " + response);
+        //logger.info( "Card for mnemonic " + mnemonic + " = " + response);
         
         return response;
     }
