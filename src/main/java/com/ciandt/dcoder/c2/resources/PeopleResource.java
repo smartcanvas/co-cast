@@ -2,15 +2,13 @@ package com.ciandt.dcoder.c2.resources;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
 import com.ciandt.dcoder.c2.util.Constants;
@@ -26,9 +24,9 @@ import com.google.inject.Singleton;
  * 
  * @author Daniel Viveiros
  */
-@SuppressWarnings("serial")
 @Singleton
-public class PeopleIngestionServiet extends HttpServlet {
+@Path("/people")
+public class PeopleResource {
 	
 	@Inject
 	private Logger logger;
@@ -36,13 +34,14 @@ public class PeopleIngestionServiet extends HttpServlet {
     private static ConfigurationUtils configurationServices = ConfigurationUtils .getInstance();
 	
 	/**
-	 * Executes the servlet
+	 * Ingest people into Smart Canvas
 	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException, ServletException {
+    @GET
+    @Path("/ingest")
+	public Response ingestPeople() {
 		
 		long initTime = System.currentTimeMillis();
-		logger.info( "Executing PeopleIngestionServiet" );
+		logger.info( "Executing people ingestion" );
 	
 		//gets the publishers
         List<String> publisherIds = getPublishersIds();
@@ -60,6 +59,8 @@ public class PeopleIngestionServiet extends HttpServlet {
 		
 		long endTime = System.currentTimeMillis();
 		logger.info( "Process finalized in " + (endTime - initTime) + " msecs");
+		
+		return Response.ok().build();
 	}
 	
 	/**

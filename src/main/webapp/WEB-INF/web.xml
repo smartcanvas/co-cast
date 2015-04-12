@@ -14,6 +14,6 @@
 	</filter-mapping>
 	
 	<listener>
-		<listener-class>com.ciandt.dcoder.c2.config.GuiceServletConfig</listener-class>
+		<listener-class>com.ciandt.dcoder.c2.config.C2GuiceServletContextListener</listener-class>
 	</listener>
 </web-app>

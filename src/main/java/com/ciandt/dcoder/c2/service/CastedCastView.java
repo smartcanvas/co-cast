@@ -26,7 +26,7 @@ public class CastedCastView extends CastView {
 	}
 
 	@Override
-	protected void innerOnCacheLoad(List<CastViewObject> listObjects) {
+	public void onCacheLoad(List<CastViewObject> listObjects) {
 		listCastedObjects.clear();
 		for ( CastViewObject castObj: listObjects ) {
 			if (castObj.getIsCasted()) {
@@ -36,7 +36,7 @@ public class CastedCastView extends CastView {
 	}
 
 	@Override
-	protected List<CastViewObject> innerCastObjects() {
+	public List<CastViewObject> castObjects() {
 		//if I don't have enough cards to discard, let's return the whole package
 		if (listCastedObjects.size() <= maxResults) {
 			return listCastedObjects;

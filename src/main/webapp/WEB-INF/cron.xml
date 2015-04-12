@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries> 
     <cron>
-        <url>/people</url>
+        <url>/people/ingest</url>
         <description>Read people information from Google Plus</description>
         <schedule>every day 7:00</schedule>
         <timezone>America/Sao_Paulo</timezone>
     </cron>  
 
     <cron>
-        <url>/content</url>
+        <url>/content/ingest</url>
         <description>Read content from Google Plus and send it to Smart Canvas</description>
         <schedule>every 10 minutes from 8:00 to 18:00</schedule>
+        <timezone>America/Sao_Paulo</timezone>
+    </cron>
+    
+    <cron>
+        <url>/content/fetch</url>
+        <description>Fetch content from Smart Canvas to C2</description>
+        <schedule>every 5 minutes from 7:00 to 19:00</schedule>
         <timezone>America/Sao_Paulo</timezone>
     </cron>
 </cronentries>

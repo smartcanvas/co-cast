@@ -2,16 +2,16 @@ package com.ciandt.dcoder.c2.resources;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import com.ciandt.dcoder.c2.service.CastViewServices;
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
 import com.ciandt.dcoder.c2.util.Constants;
 import com.google.appengine.api.taskqueue.Queue;
@@ -26,22 +26,24 @@ import com.google.inject.Singleton;
  * 
  * @author Daniel Viveiros
  */
-@SuppressWarnings("serial")
 @Singleton
-public class ContentIngestionServlet extends HttpServlet {
+@Path("/content")
+public class ContentResource {
 	
 	@Inject
 	private Logger logger;
 	
+	@Inject
+	private CastViewServices castServices;
+	
 	private static ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
     
     /**
-	 * Executes the servlet
+	 * Ingest content into Smart Canvas
 	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException, ServletException {
-		
-		
+	@GET
+	@Path("/ingest")
+	public Response ingestContent() {
 		long initTime = System.currentTimeMillis();
 		logger.info( "Executing ContentIngestionServlet" );
 		
@@ -61,6 +63,23 @@ public class ContentIngestionServlet extends HttpServlet {
 		
 		long endTime = System.currentTimeMillis();
 		logger.info( "Process finalized in " + (endTime - initTime) + " msecs");
+		
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Read content from Smart Canvas and populates the cache
+	 */
+	@GET
+	@Path("/fetch")
+	public Response fetchContent() {
+		try {
+			castServices.fecthContent();
+		} catch (Exception exc) {
+			logger.log(Level.SEVERE, "Error fetching content", exc);
+		}
+		
+		return Response.ok().build();
 	}
 	
     /**

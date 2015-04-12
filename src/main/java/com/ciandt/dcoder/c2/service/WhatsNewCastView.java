@@ -25,7 +25,7 @@ public class WhatsNewCastView extends CastView {
 	}
 
 	@Override
-	protected void innerOnCacheLoad(List<CastViewObject> listObjects) {
+	public void onCacheLoad(List<CastViewObject> listObjects) {
 		listCastedObjects.clear();
 		
 		//the list is already ordered by date, so we just need to take the first entries
@@ -40,7 +40,7 @@ public class WhatsNewCastView extends CastView {
 	}
 
 	@Override
-	protected List<CastViewObject> innerCastObjects() {
+	public List<CastViewObject> castObjects() {
 		return listCastedObjects;
 	}
 

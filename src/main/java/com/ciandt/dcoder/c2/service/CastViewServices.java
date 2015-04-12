@@ -21,7 +21,7 @@ import com.google.inject.Singleton;
  * @author Daniel Viveiros
  */
 @Singleton
-public class CastViewDataServices {
+public class CastViewServices {
 	
 	@Inject
 	private Logger logger;
@@ -34,13 +34,55 @@ public class CastViewDataServices {
 	
 	@Inject
 	private CastViewObjectDAO castViewObjectDAO;
+	
+	@Inject
+	private WhatsHotCastView whatsHotCastView;
+	
+	@Inject
+	private WhatsNewCastView whatsNewCastView;
+	
+	@Inject
+	private CastedCastView castedCastView;
+
+	/**
+	 * Return the cast objects to be shown in a castable device
+	 */
+	public List<CastViewObject> getCastViewObjects( String mnemonic ) {
+		CastView castView = null;
+		
+		//checks if the cache is created
+		if ( !castViewObjectCache.isLoaded() ) {
+			//register the observers
+			castViewObjectCache.registerObserver(whatsHotCastView);
+			castViewObjectCache.registerObserver(whatsNewCastView);
+			castViewObjectCache.registerObserver(castedCastView);
+			
+			//updates the cache
+			List<CastViewObject> listObjects = castViewObjectDAO.findAll();
+	        castViewObjectCache.loadCache(listObjects);
+		}
+		
+		if ( mnemonic.equals(whatsHotCastView.getMnemonic() ) ) {
+			castView = whatsHotCastView;
+		} else if ( mnemonic.equals(whatsNewCastView.getMnemonic() ) ) {
+			castView = whatsNewCastView;
+		} else if ( mnemonic.equals(castedCastView.getMnemonic() ) ) {
+			castView = castedCastView;
+		}
+		
+		if (castView != null) {
+			return castView.castObjects();
+		} else {
+			throw new RuntimeException( "Invalid mnemonic: " + mnemonic );
+		}
+	}
 
 	/**
 	 * Searches for cards inside Smart Canvas and refreshes the cache to serve new information
 	 * @throws IOException 
 	 * @throws JsonProcessingException 
 	 */
-	public void refreshCardCache() throws IOException {
+	public void fecthContent() throws IOException {
 		String cardJson = cardServices.searchCards("c2", "pt-br", null);
 		
 		List<CastViewObject> listObjects = new ArrayList<CastViewObject>();
@@ -67,17 +109,6 @@ public class CastViewDataServices {
         }
         
         //updates the cache
-        castViewObjectCache.loadCache(listObjects);
-	}
-	
-	/**
-	 * Builds the cache based on the last saved state
-	 * @throws IOException 
-	 * @throws JsonProcessingException 
-	 */
-	public void createExpressCache() throws IOException {
-		List<CastViewObject> listObjects = castViewObjectDAO.findAll();
-		//updates the cache
         castViewObjectCache.loadCache(listObjects);
 	}
 	
