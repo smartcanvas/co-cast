@@ -1,21 +1,27 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>C2</title>
-  </head>
 
-  <body>
-    <h1>C2 - D-Coder</h1>
-	
-    <table>
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Available APIs:</td>        
-      </tr>
-      <tr>
-        <td><a href="api/castview/whatsnew">What is new</a></td>
-        <td><a href="api/castview/whatshot">What is hot</a></td>
-        <td><a href="api/castview/casted">Casted</a></td>
-      </tr>
-    </table>
-  </body>
+<head>
+  <!-- 1. Load webcomponents.min.js for polyfill support. -->
+  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+
+  <!-- 2. Use an HTML Import to bring in the element. -->
+  <link rel="import" href="elements.html">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/c2.css">
+</head>
+
+<!-- use fullbleed attribute to specify
+   the body should fill the viewport -->
+<body fullbleed layout vertical>
+  <core-header-panel flex>
+    <core-toolbar class="standard">
+      <div class="middle indent">What's Hot</div>
+      <paper-progress class="bottom fit" value="30"></paper-progress>
+    </core-toolbar>
+    <div class="content"></div>
+  </core-header-panel>
+</body>
+
 </html>

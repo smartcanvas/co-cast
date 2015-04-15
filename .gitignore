@@ -17,3 +17,10 @@ hs_err_pid*
 .classpath
 .settings/*
 local_db.bin
+
+# Bower
+/src/main/webapp/bower_components/*
+/src/main/webapp/.DS_Store
+
+# Polymer
+
