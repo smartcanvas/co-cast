@@ -16,12 +16,44 @@
    the body should fill the viewport -->
 <body fullbleed layout vertical>
   <core-header-panel flex>
-    <core-toolbar class="standard">
+    <core-toolbar class="tall">
       <div class="middle indent">What's Hot</div>
       <paper-progress class="bottom fit" value="30"></paper-progress>
     </core-toolbar>
-    <div class="content"></div>
+    <div class="content">
+      <core-pages class="fancy" selected="0" flex>
+        <div class="one">
+          <paper-shadow z="3">
+            Vitor Freire<br>
+            <img src="https://lh3.googleusercontent.com/72742pPOIz0aemQHEiNhq5_huB7lye5reQH7c2xe_YXBJ9hqAkiqDUuY22LSQ8uDB9bhdrr9bE7WZ9J3">
+          </paper-shadow>
+        </div>
+        <div class="two">
+          <paper-shadow z="3">
+          Two
+          </paper-shadow>
+        </div>
+        <div class="three">
+          <paper-shadow z="3">
+          Three
+          </paper-shadow>
+        </div>
+      </core-pages>
+    </div>
   </core-header-panel>
+
+  <script>
+    document.querySelector('core-pages.fancy').onclick = function(e) {
+      this.selected = (this.selected + 1) % this.items.length;
+      this.async(function() {
+        if (this.selectedIndex == 0) {
+          this.selectedItem.classList.remove('begin');
+        } else if (this.selectedIndex == this.items.length - 1) {
+          this.items[0].classList.add('begin');
+        }
+      });
+    };
+  </script>
 </body>
 
 </html>
