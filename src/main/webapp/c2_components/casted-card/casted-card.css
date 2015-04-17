@@ -6,3 +6,65 @@
 	background-color: #fff; 
 	color: #555;
 }
+
+#header {
+	border-bottom: 2px solid #DDD; 
+	margin-bottom:10px;
+}
+
+#content {
+	margin-left: 10px;
+    margin-top: 10px;
+  	margin-right: 10px;
+  	margin-bottom: 10px;
+}
+
+#author-image {
+	-webkit-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.75);
+    box-shadow: -1px 9px 18px 0px rgba(0,0,0,0.75); 
+    margin-left: 10px;
+    margin-top: 10px;
+  	margin-right: 20px;
+  	margin-bottom: 20px;
+}
+
+#title {
+	font-size: 32px;
+	font-family: 'Raleway';
+	font-style: bold;
+	font-weight: 100;
+	color: #888;
+}
+
+#author-name {
+	font-size: 18px;
+	font-family: 'Raleway';
+	font-style: bold;
+	font-weight: 100;	
+	color: #888;
+}
+
+#publish-date {
+	font-size: 18px;
+	font-family: 'Raleway';
+	font-style: bold;
+	font-weight: 100;	
+	color: #888;	
+}
+
+#content-text {
+	font-size: 24px;
+	font-family: 'Raleway';
+	font-style: bold;
+	font-weight: 100;	
+	color: #888;	
+	padding-bottom: 8px;
+}
+
+#content-image {
+	margin-left: 10px;
+    margin-top: 10px;
+  	margin-right: 20px;
+  	margin-bottom: 20px;
+}

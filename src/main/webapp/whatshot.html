@@ -2,64 +2,35 @@
 <html>
 
 <head>
-  <!-- 1. Load webcomponents.min.js for polyfill support. -->
+  <!-- Load webcomponents.min.js for polyfill support. -->
   <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
 
-  <!-- 2. Use an HTML Import to bring in the element. -->
-  <link rel="import" href="elements.html">
-  
+  <!-- Common imports and JS -->
+  <link rel="import" href="common.html">
+
   <!-- CSS -->
-  <link rel="stylesheet" href="css/c2.css">
-  
+  <link rel="stylesheet" href="css/whatshot.css">
+
 </head>
 
-<!-- use fullbleed attribute to specify
-   the body should fill the viewport -->
 <body fullbleed layout vertical>
+
+  <!-- Gets the data from the API -->
+  <core-ajax url="//localhost:8080/api/castview/whatshot" handleAs="json"></core-ajax>
+
   <core-header-panel flex>
-    <core-toolbar class="tall">
+    <core-toolbar class="standard">
       <div class="middle indent">What's Hot</div>
       <paper-progress class="bottom fit" value="60"></paper-progress>
     </core-toolbar>
     <div class="content">
       <core-pages class="fancy" selected="0" flex>
-        <div class="one">
-            <casted-card 
-                title="Google Cloud Platform Tenha uma visão completa de tudo que a Google Cloud Platform pode fazer para"
-                content="<b>Google Cloud Platform</b><br /><br />Tenha uma visão completa de tudo que a Google Cloud Platform pode fazer para você! Conheça e use GCP!<br />  #cast   "
-                authorImageURL="https://lh3.googleusercontent.com/-CJR15lXz4Vc/AAAAAAAAAAI/AAAAAAAAAA8/ettlZQhfHLo/photo.jpg?sz=150">
-            </casted-card>
-        </div>
-        <div class="two">
-          <casted-card 
-              title="Google Cloud Platform Tenha uma visão completa de tudo que a Google Cloud Platform pode fazer para"
-              content="<b>Google Cloud Platform</b><br /><br />Tenha uma visão completa de tudo que a Google Cloud Platform pode fazer para você! Conheça e use GCP!<br />  #cast   "
-              authorImageURL="https://lh3.googleusercontent.com/-CJR15lXz4Vc/AAAAAAAAAAI/AAAAAAAAAA8/ettlZQhfHLo/photo.jpg?sz=50">
-          </casted-card>
-        </div>
-        <div class="three">
-          <casted-card 
-              title="Google Cloud Platform Tenha uma visão completa de tudo que a Google Cloud Platform pode fazer para"
-              content="<b>Google Cloud Platform</b><br /><br />Tenha uma visão completa de tudo que a Google Cloud Platform pode fazer para você! Conheça e use GCP!<br />  #cast   "
-              authorImageURL="https://lh3.googleusercontent.com/-CJR15lXz4Vc/AAAAAAAAAAI/AAAAAAAAAA8/ettlZQhfHLo/photo.jpg?sz=50">
-          </casted-card>
+        <div id="casted-card-list">
         </div>
       </core-pages>
     </div>
   </core-header-panel>
 
-  <script>
-    document.querySelector('core-pages.fancy').onclick = function(e) {
-      this.selected = (this.selected + 1) % this.items.length;
-      this.async(function() {
-        if (this.selectedIndex == 0) {
-          this.selectedItem.classList.remove('begin');
-        } else if (this.selectedIndex == this.items.length - 1) {
-          this.items[0].classList.add('begin');
-        }
-      });
-    };
-  </script>
 </body>
 
 </html>

@@ -1,18 +1,27 @@
-<polymer-element name="casted-card" attributes="title content authorImageURL">
+<polymer-element name="casted-card" attributes="contentTitle content authorImageURL imageURL authorName date">
   
   <template>
     <link rel="stylesheet" href="casted-card.css">
 
     <div id="external-card">
-        <div horizontal layout center>
-        <div>
+      <div id="header" horizontal layout center>
+        <div id="author-image">
           <img src="{{authorImageURL}}"></img>
         </div>
-        <div>Teste</div>
+        <div id="title-area" vertical layout flex>
+          <div id="title"><b>{{contentTitle}}</b></div>
+          <div id="author-name">By: {{authorName}}</div>
+          <div id="publish-date">{{date}}</div>
+        </div>
       </div>
-      <div style="font-size: 22px; padding: 8px 0 16px; color: #888;">{{title}}</div>
-      <div style="font-size: 16px; padding-bottom: 8px;">{{content}}</div>
-    </div>
+      <div id="content" layout vertical center>
+        <div id="content-image">
+          <img src="{{imageURL}}">
+        </div>
+        <div id="content-text">
+          {{content}}
+        </div>
+      </div>
   </template>
 
   <script>
