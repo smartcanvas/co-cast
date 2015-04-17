@@ -1,0 +1,38 @@
+<polymer-element name="casted-card" attributes="title content authorImageURL">
+  
+  <template>
+    <link rel="stylesheet" href="casted-card.css">
+
+    <div id="external-card">
+        <div horizontal layout center>
+        <div>
+          <img src="{{authorImageURL}}"></img>
+        </div>
+        <div>Teste</div>
+      </div>
+      <div style="font-size: 22px; padding: 8px 0 16px; color: #888;">{{title}}</div>
+      <div style="font-size: 16px; padding-bottom: 8px;">{{content}}</div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      title: "Untitled",
+      content: "No content",
+      authorImageURL: ""
+    });
+  </script>
+
+</polymer-element>
+<!--
+  <div style="border: 1px solid #bebebe; padding: 16px; margin: 16px; border-radius: 5px; background-color: #fff; color: #555;">
+      <div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #666; text-align: center;" horizontal layout>
+        <div>
+          <img src="{{authorImageURL}}"></img>
+        </div>
+        <div>Teste</div>
+      </div>
+      <div style="font-size: 22px; padding: 8px 0 16px; color: #888;">{{title}}</div>
+      <div style="font-size: 16px; padding-bottom: 8px;">{{content}}</div>
+    </div>
+ -->

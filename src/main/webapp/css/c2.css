@@ -1,3 +1,7 @@
+body {
+  background-color: #DDD;
+}
+
 core-toolbar {
 	background-color: #D71F3C;
 	font-size: 48px;
@@ -8,7 +12,7 @@ core-toolbar {
 }
 
 paper-progress::shadow #activeProgress {
-  background-color: red;
+  background-color: #BA1C35;
 }
 
 paper-progress::shadow #secondaryProgress {
@@ -16,7 +20,7 @@ paper-progress::shadow #secondaryProgress {
 }
 
 paper-progress::shadow #progressContainer {
-  background-color: #64ffda;
+  background-color: #999;
 }
 
 core-pages {
