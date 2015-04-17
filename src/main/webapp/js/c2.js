@@ -1,18 +1,6 @@
 //Javascript file for C2
- 
-/**
- * Handles the card transition
- */
-document.querySelector('core-pages.fancy').onclick = function(e) {
-  this.selected = (this.selected + 1) % this.items.length;
-  this.async(function() {
-    if (this.selectedIndex == 0) {
-      this.selectedItem.classList.remove('begin');
-    } else if (this.selectedIndex == this.items.length - 1) {
-      this.items[0].classList.add('begin');
-    }
-  });
-};
+
+var maxCards = 0;
 
 /**
  * Wait for 'polymer-ready'. Ensures the element is upgraded.
@@ -34,6 +22,7 @@ window.addEventListener('polymer-ready', function(e) {
             + "authorName='" + this.response[i].authorDisplayName + "' "
             + "date='" + formatDate(this.response[i].date) + "' "
             + "></casted-card></div>";
+            maxCards++;
       }
       document.getElementById("casted-card-list").innerHTML = cardList;
     }
@@ -51,13 +40,35 @@ addEventListener('polymer-ready', function() {
 });
 
 /**
+ * Handles the card transition
+ */
+function changeCard() {
+  var corePages = document.querySelector('core-pages.fancy');
+  if (corePages.selected + 1 >= maxCards) {
+    window.location=nextPage;
+  } else {
+    corePages.selected++;
+    progressBar.value = 0;
+    /*
+    corePages.async(function() {
+      if (corePages.selectedIndex == 0) {
+        corePages.selectedItem.classList.remove('begin');
+      } else if (corePages.selectedIndex == corePages.items.length - 1) {
+        corePages.items[0].classList.add('begin');
+      }
+    });
+    */
+  }
+};
+
+/**
  * Updates the progres bar
  */
 function updateProgressBar() {
   var progressBar = document.querySelector('paper-progress');
   progressBar.value += 10;
   if (progressBar.value >= 100) {
-    window.location=nextPage;
+    changeCard();
   }
 }
 
