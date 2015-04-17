@@ -1,0 +1,16 @@
+<project name="C2" default="deploy_web" basedir=".">
+    
+	<description>C2 Ant file for additional tasks to improve development productivity</description>
+
+	<target name="deploy_web">
+		<copy todir="${basedir}/target/c2-1.0.0-SNAPSHOT">
+			<fileset dir="${basedir}/src/main/webapp">
+				<include name="**/*.html"/>
+				<include name="**/*.js"/>
+				<include name="**/*.css"/>
+				<exclude name="bower_components/**/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>
