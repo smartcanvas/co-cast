@@ -12,7 +12,7 @@ paper-progress::shadow #activeProgress {
 }
 
 paper-progress::shadow #secondaryProgress {
-  background-color: #D71F3C;
+  background-color: #1a8eb1;
 }
 
 paper-progress::shadow #progressContainer {
