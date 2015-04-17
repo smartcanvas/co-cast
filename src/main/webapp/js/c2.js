@@ -1,3 +1,5 @@
+//Javascript file for C2
+ 
 /**
  * Handles the card transition
  */
@@ -39,6 +41,25 @@ window.addEventListener('polymer-ready', function(e) {
 
   ajax.go(); // Call its API methods.
 });
+
+/**
+ * Method called when each page finishes loading
+ */
+addEventListener('polymer-ready', function() {
+  /** Interval for progress bar */
+  window.setInterval("updateProgressBar()", 1000);
+});
+
+/**
+ * Updates the progres bar
+ */
+function updateProgressBar() {
+  var progressBar = document.querySelector('paper-progress');
+  progressBar.value += 10;
+  if (progressBar.value >= 100) {
+    window.location=nextPage;
+  }
+}
 
 /**
  * Resizes the author imageURL
