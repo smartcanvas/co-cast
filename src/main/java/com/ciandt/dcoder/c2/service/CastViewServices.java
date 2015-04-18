@@ -7,8 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.ciandt.dcoder.c2.dao.CastViewObjectDAO;
 import com.ciandt.dcoder.c2.entity.CastViewObject;
+import com.ciandt.dcoder.c2.util.HTMLUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -228,7 +231,7 @@ public class CastViewServices {
 	        castViewObject.setCategoryNames(strCategories);
 	        if (contentNode != null) {
 	        	castViewObject.setProviderContentURL(contentNode.get("providerContentURL").asText());
-	        	castViewObject.setContent(contentNode.get("content").asText());
+	        	castViewObject.setContent(processContent(contentNode.get("content").asText()));
 	        }
 	        castViewObject.setProviderUserId(authorNode.get("providerUserId").asText());
 	        //activity
@@ -241,6 +244,22 @@ public class CastViewServices {
 				isCasted = true;
 			}
 			castViewObject.setIsCasted(isCasted);
+		}
+	}
+	
+	/**
+	 * Process content
+	 */
+	private String processContent( String content ) {
+		Integer maxContentSize = 240; 
+		if (content == null) {
+			return "";
+		}
+		String newContent = StringUtils.trim(HTMLUtils.cleanHTMLTags(content).trim());
+		if (newContent.length() <= maxContentSize) {
+			return newContent;
+		} else {
+			return newContent.substring(0,maxContentSize) + "(...)";
 		}
 	}
 	
