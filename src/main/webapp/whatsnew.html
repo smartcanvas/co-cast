@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Load webcomponents.min.js for polyfill support. -->
+  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+
+  <!-- Common imports and JS -->
+  <link rel="import" href="common.html">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/whatsnew.css">
+  
+</head>
+
+<body fullbleed layout vertical>
+
+  <!-- Gets the data from the API -->
+  <core-ajax url="/api/castview/whatsnew" handleAs="json"></core-ajax>
+
+  <core-header-panel flex>
+    <core-toolbar class="standard">
+      <div class="middle indent">What's New</div>
+      <paper-progress class="bottom fit" value="0" id="progressBar"></paper-progress>
+    </core-toolbar>
+    <div class="content">
+      <core-pages class="fancy" selected="0" id="casted-card-list" flex>
+      </core-pages>
+    </div>
+  </core-header-panel>
+
+  <script>var nextPage='casted.html'</script>
+
+</body>
+
+</html>
