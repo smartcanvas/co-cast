@@ -36,7 +36,7 @@ window.addEventListener('polymer-ready', function(e) {
  */
 addEventListener('polymer-ready', function() {
   /** Interval for progress bar */
-  window.setInterval("updateProgressBar()", 1000);
+  window.setInterval("updateProgressBar()", 35);
 });
 
 /**
@@ -66,7 +66,7 @@ function changeCard() {
  */
 function updateProgressBar() {
   var progressBar = document.querySelector('paper-progress');
-  progressBar.value += 10;
+  progressBar.value += 1;
   if (progressBar.value >= 100) {
     changeCard();
   }
