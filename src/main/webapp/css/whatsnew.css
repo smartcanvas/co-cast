@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:500,700,400);
+
 body {
   background-color: #DDD;
 }
@@ -5,7 +7,7 @@ body {
 core-toolbar {
 	background-color: green;
 	font-size: 40px;
-	font-family: 'Raleway';
+	font-family:'Roboto' !important;
 	font-style: normal;
 	font-weight: 100;
 	color: white;
