@@ -36,7 +36,7 @@ window.addEventListener('polymer-ready', function(e) {
  */
 addEventListener('polymer-ready', function() {
   /** Interval for progress bar */
-  window.setInterval("updateProgressBar()", 35);
+  window.setInterval("updateProgressBar()", 100);
 });
 
 /**
