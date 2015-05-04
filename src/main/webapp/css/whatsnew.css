@@ -7,7 +7,7 @@ body {
 core-toolbar {
 	background-color: green;
 	font-size: 40px;
-	font-family:'Roboto' !important;
+	font-family: 'Roboto', sans-serif;
 	font-style: normal;
 	font-weight: 100;
 	color: white;
@@ -40,10 +40,10 @@ core-pages > div {
 
 core-pages.fancy {
   border: none;
-  margin-left: 2em;
-  margin-top: 2em;
-  margin-bottom: 2em;
-  margin-right: 2em;
+  margin-left: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-right: 1em;
 }
 
 core-pages.fancy > div {

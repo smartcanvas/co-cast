@@ -78,7 +78,7 @@ function updateProgressBar() {
 function resizeAuthorImage(authorImageURL) {
   indexOfQuestionMark = authorImageURL.indexOf('?');
   originalURL = authorImageURL.substring(0,indexOfQuestionMark);
-  originalURL += "?sz=150";
+  originalURL += "?sz=75";
   return originalURL;
 }
 

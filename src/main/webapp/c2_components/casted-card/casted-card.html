@@ -4,20 +4,20 @@
     <link rel="stylesheet" href="casted-card.css">
 
     <div id="external-card">
+      <div id="content-image">
+          <img src="{{imageURL}}">
+      </div>
       <div id="header" horizontal layout center>
         <div id="author-image">
           <img src="{{authorImageURL}}"></img>
         </div>
         <div id="title-area" vertical layout flex>
-          <div id="title"><b>{{contentTitle}}</b></div>
+          <div id="title">{{contentTitle}}</div>
           <div id="author-name">By: {{authorName}}</div>
           <div id="publish-date">{{date}}</div>
         </div>
       </div>
       <div id="content" layout vertical center>
-        <div id="content-image">
-          <img src="{{imageURL}}">
-        </div>
         <div id="content-text">
           {{content}}
         </div>
@@ -33,15 +33,3 @@
   </script>
 
 </polymer-element>
-<!--
-  <div style="border: 1px solid #bebebe; padding: 16px; margin: 16px; border-radius: 5px; background-color: #fff; color: #555;">
-      <div style="display: inline-block; height: 64px; width: 64px; border-radius: 50%; background: #ddd; line-height: 64px; font-size: 30px; color: #666; text-align: center;" horizontal layout>
-        <div>
-          <img src="{{authorImageURL}}"></img>
-        </div>
-        <div>Teste</div>
-      </div>
-      <div style="font-size: 22px; padding: 8px 0 16px; color: #888;">{{title}}</div>
-      <div style="font-size: 16px; padding-bottom: 8px;">{{content}}</div>
-    </div>
- -->
