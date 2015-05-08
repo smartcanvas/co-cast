@@ -5,22 +5,26 @@
 
     <div id="external-card">
       <div id="content-image">
-          <img src="{{imageURL}}">
-      </div>
-      <div id="header" horizontal layout center>
-        <div id="author-image">
-          <img src="{{authorImageURL}}"></img>
-        </div>
-        <div id="title-area" vertical layout flex>
-          <div id="title">{{contentTitle}}</div>
-          <div id="author-name">By: {{authorName}}</div>
-          <div id="publish-date">{{date}}</div>
-        </div>
-      </div>
-      <div id="content" layout vertical center>
-        <div id="content-text">
-          {{content}}
-        </div>
+          <img id="post-image" src="{{imageURL}}">
+
+<!--           <div id="header">
+
+          </div> -->
+          <div id="content">
+
+<!--             <div id="author-image">
+              
+            </div>
+            <div id="title-area">
+              
+            </div> -->
+            <img id="author-image" src="{{authorImageURL}}"></img>
+            <div id="publish-date">{{date}}</div>
+            <div id="title">{{contentTitle}}</div>
+            <div id="content-text">{{content}}</div>
+            <div id="author-name">By: {{authorName}}</div>
+          </div>
+
       </div>
   </template>
 

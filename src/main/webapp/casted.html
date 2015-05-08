@@ -11,6 +11,12 @@
   <!-- CSS -->
   <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/casted.css">
+
+  <style type="text/css">
+    core-pages{
+      margin: 0 !important;
+    }
+  </style>
   
 </head>
 
@@ -19,7 +25,18 @@
   <!-- Gets the data from the API -->
   <core-ajax url="/api/castview/casted" handleAs="json"></core-ajax>
 
-  <core-header-panel flex>
+  <div class="header">
+    <h1 class="header-title">Check it out!</h1>
+  </div>
+  
+  <paper-progress class="bottom fit" value="0" id="progressBar"></paper-progress>
+
+  <div class="content">
+    <!-- <div class="fancy" selected="0" id="casted-card-list"></div> -->
+    <core-pages class="fancy" selected="0" id="casted-card-list"></core-pages>
+  </div>
+
+<!--   <core-header-panel flex>
     <core-toolbar class="medium-tall">
       <div class="middle indent">Check it out!</div>
       <paper-progress class="bottom fit" value="0" id="progressBar"></paper-progress>
@@ -28,7 +45,7 @@
       <core-pages class="fancy" selected="0" id="casted-card-list" flex>
       </core-pages>
     </div>
-  </core-header-panel>
+  </core-header-panel> -->
 
   <script>var nextPage='whatshot.html'</script>
 
