@@ -103,6 +103,10 @@ public class GooglePlusConnector {
         card.setAddress(activity.getAddress());
         card.setPlaceName(activity.getPlaceName());
         card.setGeoCode(activity.getGeocode());
+        
+        //language and region
+        card.addLanguage("pt");
+        card.addRegion("br");
 
         // dates
         DateTime pubDatetime = activity.getPublished();
@@ -111,12 +115,16 @@ public class GooglePlusConnector {
             pubDate = new Date(pubDatetime.getValue());
             card.setProviderPublished(pubDate);
         }
+        //force the update
+        card.setProviderUpdated(new Date());
+        /*
         DateTime uptDatetime = activity.getUpdated();
         Date uptDate = null;
         if (uptDatetime != null) {
             uptDate = new Date(uptDatetime.getValue());
             card.setProviderUpdated(uptDate);
         }
+        */
 
         // attachments
         if (activity.getObject() != null) {
