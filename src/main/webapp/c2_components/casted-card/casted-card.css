@@ -1,10 +1,11 @@
 #content-image{
     position: relative;
+    text-align: center;
 }
 
     #post-image{
-        width: 1280px;
-        height: 555px;
+        max-width: 100%;
+        /*height: 555px;*/
     }
 
     #header{
@@ -14,8 +15,10 @@
     }
 
     #content{
-        position: absolute;
-        bottom: 0;
+/*        position: absolute;
+        bottom: 0;*/
+        position: fixed;
+        bottom: 82px;
         left: 0;
         right: 0;
         background-color: #333;
@@ -23,7 +26,7 @@
         margin: 40px 0 0 0;
     }
 
-        #author-image{
+     /*   #author-image{
             width: 75px;
             height: 75px;
             position: absolute;
@@ -36,12 +39,13 @@
             color: #EFEFEF;
             font: normal normal 20px 'Roboto', sans-serif;
             margin: 25px 115px 15px;
-        }
+        }*/
 
         #title{
             color: #93F699;
             font: normal normal 45px 'Roboto', sans-serif;
-            margin: 0 115px;
+            /*margin: 0 115px;*/
+            margin: 20px;
 
             text-align: justify;
             word-break: break-all;
@@ -50,17 +54,18 @@
         #content-text{
             color: #EFEFEF;
             font: normal normal 33px 'Roboto', sans-serif;
-            margin: 15px 115px 0;
+            /*margin: 15px 115px 0;*/
+            margin: 20px;
 
             text-align: justify;
             word-break: break-all;
         }
 
-        #author-name{
+/*        #author-name{
             color: #EFEFEF;
             font: normal normal 20px 'Roboto', sans-serif;
             margin: 25px 115px 15px;
-        }
+        }*/
 
 /*#external-card {
 	border: 1px solid #bebebe; 
