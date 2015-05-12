@@ -18,7 +18,7 @@ window.addEventListener('polymer-ready', function(e) {
         cardList += "<div><casted-card contentTitle='" + this.response[i].title + "' "
             + "content='" + this.response[i].content + "' "
             + "authorImageURL='" + resizeAuthorImage(this.response[i].authorImageURL) + "' "
-            + "imageURL='" + this.response[i].contentImageURL + "' "
+            + "imageURL='" + this.response[i].contentImageURL + "=s0' "
             + "authorName='" + this.response[i].authorDisplayName + "' "
             + "date='" + formatDate(this.response[i].date) + "' "
             + "></casted-card></div>";
