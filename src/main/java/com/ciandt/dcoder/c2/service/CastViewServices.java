@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.ciandt.dcoder.c2.dao.CastViewObjectDAO;
 import com.ciandt.dcoder.c2.entity.CastViewObject;
+import com.ciandt.dcoder.c2.util.ConfigurationRequiredException;
 import com.ciandt.dcoder.c2.util.ConfigurationUtils;
 import com.ciandt.dcoder.c2.util.HTMLUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -272,11 +273,15 @@ public class CastViewServices {
 		}
 		
 		//try to find a configuration for a better image
-		String newImageURL = configurationServices.get(castViewObject.getMnemonic());
-		if (StringUtils.isEmpty(newImageURL)) {
-			return;
-		} else {
-			castViewObject.setContentImageURL(newImageURL);
+		try {
+			String newImageURL = configurationServices.get(castViewObject.getMnemonic());
+			if (StringUtils.isEmpty(newImageURL)) {
+				return;
+			} else {
+				castViewObject.setContentImageURL(newImageURL);
+			}
+		} catch ( ConfigurationRequiredException exc ) {
+			logger.info("No better image found for card with mnemonic = " + castViewObject.getMnemonic() );
 		}
 	}
 	

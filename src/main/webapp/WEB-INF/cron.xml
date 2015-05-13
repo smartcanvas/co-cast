@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries> 
+	<!-- 
     <cron>
         <url>/people/ingest</url>
         <description>Read people information from Google Plus</description>
@@ -20,4 +21,5 @@
         <schedule>every day 09:00</schedule>
         <timezone>America/Sao_Paulo</timezone>
     </cron>
+     -->
 </cronentries>
