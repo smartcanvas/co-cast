@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.ciandt.dcoder.c2.dao.CastViewObjectDAO;
 import com.ciandt.dcoder.c2.entity.CastViewObject;
+import com.ciandt.dcoder.c2.util.ConfigurationRequiredException;
+import com.ciandt.dcoder.c2.util.ConfigurationUtils;
 import com.ciandt.dcoder.c2.util.HTMLUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -48,6 +50,8 @@ public class CastViewServices {
 	private CastedCastView castedCastView;
 	
 	private List<String> supportedTypes;
+	
+	private static ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
 	
 	private boolean firstTime;
 	
@@ -98,7 +102,7 @@ public class CastViewServices {
 	 * @throws IOException 
 	 * @throws JsonProcessingException 
 	 */
-	public void fecthContent() throws IOException {
+	public void fetchContent() throws IOException {
 		String cardJson = cardServices.searchCards("c2", "pt-br", null);
 		
 		List<CastViewObject> listObjects = new ArrayList<CastViewObject>();
@@ -114,17 +118,29 @@ public class CastViewServices {
         	castViewObject = this.createCastViewObject( innerNode );
         	if ((castViewObject != null) && isSupported(castViewObject)) { 
 	        	this.enrichData(castViewObject);
-	        	if (castViewObject.getType() == null) {
-	        		logger.info("Unable to define the type. Json = " + innerNode);
+	        	if ( !StringUtils.isEmpty(castViewObject.getTitle())) {
+		        	if (castViewObject.getType() == null) {
+		        		logger.info("Unable to define the type. Json = " + innerNode);
+		        	}
+		        	this.changeCastViewObjectImage( castViewObject );
+		        	castViewObjectDAO.save(castViewObject);
+		        	listObjects.add(castViewObject);
 	        	}
-	        	castViewObjectDAO.save(castViewObject);
-	        	listObjects.add(castViewObject);
         	} else {
         		logger.info("Discarding card: " + innerNode );
         	}
         }
         
         //updates the cache
+        castViewObjectCache.loadCache(listObjects);
+	}
+	
+	/**
+	 * Reload the content in cache
+	 */
+	public void loadContent() throws IOException {
+		List<CastViewObject> listObjects = castViewObjectDAO.findAll();
+		//updates the cache
         castViewObjectCache.loadCache(listObjects);
 	}
 	
@@ -172,7 +188,6 @@ public class CastViewServices {
 		JsonNode userActivitiesBlock = getBlockByType( node, "userActivity" );
 		
 		//basic info
-		castViewObject.setId(node.get("id").asText());
 		castViewObject.setMnemonic(node.get("mnemonic").asText());
 		castViewObject.setProviderId(node.get("providerId").asText());
 		
@@ -244,6 +259,29 @@ public class CastViewServices {
 				isCasted = true;
 			}
 			castViewObject.setIsCasted(isCasted);
+		}
+	}
+	
+	/**
+	 * Changes the cast view object image for a new and better one
+	 */
+	private void changeCastViewObjectImage( CastViewObject castViewObject ) {
+		
+		if (castViewObject.getMnemonic() == null) {
+			logger.info("Card with mnemonic null detected. Title = " + castViewObject.getTitle() );
+			return;
+		}
+		
+		//try to find a configuration for a better image
+		try {
+			String newImageURL = configurationServices.get(castViewObject.getMnemonic());
+			if (StringUtils.isEmpty(newImageURL)) {
+				return;
+			} else {
+				castViewObject.setContentImageURL(newImageURL);
+			}
+		} catch ( ConfigurationRequiredException exc ) {
+			logger.info("No better image found for card with mnemonic = " + castViewObject.getMnemonic() );
 		}
 	}
 	

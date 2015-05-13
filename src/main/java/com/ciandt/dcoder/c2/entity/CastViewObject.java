@@ -16,12 +16,11 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 @Cache
 public class CastViewObject implements Serializable {
-	
-	@Id
-	private String id;
-	
+		
 	/* Basic Info */
+	@Id
 	private String mnemonic;
+	
 	private Date date;
 	private String title;
 	private String summary;
@@ -50,12 +49,6 @@ public class CastViewObject implements Serializable {
 	private Integer shareCounter = 0;
 	private Integer pinCounter = 0;
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getMnemonic() {
 		return mnemonic;
 	}

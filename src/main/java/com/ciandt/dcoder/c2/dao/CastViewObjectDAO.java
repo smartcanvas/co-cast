@@ -31,7 +31,7 @@ public class CastViewObjectDAO {
 	 * @param castViewObject Cast View Object to be saved
 	 */
 	public void save( CastViewObject castViewObject ) {
-		logger.info("Saving cast view object with id = " + castViewObject.getId() );
+		logger.info("Saving cast view object with mnemonic = " + castViewObject.getMnemonic() );
 		ofy().save().entity(castViewObject).now();
 	}
 
