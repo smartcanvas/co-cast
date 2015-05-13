@@ -116,15 +116,15 @@ public class GooglePlusConnector {
             card.setProviderPublished(pubDate);
         }
         //force the update
-        card.setProviderUpdated(new Date());
-        /*
+        //card.setProviderUpdated(new Date());
+        
         DateTime uptDatetime = activity.getUpdated();
         Date uptDate = null;
         if (uptDatetime != null) {
             uptDate = new Date(uptDatetime.getValue());
             card.setProviderUpdated(uptDate);
         }
-        */
+        
 
         // attachments
         if (activity.getObject() != null) {

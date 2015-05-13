@@ -74,7 +74,22 @@ public class ContentResource {
 	@Path("/fetch")
 	public Response fetchContent() {
 		try {
-			castServices.fecthContent();
+			castServices.fetchContent();
+		} catch (Exception exc) {
+			logger.log(Level.SEVERE, "Error fetching content", exc);
+		}
+		
+		return Response.ok().build();
+	}
+	
+	/**
+	 * Read content from Smart Canvas and populates the cache
+	 */
+	@GET
+	@Path("/load")
+	public Response loadContent() {
+		try {
+			castServices.loadContent();
 		} catch (Exception exc) {
 			logger.log(Level.SEVERE, "Error fetching content", exc);
 		}
