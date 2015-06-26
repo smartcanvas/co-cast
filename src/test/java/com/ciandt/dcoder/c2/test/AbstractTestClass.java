@@ -3,7 +3,7 @@ package com.ciandt.dcoder.c2.test;
 import org.junit.After;
 import org.junit.Before;
 
-import com.ciandt.dcoder.c2.config.C2Module;
+import com.ciandt.d1.cocast.guice.CoCastModule;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -25,7 +25,7 @@ public abstract class AbstractTestClass {
 			new LocalMemcacheServiceTestConfig());
 	
 	public AbstractTestClass() {
-		this.injector = Guice.createInjector(new C2Module());
+		this.injector = Guice.createInjector(new CoCastModule());
 	}
 	
 	@Before
