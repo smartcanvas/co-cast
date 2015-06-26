@@ -3,7 +3,8 @@ package com.ciandt.d1.cocast.util;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import com.ciandt.d1.cocast.configuration.ConfigurationUtils;
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -20,7 +21,8 @@ import com.sun.jersey.api.json.JSONConfiguration;
 @Singleton
 public class APIServices {
 	
-	private ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
+    @Inject
+	private ConfigurationServices configurationServices;
 
 	/** Base URL for API calls */
     private String BASE_URI;

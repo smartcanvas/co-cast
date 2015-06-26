@@ -10,6 +10,7 @@ import com.ciandt.d1.cocast.castview.WhatsHotCastView;
 import com.ciandt.d1.cocast.castview.WhatsNewCastView;
 import com.ciandt.d1.cocast.castview.api.CastViewAPIResource;
 import com.ciandt.d1.cocast.configuration.ConfigurationDAO;
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
 import com.ciandt.d1.cocast.util.APIServices;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
@@ -42,6 +43,7 @@ public class CoCastModule extends ServletModule {
 		
 		//Util
 		bind(APIServices.class);
+		bind(ConfigurationServices.class);
 	}
 	
     /*

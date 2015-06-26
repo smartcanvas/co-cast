@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.ciandt.d1.cocast.configuration.ConfigurationUtils;
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
 import com.google.inject.Inject;
 
 /**
@@ -17,10 +17,11 @@ public class WhatsHotCastView extends CastView {
 	
 	@Inject
 	private Logger logger;
+	@Inject
+    private ConfigurationServices configuration;
 	
 	private PopularityComparator comparator;
 	private List<CastViewObject> listCastedObjects;
-	private ConfigurationUtils configuration = ConfigurationUtils.getInstance();
 	private Integer maxResults;
 	private Integer maxAgeInHours;
 	

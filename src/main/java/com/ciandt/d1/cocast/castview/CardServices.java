@@ -1,12 +1,8 @@
 package com.ciandt.d1.cocast.castview;
 
-import java.util.logging.Logger;
-
-import com.ciandt.d1.cocast.card.Card;
 import com.ciandt.d1.cocast.util.APIServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 
 /**

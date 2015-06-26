@@ -3,7 +3,8 @@ package com.ciandt.d1.cocast.castview;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ciandt.d1.cocast.configuration.ConfigurationUtils;
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
+import com.google.inject.Inject;
 
 /**
  * Cast View implementation that cast objects with a #cast hashtag 
@@ -11,9 +12,11 @@ import com.ciandt.d1.cocast.configuration.ConfigurationUtils;
  * @author Daniel Viveiros
  */
 public class CastedCastView extends CastView {
+    
+    @Inject
+    private ConfigurationServices configuration;
 	
 	private List<CastViewObject> listCastedObjects;
-	private ConfigurationUtils configuration = ConfigurationUtils.getInstance();
 	private Integer maxResults;
 	
 	/**

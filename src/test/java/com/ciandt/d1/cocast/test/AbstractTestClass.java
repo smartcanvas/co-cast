@@ -1,4 +1,4 @@
-package com.ciandt.dcoder.c2.test;
+package com.ciandt.d1.cocast.test;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,14 +11,14 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * Abstract Test
+ * Abstract Test for Co-Cast
  * 
- * @author fabioap
+ * @author Daniel Viveiros
  *
  */
 public abstract class AbstractTestClass {
 	
-	private Injector injector; 
+	protected Injector injector; 
 	
 	final LocalServiceTestHelper helper = new LocalServiceTestHelper(
 			new LocalDatastoreServiceTestConfig(),
@@ -29,17 +29,14 @@ public abstract class AbstractTestClass {
 	}
 	
 	@Before
-	public void helperSetup() {
-		helper.setUp();
+    public void setup() {
+	    this.helper.setUp();
 	}
 
-	@After
-	public void helperTearDown() {
-		helper.tearDown();
-	}
-	
-	@Before
-	public abstract void setup();
+    @After
+    public void shutdown() throws Exception {
+        this.helper.tearDown();
+    }
 	
 	protected <T> T getInstance(Class<T> type) {
         return this.injector.getInstance(type);

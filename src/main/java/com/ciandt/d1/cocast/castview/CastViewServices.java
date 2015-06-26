@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ciandt.d1.cocast.configuration.ConfigurationRequiredException;
-import com.ciandt.d1.cocast.configuration.ConfigurationUtils;
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
 import com.ciandt.d1.cocast.util.HTMLUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -47,9 +47,10 @@ public class CastViewServices {
 	@Inject
 	private CastedCastView castedCastView;
 	
-	private List<String> supportedTypes;
+	@Inject
+    private ConfigurationServices configurationServices;
 	
-	private static ConfigurationUtils configurationServices = ConfigurationUtils.getInstance();
+	private List<String> supportedTypes;
 	
 	private boolean firstTime;
 	

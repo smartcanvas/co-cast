@@ -17,7 +17,7 @@ public class Configuration implements Serializable {
     
     /* Configuration Name */
     @Id
-    private String name;
+    private String key;
     
     /* Value */
     private String value;
@@ -25,12 +25,12 @@ public class Configuration implements Serializable {
     /* Description (optional) */
     private String description;
 
-    public String getName() {
-        return name;
+    public String getKey() {
+        return key;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getValue() {
@@ -51,7 +51,7 @@ public class Configuration implements Serializable {
 
     @Override
     public String toString() {
-        return "Configuration [name=" + name + ", value=" + value + ", description=" + description + "]";
+        return "Configuration [name=" + key + ", value=" + value + ", description=" + description + "]";
     }
     
     
