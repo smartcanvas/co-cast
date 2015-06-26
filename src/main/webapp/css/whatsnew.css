@@ -1,10 +1,10 @@
 body {
-  background-color: #222;
+  background-color: #ecf0f1;
   overflow: hidden;
 }
 
 .header{
-	background-color: #000;
+	background-color: #80b33a;
 	font: normal normal 18px 'Roboto', sans-serif;
   text-transform: uppercase;
 	color: #FFF;
@@ -35,17 +35,17 @@ paper-progress{
 }
 
 paper-progress::shadow #progressContainer {
-  background-color: #333;
+  background-color: #000;
 }
 
 /* PROGRESS */
 paper-progress::shadow #activeProgress {
-  background-color: #23F846;
+  background-color: #94cf43;
 }
 
 /* ? */
 paper-progress::shadow #secondaryProgress {
-  background-color: #1a8eb1;
+  background-color: #94cf43;
 }
 
 

@@ -1,13 +1,13 @@
 body {
-  background-color: #490A3D;
+  background-color: #ecf0f1;
   overflow: hidden;
 }
 
 .header{
-  background-color: #BD1550;
+  background-color: #94cf43;
   font: normal normal 18px 'Roboto', sans-serif;
   text-transform: uppercase;
-  color: #F8CA00;
+  color: #000;
   height: 78px;
   -webkit-box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
   -moz-box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
@@ -35,17 +35,17 @@ paper-progress{
 }
 
 paper-progress::shadow #progressContainer {
-  background-color: #E97F02;
+  background-color: #FFF;
 }
 
 /* PROGRESS */
 paper-progress::shadow #activeProgress {
-  background-color: #8A9B0F;
+  background-color: #80b33a;
 }
 
 /* ? */
 paper-progress::shadow #secondaryProgress {
-  background-color: #1a8eb1;
+  background-color: #80b33a;
 }
 
 
