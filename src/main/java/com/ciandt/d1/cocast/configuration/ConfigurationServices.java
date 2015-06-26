@@ -1,11 +1,12 @@
 package com.ciandt.d1.cocast.configuration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
@@ -24,9 +25,6 @@ public class ConfigurationServices {
     /** Cache */
     private static final String CACHE_KEY = "cache_Configurations_CoCast";
     private static Integer EXPIRATION_TIME = 60 * 60 * 3;
-    
-    @Inject
-    private Logger logger;
     
     @Inject
     private ConfigurationDAO configurationDAO;
@@ -50,28 +48,33 @@ public class ConfigurationServices {
 	 * List the configurations
 	 */
 	public List<Configuration> list() {
-	    List<Configuration> configurations = new ArrayList<Configuration>();
-	    Configuration configuration;
+	    List<Configuration> configurations;
 	    String key;
 	    String value;
+	    Set<String> confKeys = new HashSet<String>();
+	    
+	    //loads data from the datastore
+        configurations = configurationDAO.findAll();
+        for (Configuration configuration: configurations) {
+            confKeys.add(configuration.getKey());
+        }
 	    
 	    //loads data from the bundle
         if (properties != null) {
             Iterator<String> iterator = properties.keySet().iterator();
             while (iterator.hasNext()) {
                 key = iterator.next();
-                value = properties.getString(key);
-                configuration = new Configuration();
-                configuration.setKey(key);
-                configuration.setValue(value);
-                configurations.add(configuration);
-                
+                if (!confKeys.contains(key)) {
+                    value = properties.getString(key);
+                    Configuration configuration = new Configuration();
+                    configuration.setKey(key);
+                    configuration.setValue(value);
+                    configuration.setDescription("From co-cast.properties");
+                    configurationDAO.save(configuration);
+                    configurations.add(configuration);
+                }
             }
         }
-        
-        //loads data from the datastore
-        List<Configuration> savedConfigurations = configurationDAO.findAll();
-        configurations.addAll(savedConfigurations);
         
         return configurations;
 	}
