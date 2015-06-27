@@ -1,4 +1,4 @@
-package com.ciandt.d1.cocast.card;
+package com.ciandt.d1.cocast.content;
 
 import java.util.ArrayList;
 import java.util.Date;

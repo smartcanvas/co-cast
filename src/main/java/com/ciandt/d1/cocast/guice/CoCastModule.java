@@ -1,7 +1,5 @@
 package com.ciandt.d1.cocast.guice;
 
-import com.ciandt.d1.cocast.card.api.ContentResource;
-import com.ciandt.d1.cocast.castview.CardServices;
 import com.ciandt.d1.cocast.castview.CastViewObjectCache;
 import com.ciandt.d1.cocast.castview.CastViewObjectDAO;
 import com.ciandt.d1.cocast.castview.CastViewServices;
@@ -10,7 +8,10 @@ import com.ciandt.d1.cocast.castview.WhatsHotCastView;
 import com.ciandt.d1.cocast.castview.WhatsNewCastView;
 import com.ciandt.d1.cocast.castview.api.CastViewAPIResource;
 import com.ciandt.d1.cocast.configuration.ConfigurationDAO;
+import com.ciandt.d1.cocast.configuration.ConfigurationResource;
 import com.ciandt.d1.cocast.configuration.ConfigurationServices;
+import com.ciandt.d1.cocast.content.CardServices;
+import com.ciandt.d1.cocast.content.api.ContentResource;
 import com.ciandt.d1.cocast.util.APIServices;
 import com.google.inject.Scopes;
 import com.google.inject.servlet.ServletModule;
@@ -44,6 +45,7 @@ public class CoCastModule extends ServletModule {
 		//Util
 		bind(APIServices.class);
 		bind(ConfigurationServices.class);
+		bind(ConfigurationResource.class);
 	}
 	
     /*

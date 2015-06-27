@@ -17,9 +17,7 @@ public class WhatsHotCastView extends CastView {
 	
 	@Inject
 	private Logger logger;
-	@Inject
-    private ConfigurationServices configuration;
-	
+
 	private PopularityComparator comparator;
 	private List<CastViewObject> listCastedObjects;
 	private Integer maxResults;
@@ -28,7 +26,8 @@ public class WhatsHotCastView extends CastView {
 	/**
 	 * Constructor
 	 */
-	public WhatsHotCastView() {
+	@Inject 
+	public WhatsHotCastView( ConfigurationServices configuration ) {
 		listCastedObjects = new ArrayList<CastViewObject>();
 		comparator = new PopularityComparator();
 		maxResults = configuration.getInt("whatshot_max_results");

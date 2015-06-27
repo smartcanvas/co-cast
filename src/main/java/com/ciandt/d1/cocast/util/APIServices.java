@@ -23,15 +23,11 @@ public class APIServices {
 	
     @Inject
 	private ConfigurationServices configurationServices;
-
-	/** Base URL for API calls */
-    private String BASE_URI;
     
     /**
      * Constructor
      */
     public APIServices() {
-        BASE_URI = configurationServices.get("base_uri");
     }
     
     /**
@@ -45,6 +41,7 @@ public class APIServices {
      * Creates the Builder (Jersey - java framework to invoke and create APIs) 
      */
     public Builder createBuilder( String apiSpecificPath, MultivaluedMap<String,String> queryParams ) {
+        String BASE_URI = configurationServices.get("base_uri");
         return this.createBuilder(BASE_URI, apiSpecificPath, queryParams);
     }
     
@@ -77,6 +74,7 @@ public class APIServices {
      * Creates the Builder (Jersey - java framework to invoke and create APIs) 
      */
     public Builder createBuilderForPojo(String apiSpecificPath) {
+        String BASE_URI = configurationServices.get("base_uri");
         String apiPath = BASE_URI + apiSpecificPath;
         System.out.println( "Creating builder for API path = " + apiPath );
         

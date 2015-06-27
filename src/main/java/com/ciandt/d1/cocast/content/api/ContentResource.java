@@ -1,4 +1,4 @@
-package com.ciandt.d1.cocast.card.api;
+package com.ciandt.d1.cocast.content.api;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +12,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Servlet to ingest content coming from google plus inside Smart Canvas
+ * APIs for populating Co-cast with content coming from Smart Canvas
  * 
  * @author Daniel Viveiros
  */
@@ -36,6 +36,7 @@ public class ContentResource {
 			castServices.fetchContent();
 		} catch (Exception exc) {
 			logger.log(Level.SEVERE, "Error fetching content", exc);
+			return Response.serverError().build();
 		}
 		
 		return Response.ok().build();
@@ -45,12 +46,13 @@ public class ContentResource {
 	 * Read content from Smart Canvas and populates the cache
 	 */
 	@GET
-	@Path("/load")
+	@Path("/reload")
 	public Response loadContent() {
 		try {
-			castServices.loadContent();
+			castServices.reload();
 		} catch (Exception exc) {
 			logger.log(Level.SEVERE, "Error fetching content", exc);
+			return Response.serverError().build();
 		}
 		
 		return Response.ok().build();

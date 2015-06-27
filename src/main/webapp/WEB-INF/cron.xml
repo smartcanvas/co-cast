@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries> 
-	<!-- 
-    <cron>
-        <url>/people/ingest</url>
-        <description>Read people information from Google Plus</description>
-        <schedule>every day 7:00</schedule>
-        <timezone>America/Sao_Paulo</timezone>
-    </cron>  
-
-    <cron>
-        <url>/content/ingest</url>
-        <description>Read content from Google Plus and send it to Smart Canvas</description>
-        <schedule>every day 08:00</schedule>
-        <timezone>America/Sao_Paulo</timezone>
-    </cron>
-    
+ 
     <cron>
         <url>/content/fetch</url>
-        <description>Fetch content from Smart Canvas to C2</description>
+        <description>Fetch content from Smart Canvas to Co-Cast</description>
         <schedule>every day 09:00</schedule>
         <timezone>America/Sao_Paulo</timezone>
     </cron>
-     -->
+
 </cronentries>

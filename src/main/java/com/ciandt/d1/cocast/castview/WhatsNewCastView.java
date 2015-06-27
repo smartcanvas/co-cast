@@ -12,16 +12,14 @@ import com.google.inject.Inject;
  */
 public class WhatsNewCastView extends CastView {
     
-    @Inject
-    private ConfigurationServices configuration;
-	
 	private List<CastViewObject> listCastedObjects;
 	private Integer maxResults;
 	
 	/**
 	 * Constructor
 	 */
-	public WhatsNewCastView() {
+	@Inject
+	public WhatsNewCastView( ConfigurationServices configuration ) {
 		listCastedObjects = new ArrayList<CastViewObject>();
 		maxResults = configuration.getInt("whatsnew_max_results");
 	}

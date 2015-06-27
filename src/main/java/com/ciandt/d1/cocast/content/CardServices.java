@@ -1,5 +1,6 @@
-package com.ciandt.d1.cocast.castview;
+package com.ciandt.d1.cocast.content;
 
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
 import com.ciandt.d1.cocast.util.APIServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -15,13 +16,18 @@ public class CardServices {
 
 	@Inject
 	private APIServices apiServices;
+	
+	@Inject
+	private ConfigurationServices configurationServices;
     
     /**
      * Search for a card. This method is better because it returns the numbers of likes, dislikes and so on.
      */
     public String searchCards(String query, String localeCode, Long personId) {
         
-        String apiSpecificPath = "/sc2/d-coder/h/brain/card/v3/cards?q=" + query;
+        String tenant = configurationServices.get("tenant");
+        
+        String apiSpecificPath = "/brain/" + tenant + "/card/bucket/cards?q=" + query;
         if ( localeCode != null ) {
             apiSpecificPath += "&locale=" + localeCode;
         } else {
@@ -47,7 +53,8 @@ public class CardServices {
      */
     public String getCard(String mnemonic) {
         
-        String apiSpecificPath = "/sc2/d-coder/h/brain/card/v3/cards/" + mnemonic;
+        String tenant = configurationServices.get("tenant");
+        String apiSpecificPath = "/sc2/" + tenant + "/h/brain/card/bucket/cards/" + mnemonic;
         
         //Builder builder = APIUtil.createBuilder(apiSpecificPath, queryParam);
         Builder builder = apiServices.createBuilder("https://d1-prd.appspot.com",

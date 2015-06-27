@@ -8,7 +8,9 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.inject.Inject;
@@ -37,6 +39,7 @@ public class ConfigurationResource {
      */
     @PUT
     @Path("/save")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response saveConfiguration( 
             @NotNull @QueryParam("key") final String key,
             @NotNull @QueryParam("value") final String value, 
@@ -62,7 +65,10 @@ public class ConfigurationResource {
      */
     @GET
     @Path("/list")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response listConfigurations() {
+        logger.log(Level.FINE, "Listing configurations");
+        
         List<Configuration> configurations = null;
         
         try {
@@ -80,6 +86,7 @@ public class ConfigurationResource {
      */
     @GET
     @Path("/reload")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response reloadConfigurations() {
         List<Configuration> configurations = null;
         

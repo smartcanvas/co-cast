@@ -12,9 +12,6 @@ import com.google.inject.Inject;
  * @author Daniel Viveiros
  */
 public class CastedCastView extends CastView {
-    
-    @Inject
-    private ConfigurationServices configuration;
 	
 	private List<CastViewObject> listCastedObjects;
 	private Integer maxResults;
@@ -22,7 +19,8 @@ public class CastedCastView extends CastView {
 	/**
 	 * Constructor
 	 */
-	public CastedCastView() {
+	@Inject
+	public CastedCastView( ConfigurationServices configuration ) {
 		listCastedObjects = new ArrayList<CastViewObject>();
 		maxResults = configuration.getInt("casted_max_results");
 	}

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.ciandt.d1.cocast.configuration.ConfigurationRequiredException;
 import com.ciandt.d1.cocast.configuration.ConfigurationServices;
+import com.ciandt.d1.cocast.content.CardServices;
 import com.ciandt.d1.cocast.util.HTMLUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -102,31 +103,46 @@ public class CastViewServices {
 	 * @throws JsonProcessingException 
 	 */
 	public void fetchContent() throws IOException {
-		String cardJson = cardServices.searchCards("c2", "pt-br", null);
+	    String searchTerm = configurationServices.get("search_term");
+	    String locale = configurationServices.get("search_locale");
+	    
+	    logger.info( "Fetching content from Smart Canvas. Term = " + searchTerm + ", locale = " + locale );
+	    
+		String cardJson = cardServices.searchCards( searchTerm, locale, null);
 		
 		List<CastViewObject> listObjects = new ArrayList<CastViewObject>();
 		ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(cardJson);
-        logger.info( "# de cards returned = " + node.size() );
-        //logger.info( "Json returned = " + node );
+        JsonNode bucketList = mapper.readTree(cardJson).get("buckets");
+        logger.info( "# de buckets returned = " + bucketList.size() );
+        if( (bucketList == null) || (bucketList.size()==0) ) {
+            return;
+        }
         
-        Iterator<JsonNode> nodes = node.elements();
+        Iterator<JsonNode> buckets = bucketList.elements();
         CastViewObject castViewObject = null;
-        while ( nodes.hasNext() ) {
-        	JsonNode innerNode = nodes.next();
-        	castViewObject = this.createCastViewObject( innerNode );
-        	if ((castViewObject != null) && isSupported(castViewObject)) { 
-	        	this.enrichData(castViewObject);
-	        	if ( !StringUtils.isEmpty(castViewObject.getTitle())) {
-		        	if (castViewObject.getType() == null) {
-		        		logger.info("Unable to define the type. Json = " + innerNode);
-		        	}
-		        	this.changeCastViewObjectImage( castViewObject );
-		        	castViewObjectDAO.save(castViewObject);
-		        	listObjects.add(castViewObject);
-	        	}
-        	} else {
-        		logger.info("Discarding card: " + innerNode );
+        while ( buckets.hasNext() ) {
+        	JsonNode bucket = buckets.next();
+        	JsonNode cardList = bucket.get("cards");
+        	if ((cardList == null) || (cardList.size() == 0)) {
+        	    continue;
+        	}
+        	Iterator<JsonNode> cards = cardList.elements();
+        	while (cards.hasNext()) {
+        	    JsonNode card = cards.next();
+            	castViewObject = this.createCastViewObject( card );
+            	if ((castViewObject != null) && isSupported(castViewObject)) { 
+    	        	//this.enrichData(castViewObject);
+    	        	if ( !StringUtils.isEmpty(castViewObject.getTitle())) {
+    		        	if (castViewObject.getType() == null) {
+    		        		logger.info("Unable to define the type. Json = " + card);
+    		        	}
+    		        	this.changeCastViewObjectImage( castViewObject );
+    		        	castViewObjectDAO.save(castViewObject);
+    		        	listObjects.add(castViewObject);
+    	        	}
+            	} else {
+            		logger.info("Discarding card: " + card );
+            	}
         	}
         }
         
@@ -137,7 +153,7 @@ public class CastViewServices {
 	/**
 	 * Reload the content in cache
 	 */
-	public void loadContent() throws IOException {
+	public void reload() throws IOException {
 		List<CastViewObject> listObjects = castViewObjectDAO.findAll();
 		//updates the cache
         castViewObjectCache.loadCache(listObjects);
@@ -194,12 +210,23 @@ public class CastViewServices {
 		castViewObject.setAuthorDisplayName( authorBlock.get("authorDisplayName").asText());
 		castViewObject.setAuthorId(authorBlock.get("authorId").asText());
 		castViewObject.setAuthorImageURL(authorBlock.get("authorImageURL").asText());
+		if (authorBlock.get("providerUserId") != null) {
+		    castViewObject.setProviderUserId(authorBlock.get("providerUserId").asText());
+		}
 		castViewObject.setDate(new Date(authorBlock.get("publishDate").asLong()));
 		
 		//content
 		if (contentBlock != null) {
-			castViewObject.setContent(contentBlock.get("content").asText());
-			castViewObject.setSummary( contentBlock.get("summary").asText() );
+		    if ( contentBlock.get("content") != null ) {
+		        castViewObject.setContent(contentBlock.get("content").asText());
+		    } else {
+		        castViewObject.setContent("");
+		    }
+		    if ( contentBlock.get("summary") != null ) {
+		        castViewObject.setSummary( contentBlock.get("summary").asText() );
+		    } else {
+		        castViewObject.setSummary("");
+		    }
 			castViewObject.setTitle( contentBlock.get("title").asText() );
 		}
 		
@@ -214,9 +241,25 @@ public class CastViewServices {
 		}
 		
 		//activity
-		castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
-		castViewObject.setPinCounter(userActivitiesBlock.get("pinCounter").asInt());
-		castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
+		if (userActivitiesBlock.get("likeCounter") != null) {
+		    castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
+		}
+		if (userActivitiesBlock.get("pinCounter") != null) {
+		    castViewObject.setPinCounter(userActivitiesBlock.get("pinCounter").asInt());
+		}
+		if (userActivitiesBlock.get("totalCounter") != null) {
+		    castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
+		}
+		
+		//categories
+		JsonNode categoriesNode = node.get("categoryNames");
+		String strCategories = getCategories( categoriesNode );
+        castViewObject.setCategoryNames(strCategories);
+        if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains("cast")) {
+            castViewObject.setIsCasted(true);
+        } else {
+            castViewObject.setIsCasted(false);
+        }
 		
 		return castViewObject;
 	}

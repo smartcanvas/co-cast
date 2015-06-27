@@ -1,4 +1,4 @@
-package com.ciandt.d1.cocast.card;
+package com.ciandt.d1.cocast.content;
 
 public class Attachment {
     
