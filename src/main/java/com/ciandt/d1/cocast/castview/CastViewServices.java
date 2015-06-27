@@ -243,19 +243,26 @@ public class CastViewServices {
 		//activity
 		if (userActivitiesBlock.get("likeCounter") != null) {
 		    castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
+		} else {
+		    castViewObject.setLikeCounter(0);
 		}
 		if (userActivitiesBlock.get("pinCounter") != null) {
 		    castViewObject.setPinCounter(userActivitiesBlock.get("pinCounter").asInt());
+		} else {
+		    castViewObject.setPinCounter(0);
 		}
 		if (userActivitiesBlock.get("totalCounter") != null) {
 		    castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
+		} else {
+		    castViewObject.setShareCounter(0);
 		}
 		
 		//categories
 		JsonNode categoriesNode = node.get("categoryNames");
 		String strCategories = getCategories( categoriesNode );
         castViewObject.setCategoryNames(strCategories);
-        if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains("cast")) {
+        String castHashtag = configurationServices.get("casted_hashtag");
+        if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains(castHashtag)) {
             castViewObject.setIsCasted(true);
         } else {
             castViewObject.setIsCasted(false);
@@ -297,7 +304,8 @@ public class CastViewServices {
 			castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
 			
 			Boolean isCasted = false;
-			if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains("cast")) {
+			String castHashtag = configurationServices.get("casted_hashtag");
+			if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains(castHashtag)) {
 				isCasted = true;
 			}
 			castViewObject.setIsCasted(isCasted);
