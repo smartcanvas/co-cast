@@ -217,12 +217,12 @@ public class CastViewServices {
 		
 		//content
 		if (contentBlock != null) {
-		    if ( contentBlock.get("content") != null ) {
+		    if ( (contentBlock.get("content") != null) && !"null".equals((contentBlock).get("content").asText() )) {
 		        castViewObject.setContent(contentBlock.get("content").asText());
 		    } else {
 		        castViewObject.setContent("");
 		    }
-		    if ( contentBlock.get("summary") != null ) {
+		    if ( (contentBlock.get("summary") != null) && !"null".equals((contentBlock).get("summary").asText() )) {
 		        castViewObject.setSummary( contentBlock.get("summary").asText() );
 		    } else {
 		        castViewObject.setSummary("");
