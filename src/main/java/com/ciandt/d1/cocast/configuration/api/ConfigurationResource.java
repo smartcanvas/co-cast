@@ -1,4 +1,4 @@
-package com.ciandt.d1.cocast.configuration;
+package com.ciandt.d1.cocast.configuration.api;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -13,6 +13,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.ciandt.d1.cocast.configuration.Configuration;
+import com.ciandt.d1.cocast.configuration.ConfigurationDAO;
+import com.ciandt.d1.cocast.configuration.ConfigurationServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -22,7 +25,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:viveiros@ciandt.com">Daniel Viveiros</a>
  */
 @Singleton
-@Path("/configurations")
+@Path("/api/configurations")
 public class ConfigurationResource {
     
     @Inject

@@ -28,7 +28,7 @@ import com.google.inject.Singleton;
  * @author Daniel Viveiros
  */
 @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-@Path("/castviews")
+@Path("/api/castviews")
 @Singleton
 public class CastViewAPIResource {
 	

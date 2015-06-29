@@ -5,16 +5,20 @@ import static com.ciandt.d1.cocast.util.OfyService.ofy;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Persistent methods for Cast View
  * 
  * @author <a href="mailto:viveiros@ciandt.com">Daniel Viveiros</a>
  */
+@Singleton
 public class CastViewDAO {
     
     private static final String CACHE_KEY = "cacheCastView";
@@ -22,6 +26,26 @@ public class CastViewDAO {
     
     @Inject
     private Logger logger;
+    
+    /**
+     * Returns the cast view by its mnemonic. If mnemonic == null, returns the default. 
+     */
+    public CastView findByMnemonic( String mnemonic ) {
+        List<CastView> castViews = this.findAll();
+        for (CastView castView: castViews) {
+            if (!StringUtils.isEmpty(mnemonic)) {
+                if ( mnemonic.equals(castView.getMnemonic())) {
+                    return castView;
+                }
+            } else {
+                if (castView.getIsDefault()) {
+                    return castView;
+                }
+            }
+        }
+        
+        return null;
+    }
     
     /**
      * Return all cast views saved on the datastore

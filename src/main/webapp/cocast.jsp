@@ -2,13 +2,13 @@
 <html>
 
 <%
-  String castViewMnemonic = "whatsnew";
-  String title = "What's New";
-  String nextCastView = "teste";
-  String headerBackgroundColor = "#FFF";
-  String headerColor = "#80b33a";
-  String progressContainerColor = "#000";
-  String activeProgressColor = "#94cf43";
+  String castViewMnemonic = (String) request.getAttribute( "castViewMnemonic" );
+  String title = (String) request.getAttribute( "title" );
+  String nextCastView = (String) request.getAttribute( "nextCastView" );
+  String headerBackgroundColor = (String) request.getAttribute( "headerBackgroundColor" );
+  String headerColor = (String) request.getAttribute( "headerColor" );
+  String progressContainerColor = (String) request.getAttribute( "progressContainerColor" );
+  String activeProgressColor = (String) request.getAttribute( "activeProgressColor" );
 %>
 
 <head>
@@ -30,10 +30,10 @@
     }
 
     .header{
-      background-color: <%= headerBackgroundColor %>;
+      background-color: #<%= headerBackgroundColor %>;
       font: normal normal 18px 'Roboto', sans-serif;
       text-transform: uppercase;
-      color: <%= headerColor %>;
+      color: #<%= headerColor %>;
       height: 78px;
       -webkit-box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
       -moz-box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
@@ -60,12 +60,12 @@
     }
 
     paper-progress::shadow #progressContainer {
-      background-color: <%= progressContainerColor %>;
+      background-color: #<%= progressContainerColor %>;
     }
 
     /* PROGRESS */
     paper-progress::shadow #activeProgress {
-      background-color: <%= activeProgressColor %>;
+      background-color: #<%= activeProgressColor %>;
     }
 
   </style>
@@ -88,7 +88,7 @@
     <core-pages class="fancy" selected="0" id="casted-card-list"></core-pages>
   </div>
 
-  <script>var nextPage='<%= nextCastView %>'</script>
+  <script>var nextPage='cocast.jsp?castView=<%= nextCastView %>'</script>
 
 </body>
 

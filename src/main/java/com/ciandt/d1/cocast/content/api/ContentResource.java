@@ -17,7 +17,7 @@ import com.google.inject.Singleton;
  * @author Daniel Viveiros
  */
 @Singleton
-@Path("/content")
+@Path("/api/contents")
 public class ContentResource {
 	
 	@Inject
