@@ -11,7 +11,7 @@ import com.google.inject.Inject;
  * 
  * @author Daniel Viveiros
  */
-public class CastedCastView extends CastView {
+public class CastedCastView extends CastViewStrategy {
 	
 	private List<CastViewObject> listCastedObjects;
 	private Integer maxResults;

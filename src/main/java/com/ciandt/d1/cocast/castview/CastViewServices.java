@@ -70,7 +70,7 @@ public class CastViewServices {
 	 * Return the cast objects to be shown in a castable device
 	 */
 	public List<CastViewObject> getCastViewObjects( String mnemonic ) {
-		CastView castView = null;
+		CastViewStrategy castView = null;
 		
 		if (firstTime) {
 			//register the observers
@@ -131,7 +131,7 @@ public class CastViewServices {
         	    JsonNode card = cards.next();
             	castViewObject = this.createCastViewObject( card );
             	if ((castViewObject != null) && isSupported(castViewObject)) { 
-    	        	//this.enrichData(castViewObject);
+    	        	this.enrichData(castViewObject);
     	        	if ( !StringUtils.isEmpty(castViewObject.getTitle())) {
     		        	if (castViewObject.getType() == null) {
     		        		logger.info("Unable to define the type. Json = " + card);
@@ -282,9 +282,25 @@ public class CastViewServices {
 		}
 		
 		String cardJson = cardServices.getCard( castViewObject.getMnemonic() );
+		JsonNode node = null;
 		if (cardJson != null) {
 			ObjectMapper mapper = new ObjectMapper();
-	        JsonNode node = mapper.readTree(cardJson);
+			JsonNode bucketList = mapper.readTree(cardJson).get("buckets");
+	        if( (bucketList == null) || (bucketList.size()==0) ) {
+	            return;
+	        }
+	        
+	        Iterator<JsonNode> buckets = bucketList.elements();
+	        if ( buckets.hasNext() ) {
+	            JsonNode cardList = buckets.next().get("cards");
+	            if( (cardList == null) || (cardList.size()==0) ) {
+	                return;
+	            } else {
+	                node = cardList.get(0);
+	            }
+	        }
+	        
+	        
 	        logger.info( "Node = " + node );
 	        JsonNode contentNode = getBlockByType( node, "content" );
 	        JsonNode authorNode = getBlockByType( node, "author" );

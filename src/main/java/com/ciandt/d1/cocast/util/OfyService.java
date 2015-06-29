@@ -1,5 +1,6 @@
 package com.ciandt.d1.cocast.util;
 
+import com.ciandt.d1.cocast.castview.CastView;
 import com.ciandt.d1.cocast.castview.CastViewObject;
 import com.ciandt.d1.cocast.configuration.Configuration;
 import com.googlecode.objectify.Objectify;
@@ -11,6 +12,7 @@ public class OfyService {
 	static {
 		factory().register(CastViewObject.class);
 		factory().register(Configuration.class);
+		factory().register(CastView.class);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.ciandt.d1.cocast.guice;
 
+import com.ciandt.d1.cocast.castview.CastViewDAO;
 import com.ciandt.d1.cocast.castview.CastViewObjectCache;
 import com.ciandt.d1.cocast.castview.CastViewObjectDAO;
 import com.ciandt.d1.cocast.castview.CastViewServices;
@@ -29,6 +30,7 @@ public class CoCastModule extends ServletModule {
 		//DAOs
 		bind(CastViewObjectDAO.class);
 		bind(ConfigurationDAO.class);
+		bind(CastViewDAO.class);
         
 		//Cast View
 	    bind(CastViewServices.class);

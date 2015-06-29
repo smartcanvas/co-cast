@@ -10,7 +10,7 @@ import com.google.inject.Inject;
  * Cast View implementation that returns the newest releases to be shown
  * @author Daniel Viveiros
  */
-public class WhatsNewCastView extends CastView {
+public class WhatsNewCastView extends CastViewStrategy {
     
 	private List<CastViewObject> listCastedObjects;
 	private Integer maxResults;

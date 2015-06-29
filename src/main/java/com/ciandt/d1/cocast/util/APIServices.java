@@ -64,8 +64,20 @@ public class APIServices {
                 MediaType.APPLICATION_JSON);
         String clientId = configurationServices.get("client_id");
         String apiKey = configurationServices.get("api_key");
+        String d1User = configurationServices.get("d1_user");
+        String d1Provider = configurationServices.get("d1_provider");
+        String d1ProviderUserId = configurationServices.get("d1_provider_user_id");
         builder.header("CLIENT_ID", clientId);
         builder.header("API_KEY", apiKey);
+        if (d1User != null) {
+            builder.header("x-d1-user", d1User);
+        }
+        if (d1Provider != null) {
+            builder.header("x-d1-provider", d1Provider);
+        }
+        if (d1ProviderUserId != null) {
+            builder.header("x-d1-provider-user-id", d1ProviderUserId);
+        }
         
         return builder;
     }

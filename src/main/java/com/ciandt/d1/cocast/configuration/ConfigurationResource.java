@@ -22,7 +22,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:viveiros@ciandt.com">Daniel Viveiros</a>
  */
 @Singleton
-@Path("/configuration")
+@Path("/configurations")
 public class ConfigurationResource {
     
     @Inject
@@ -38,7 +38,6 @@ public class ConfigurationResource {
      * Read content from Smart Canvas and populates the cache
      */
     @PUT
-    @Path("/save")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response saveConfiguration( 
             @NotNull @QueryParam("key") final String key,

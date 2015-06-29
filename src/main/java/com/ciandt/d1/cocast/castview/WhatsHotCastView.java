@@ -13,7 +13,7 @@ import com.google.inject.Inject;
  * 
  * @author Daniel Viveiros
  */
-public class WhatsHotCastView extends CastView {
+public class WhatsHotCastView extends CastViewStrategy {
 	
 	@Inject
 	private Logger logger;
