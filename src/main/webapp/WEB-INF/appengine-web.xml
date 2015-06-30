@@ -3,6 +3,16 @@
     <application>scotts-sfw-prd</application>
     <version>1</version>
     <threadsafe>true</threadsafe>
+    
+    <sessions-enabled>true</sessions-enabled>
+    
+    <static-files>
+        <include path="/**.png" />
+        <include path="/**.gif" />
+        <include path="/**.js" />
+        <include path="/**.css" />
+        <include path="/**.html" />
+    </static-files>
 
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>

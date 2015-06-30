@@ -51,28 +51,34 @@ public class CoCastServlet extends HttpServlet {
             strCastView = req.getParameter("castView");
         }
         
-        CastView currentCastView = castViewDAO.findByMnemonic(strCastView);
-        if (currentCastView == null) {
+        CastView nextCastView = castViewDAO.findByMnemonic(strCastView);
+        if (nextCastView == null) {
             String message = "Could not find cast view for mnemonic = " + strCastView; 
             logger.log( Level.SEVERE, message );
             throw new RuntimeException( message );
         }
         
+        logger.info("Next cast view = " + nextCastView);
+        
         //checks if this view has content
-        List<CastViewObject> objects = castViewServices.getCastViewObjects(currentCastView.getMnemonic());
-        if ( (objects != null) && (objects.size() > 0)) {        
-            req.setAttribute("castViewMnemonic", currentCastView.getMnemonic());
-            req.setAttribute("title", currentCastView.getTitle());
-            req.setAttribute("nextCastView", currentCastView.getNextCastViewMnemonic());
-            req.setAttribute("headerBackgroundColor", currentCastView.getHeaderBackgroundColor());
-            req.setAttribute("headerColor", currentCastView.getHeaderColor());
-            req.setAttribute("progressContainerColor", currentCastView.getProgressContainerColor());
-            req.setAttribute("activeProgressColor", currentCastView.getActiveProgressColor());
+        List<CastViewObject> objects = castViewServices.getCastViewObjects(nextCastView.getMnemonic());
+        if ( (objects != null) && (objects.size() > 0)) {   
+            logger.info("Found " + objects.size() + " cast view objects. Forwarding to cocast.jsp");
             
-            RequestDispatcher dispatcher = req.getRequestDispatcher("cocast.jsp");
+            req.setAttribute("castViewMnemonic", nextCastView.getMnemonic());
+            req.setAttribute("title", nextCastView.getTitle());
+            req.setAttribute("nextCastView", nextCastView.getNextCastViewMnemonic());
+            req.setAttribute("headerBackgroundColor", nextCastView.getHeaderBackgroundColor());
+            req.setAttribute("headerColor", nextCastView.getHeaderColor());
+            req.setAttribute("progressContainerColor", nextCastView.getProgressContainerColor());
+            req.setAttribute("activeProgressColor", nextCastView.getActiveProgressColor());
+            
+            RequestDispatcher dispatcher = req.getRequestDispatcher("cocast.jsp?time=" + System.currentTimeMillis());
             dispatcher.forward(req, resp);
+            
         } else {
-            req.setAttribute("castView", currentCastView.getNextCastViewMnemonic());
+            logger.info("No cast view objects found. Forwarding to cocast?nextView=" + nextCastView.getNextCastViewMnemonic());
+            req.setAttribute("castView", nextCastView.getNextCastViewMnemonic());
             RequestDispatcher dispatcher = req.getRequestDispatcher("/cocast");
             dispatcher.forward(req, resp);
         }

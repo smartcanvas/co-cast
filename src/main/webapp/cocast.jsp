@@ -12,6 +12,7 @@
 %>
 
 <head>
+
   <!-- Load webcomponents.min.js for polyfill support. -->
   <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
 
@@ -73,6 +74,10 @@
 </head>
 
 <body fullbleed layout vertical>
+
+  <form action="/cocast" method="get">
+    <input type="hidden" name="castView" value="<%= nextCastView %>"/>
+  </form>
 
   <!-- Gets the data from the API -->
   <core-ajax url="/api/castviews/<%= castViewMnemonic %>" handleAs="json"></core-ajax>

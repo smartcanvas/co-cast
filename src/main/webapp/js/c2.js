@@ -1,6 +1,7 @@
 //Javascript file for C2
 
 var maxCards = 0;
+var intervalId;
 
 /**
  * Wait for 'polymer-ready'. Ensures the element is upgraded.
@@ -36,7 +37,7 @@ window.addEventListener('polymer-ready', function(e) {
  */
 addEventListener('polymer-ready', function() {
   /** Interval for progress bar */
-  window.setInterval("updateProgressBar()", 100);
+  intervalId = window.setInterval("updateProgressBar()", 100);
 });
 
 /**
@@ -45,19 +46,11 @@ addEventListener('polymer-ready', function() {
 function changeCard() {
   var corePages = document.querySelector('core-pages.fancy');
   if (corePages.selected + 1 >= maxCards) {
-    window.location=nextPage;
+    window.clearInterval( intervalId );
+    document.forms[0].submit();
   } else {
     corePages.selected++;
     progressBar.value = 0;
-    /*
-    corePages.async(function() {
-      if (corePages.selectedIndex == 0) {
-        corePages.selectedItem.classList.remove('begin');
-      } else if (corePages.selectedIndex == corePages.items.length - 1) {
-        corePages.items[0].classList.add('begin');
-      }
-    });
-    */
   }
 };
 
