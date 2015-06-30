@@ -2,7 +2,9 @@ package com.ciandt.d1.cocast.castview;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.memcache.Expiration;
@@ -32,23 +34,33 @@ public class CastViewObjectCache {
 	
 	private DateComparator comparator;
 	
-	@Inject
 	private CastViewObjectDAO castViewObjectDAO;
 	
 	/**
 	 * Constructor
 	 */
-	public CastViewObjectCache() {
+	@Inject
+	public CastViewObjectCache( Map<String, CastViewStrategy> mapStrategies, CastViewObjectDAO castViewObjectDAO ) {
+	    
+	    this.castViewObjectDAO = castViewObjectDAO;
 		observers = new ArrayList<CastViewObjectCacheObserver>();
 		isLoaded = false;
 		comparator = new DateComparator();
+		
+		Iterator<String> keys = mapStrategies.keySet().iterator();
+		while (keys.hasNext()) {
+		    String key = keys.next();
+		    CastViewStrategy strategy = mapStrategies.get(key);
+		    observers.add(strategy);
+		}
+		
+		notifyObservers();
 	}
 	
 	/**
 	 * Put this list of CastViewObjects into de cache
 	 */
 	public void loadCache( List<CastViewObject> listObjects ) {
-		logger.info("Loading cast view objects cache with " + listObjects.size() + " entities");
 		
 		Collections.sort(listObjects, comparator);
 		
@@ -57,7 +69,6 @@ public class CastViewObjectCache {
 		cache.put(CASTVIEW_CACHE_KEY, listObjects, Expiration.byDeltaSeconds( 60 * 60 ));
 		
 		for ( CastViewObjectCacheObserver observer: observers ) {
-			logger.info("Calling observer: " + observer);
 			observer.onCacheLoad(listObjects);
 		}
 		

@@ -75,7 +75,7 @@
 <body fullbleed layout vertical>
 
   <!-- Gets the data from the API -->
-  <core-ajax url="/api/castview/<%= castViewMnemonic %>" handleAs="json"></core-ajax>
+  <core-ajax url="/api/castviews/<%= castViewMnemonic %>" handleAs="json"></core-ajax>
 
   <div class="header">
     <h1 class="header-title"><%= title %></h1>
@@ -88,7 +88,7 @@
     <core-pages class="fancy" selected="0" id="casted-card-list"></core-pages>
   </div>
 
-  <script>var nextPage='cocast.jsp?castView=<%= nextCastView %>'</script>
+  <script>var nextPage='/cocast?castView=<%= nextCastView %>'</script>
 
 </body>
 

@@ -168,8 +168,19 @@ public class CastViewObject implements Serializable {
 		this.type = type;
 	}
 	public Integer getPopularity() {
-		return getLikeCounter() + getPinCounter() + getShareCounter();
+		return getLikeCounter() + getShareCounter();
 	}
+	
+    @Override
+    public String toString() {
+        return "CastViewObject [mnemonic=" + mnemonic + ", date=" + date + ", title=" + title + ", summary=" + summary
+                + ", content=" + content + ", isCasted=" + isCasted + ", categoryNames=" + categoryNames + ", type="
+                + type + ", authorId=" + authorId + ", authorDisplayName=" + authorDisplayName + ", authorImageURL="
+                + authorImageURL + ", contentImageURL=" + contentImageURL + ", contentImageWidth=" + contentImageWidth
+                + ", contentImageHeight=" + contentImageHeight + ", providerId=" + providerId + ", providerUserId="
+                + providerUserId + ", providerContentURL=" + providerContentURL + ", likeCounter=" + likeCounter
+                + ", shareCounter=" + shareCounter + ", pinCounter=" + pinCounter + "]";
+    }
 	
 	
 }

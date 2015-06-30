@@ -2,6 +2,8 @@ package com.ciandt.d1.cocast.castview;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
@@ -13,6 +15,8 @@ import com.googlecode.objectify.annotation.Id;
 @SuppressWarnings("serial")
 @Entity
 public class CastView implements Serializable {
+    
+    private static final String DEFAULT_STRATEGY = "default";
     
     @Id
     private String mnemonic;
@@ -102,7 +106,12 @@ public class CastView implements Serializable {
         this.isDefault = isDefault;
     }
     public String getStrategy() {
-        return strategy;
+        if (!StringUtils.isEmpty(strategy)) {
+            return strategy;
+        } else {
+            return CastView.DEFAULT_STRATEGY;
+        }
+            
     }
     public void setStrategy(String strategy) {
         this.strategy = strategy;

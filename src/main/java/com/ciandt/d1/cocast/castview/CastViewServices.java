@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,26 +41,21 @@ public class CastViewServices {
 	private CastViewObjectDAO castViewObjectDAO;
 	
 	@Inject
-	private WhatsHotCastView whatsHotCastView;
-	
-	@Inject
-	private WhatsNewCastView whatsNewCastView;
-	
-	@Inject
-	private CastedCastView castedCastView;
+	private CastViewDAO castViewDAO;
 	
 	@Inject
     private ConfigurationServices configurationServices;
 	
+	@Inject
+	private Map<String, CastViewStrategy> mapCastViewStrategy;
+	
 	private List<String> supportedTypes;
 	
-	private boolean firstTime;
 	
 	/**
 	 * Constructor
 	 */
 	public CastViewServices() {
-		firstTime = true;
 		supportedTypes = new ArrayList<String>();
 		supportedTypes.add("post");
 		supportedTypes.add("photo");
@@ -70,31 +66,14 @@ public class CastViewServices {
 	 * Return the cast objects to be shown in a castable device
 	 */
 	public List<CastViewObject> getCastViewObjects( String mnemonic ) {
-		CastViewStrategy castView = null;
-		
-		if (firstTime) {
-			//register the observers
-			castViewObjectCache.registerObserver(whatsHotCastView);
-			castViewObjectCache.registerObserver(whatsNewCastView);
-			castViewObjectCache.registerObserver(castedCastView);
-			
-			castViewObjectCache.notifyObservers();
-			firstTime = false;
-		}
-		
-		if ( mnemonic.equals(whatsHotCastView.getMnemonic() ) ) {
-			castView = whatsHotCastView;
-		} else if ( mnemonic.equals(whatsNewCastView.getMnemonic() ) ) {
-			castView = whatsNewCastView;
-		} else if ( mnemonic.equals(castedCastView.getMnemonic() ) ) {
-			castView = castedCastView;
-		}
-		
-		if (castView != null) {
-			return castView.castObjects();
-		} else {
-			throw new RuntimeException( "Invalid mnemonic: " + mnemonic );
-		}
+	    
+	    CastView castView = castViewDAO.findByMnemonic(mnemonic);
+	    if (castView == null) {
+	        throw new RuntimeException( "Cast view not found for mnemonic: " + mnemonic );
+	    }
+	    
+	    CastViewStrategy castViewStrategy = mapCastViewStrategy.get(castView.getStrategy());
+	    return castViewStrategy.castObjects(castView);
 	}
 
 	/**

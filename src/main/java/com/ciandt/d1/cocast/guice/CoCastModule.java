@@ -4,9 +4,8 @@ import com.ciandt.d1.cocast.castview.CastViewDAO;
 import com.ciandt.d1.cocast.castview.CastViewObjectCache;
 import com.ciandt.d1.cocast.castview.CastViewObjectDAO;
 import com.ciandt.d1.cocast.castview.CastViewServices;
-import com.ciandt.d1.cocast.castview.CastedCastView;
-import com.ciandt.d1.cocast.castview.WhatsHotCastView;
-import com.ciandt.d1.cocast.castview.WhatsNewCastView;
+import com.ciandt.d1.cocast.castview.CastViewStrategy;
+import com.ciandt.d1.cocast.castview.DefaultCastViewStrategy;
 import com.ciandt.d1.cocast.castview.api.CastViewAPIResource;
 import com.ciandt.d1.cocast.configuration.ConfigurationDAO;
 import com.ciandt.d1.cocast.configuration.ConfigurationServices;
@@ -15,8 +14,10 @@ import com.ciandt.d1.cocast.content.CardServices;
 import com.ciandt.d1.cocast.content.api.ContentResource;
 import com.ciandt.d1.cocast.util.APIServices;
 import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
 import com.googlecode.objectify.ObjectifyFilter;
+import com.google.inject.multibindings.MapBinder;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class CoCastModule extends ServletModule {
@@ -37,9 +38,7 @@ public class CoCastModule extends ServletModule {
 		bind(CastViewAPIResource.class);
 		bind(ContentResource.class);
 	    bind(CastViewObjectCache.class);
-	    bind(WhatsHotCastView.class);
-        bind(WhatsNewCastView.class);
-        bind(CastedCastView.class);
+        bind(DefaultCastViewStrategy.class);
 		
 		//Card
 		bind(CardServices.class);
@@ -48,6 +47,12 @@ public class CoCastModule extends ServletModule {
 		bind(APIServices.class);
 		bind(ConfigurationServices.class);
 		bind(ConfigurationResource.class);
+		
+		// Strategies
+        MapBinder<String, CastViewStrategy> commands = MapBinder.newMapBinder(binder(), new TypeLiteral<String>() {
+        }, new TypeLiteral<CastViewStrategy>() {
+        });
+        commands.addBinding("default").to(DefaultCastViewStrategy.class);
 	}
 	
     /*
