@@ -45,16 +45,12 @@ public abstract class CastViewStrategy implements CastViewObjectCacheObserver {
 	    MemcacheService cache = MemcacheServiceFactory.getMemcacheService(CACHE_KEY + getStrategyName());
         List<CastViewObject> castViewObjects = (List<CastViewObject>) cache.get( castView.getMnemonic() );
         
-        castViewObjects = loadObjects(castView);
-        
-        /*
         if (castViewObjects != null) {
             return castViewObjects;
         } else {
             castViewObjects = loadObjects(castView);
             cache.put(castView.getMnemonic(), castViewObjects, Expiration.byDeltaSeconds(EXPIRATION_TIME));
         }
-        */
         
         return castViewObjects;
 	}

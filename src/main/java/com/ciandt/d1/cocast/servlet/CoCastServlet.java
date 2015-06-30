@@ -1,6 +1,7 @@
 package com.ciandt.d1.cocast.servlet;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,6 +15,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.ciandt.d1.cocast.castview.CastView;
 import com.ciandt.d1.cocast.castview.CastViewDAO;
+import com.ciandt.d1.cocast.castview.CastViewObject;
+import com.ciandt.d1.cocast.castview.CastViewServices;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -28,6 +31,9 @@ public class CoCastServlet extends HttpServlet {
     
     @Inject
     private CastViewDAO castViewDAO;
+    
+    @Inject
+    private CastViewServices castViewServices;
     
     @Inject
     private Logger logger;
@@ -46,7 +52,15 @@ public class CoCastServlet extends HttpServlet {
         }
         
         CastView currentCastView = castViewDAO.findByMnemonic(strCastView);
-        if (currentCastView != null) {
+        if (currentCastView == null) {
+            String message = "Could not find cast view for mnemonic = " + strCastView; 
+            logger.log( Level.SEVERE, message );
+            throw new RuntimeException( message );
+        }
+        
+        //checks if this view has content
+        List<CastViewObject> objects = castViewServices.getCastViewObjects(currentCastView.getMnemonic());
+        if ( (objects != null) && (objects.size() > 0)) {        
             req.setAttribute("castViewMnemonic", currentCastView.getMnemonic());
             req.setAttribute("title", currentCastView.getTitle());
             req.setAttribute("nextCastView", currentCastView.getNextCastViewMnemonic());
@@ -58,9 +72,9 @@ public class CoCastServlet extends HttpServlet {
             RequestDispatcher dispatcher = req.getRequestDispatcher("cocast.jsp");
             dispatcher.forward(req, resp);
         } else {
-            String message = "Could not find cast view for mnemonic = " + strCastView; 
-            logger.log( Level.SEVERE, message );
-            throw new RuntimeException( message );
+            req.setAttribute("castView", currentCastView.getNextCastViewMnemonic());
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/cocast");
+            dispatcher.forward(req, resp);
         }
         
     }
