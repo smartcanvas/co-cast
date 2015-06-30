@@ -23,7 +23,6 @@ public class CastViewObject implements Serializable {
 	private String title;
 	private String summary;
 	private String content;
-	private Boolean isCasted;
 	private String categoryNames;
 	private String type;
 	
@@ -76,12 +75,6 @@ public class CastViewObject implements Serializable {
 	}
 	public void setContent(String content) {
 		this.content = content;
-	}
-	public Boolean getIsCasted() {
-		return isCasted;
-	}
-	public void setIsCasted(Boolean isCasted) {
-		this.isCasted = isCasted;
 	}
 	public String getCategoryNames() {
 		return categoryNames;
@@ -174,7 +167,7 @@ public class CastViewObject implements Serializable {
     @Override
     public String toString() {
         return "CastViewObject [mnemonic=" + mnemonic + ", date=" + date + ", title=" + title + ", summary=" + summary
-                + ", content=" + content + ", isCasted=" + isCasted + ", categoryNames=" + categoryNames + ", type="
+                + ", content=" + content + ", categoryNames=" + categoryNames + ", type="
                 + type + ", authorId=" + authorId + ", authorDisplayName=" + authorDisplayName + ", authorImageURL="
                 + authorImageURL + ", contentImageURL=" + contentImageURL + ", contentImageWidth=" + contentImageWidth
                 + ", contentImageHeight=" + contentImageHeight + ", providerId=" + providerId + ", providerUserId="

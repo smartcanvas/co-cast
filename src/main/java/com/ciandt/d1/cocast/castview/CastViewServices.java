@@ -158,10 +158,8 @@ public class CastViewServices {
 			return null;
 		}
 		
+		JsonNode photoBlock = getBlockByType( node, "photo" );
 		JsonNode attachBlock = getBlockByType( node, "article" );
-		if (attachBlock == null) {
-			attachBlock = getBlockByType( node, "photo" );
-		}
 		if (attachBlock == null) {
 			attachBlock = getBlockByType( node, "youtube" );
 		}
@@ -219,6 +217,18 @@ public class CastViewServices {
 			}
 		}
 		
+		//photo
+		if (photoBlock != null) {
+		    if (StringUtils.isEmpty(castViewObject.getType()) ) {
+		        castViewObject.setType(photoBlock.get("type").asText());
+		    }
+            if (photoBlock.get("imageURL") != null) {
+                castViewObject.setContentImageHeight(photoBlock.get("imageHeight").asInt());
+                castViewObject.setContentImageWidth(photoBlock.get("imageWidth").asInt());
+                castViewObject.setContentImageURL(photoBlock.get("imageURL").asText());
+            }
+        }
+		
 		//activity
 		if (userActivitiesBlock.get("likeCounter") != null) {
 		    castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
@@ -240,12 +250,6 @@ public class CastViewServices {
 		JsonNode categoriesNode = node.get("categoryNames");
 		String strCategories = getCategories( categoriesNode );
         castViewObject.setCategoryNames(strCategories);
-        String castHashtag = configurationServices.get("casted_hashtag");
-        if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains(castHashtag)) {
-            castViewObject.setIsCasted(true);
-        } else {
-            castViewObject.setIsCasted(false);
-        }
 		
 		return castViewObject;
 	}
@@ -297,13 +301,6 @@ public class CastViewServices {
 			castViewObject.setLikeCounter(userActivitiesBlock.get("likeCounter").asInt());
 			castViewObject.setPinCounter(userActivitiesBlock.get("pinCounter").asInt());
 			castViewObject.setShareCounter( userActivitiesBlock.get("totalCounter").asInt() );
-			
-			Boolean isCasted = false;
-			String castHashtag = configurationServices.get("casted_hashtag");
-			if (castViewObject.getCategoryNames() != null && castViewObject.getCategoryNames().contains(castHashtag)) {
-				isCasted = true;
-			}
-			castViewObject.setIsCasted(isCasted);
 		}
 	}
 	
