@@ -12,6 +12,7 @@ import com.ciandt.d1.cocast.configuration.ConfigurationServices;
 import com.ciandt.d1.cocast.configuration.api.ConfigurationResource;
 import com.ciandt.d1.cocast.content.CardServices;
 import com.ciandt.d1.cocast.content.api.ContentResource;
+import com.ciandt.d1.cocast.servlet.TaskQueueResource;
 import com.ciandt.d1.cocast.util.APIServices;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
@@ -47,6 +48,9 @@ public class CoCastModule extends ServletModule {
 		bind(APIServices.class);
 		bind(ConfigurationServices.class);
 		bind(ConfigurationResource.class);
+
+		//General
+		bind(TaskQueueResource.class);
 		
 		// Strategies
         MapBinder<String, CastViewStrategy> commands = MapBinder.newMapBinder(binder(), new TypeLiteral<String>() {

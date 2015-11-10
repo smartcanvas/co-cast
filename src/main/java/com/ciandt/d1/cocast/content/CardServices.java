@@ -19,6 +19,9 @@ public class CardServices {
 	
 	@Inject
 	private ConfigurationServices configurationServices;
+
+    //TODO: melhorar isso aqui
+    private static final String BASE_URI = "https://d1-tst.appspot.com";
     
     /**
      * Search for a card. This method is better because it returns the numbers of likes, dislikes and so on.
@@ -38,8 +41,7 @@ public class CardServices {
         }
         
         //Builder builder = APIUtil.createBuilder(apiSpecificPath, queryParam);
-        Builder builder = apiServices.createBuilder("https://d1-prd.appspot.com",
-                apiSpecificPath, null);
+        Builder builder = apiServices.createBuilder(BASE_URI, apiSpecificPath, null);
         
         //invoke the API
         String response = builder.get(String.class);
@@ -57,8 +59,7 @@ public class CardServices {
         String apiSpecificPath = "/sc2/" + tenant + "/h/brain/card/bucket/cards/" + mnemonic;
         
         //Builder builder = APIUtil.createBuilder(apiSpecificPath, queryParam);
-        Builder builder = apiServices.createBuilder("https://d1-prd.appspot.com",
-                apiSpecificPath, null);
+        Builder builder = apiServices.createBuilder(BASE_URI, apiSpecificPath, null);
         
         //invoke the API
         String response = builder.get(String.class);

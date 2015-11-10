@@ -25,3 +25,8 @@ local_db.bin
 # Google Data store
 *.DS_Store
 
+#IntelliJ
+/.idea
+/.settings
+*.iml
+
