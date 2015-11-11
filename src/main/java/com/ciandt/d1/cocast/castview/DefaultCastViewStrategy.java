@@ -26,6 +26,9 @@ public class DefaultCastViewStrategy extends CastViewStrategy {
 
     @Override
     public List<CastViewObject> loadObjects(CastView castView) {
+
+        logger.info( "Loading objects... Cast view = " + castView );
+
         List<CastViewObject> result = new ArrayList<CastViewObject>();
         List<CastViewObject> allData = super.cloneCastViewObjectList(); 
         

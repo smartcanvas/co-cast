@@ -80,12 +80,21 @@ function resizeAuthorImage(authorImageURL) {
  */
 function formatDate(dateInUTC) {
 
+    /*
   var monthNames = [
       "January", "February", "March",
       "April", "May", "June", "July",
       "August", "September", "October",
       "November", "December"
   ];
+  */
+
+    var monthNames = [
+        "Jan", "Feb", "Ma",
+        "Apr", "May", "Jun", "Jul",
+        "Aug", "Sep", "Oct",
+        "Nov", "Dec"
+    ];
 
   var date = new Date( dateInUTC );
   var day = date.getDate();

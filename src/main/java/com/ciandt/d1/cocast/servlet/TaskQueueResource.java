@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Daniel Viveiros
  */
 @Singleton
-@Path("/tasks")
+@Path("/api/tasks")
 public class TaskQueueResource {
 
     @Inject
@@ -27,7 +27,7 @@ public class TaskQueueResource {
 
     @POST
     @Path("/fetch/inbound")
-    public Response processBilling(final String strDate) {
+    public Response fetchContent() {
 
         logger.info("[TaskQueueResource] Fetch content started");
 
@@ -36,7 +36,7 @@ public class TaskQueueResource {
         try {
             castServices.fetchContent();
         } catch (Exception exc) {
-            String message = "Error processing billing for date: " + strDate;
+            String message = "Error fetching content";
             logger.log(Level.SEVERE, message, exc);
 
         }

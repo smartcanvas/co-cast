@@ -43,8 +43,7 @@ public class ContentResource {
 
 			//put the date in a task queue
 			Queue queue = QueueFactory.getQueue( "fetch-content" );
-			queue.add(withUrl("/tasks/fetch/inbound")
-					.header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN).method(TaskOptions.Method.POST));
+			queue.add(withUrl("/api/tasks/fetch/inbound").method(TaskOptions.Method.POST));
 		} catch (Exception exc) {
 			logger.log(Level.SEVERE, "Error fetching content", exc);
 			return Response.serverError().build();

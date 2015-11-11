@@ -50,6 +50,7 @@ public class CoCastServlet extends HttpServlet {
         if (StringUtils.isEmpty(strCastView)) {
             strCastView = req.getParameter("castView");
         }
+        logger.info("Current cast view = " + strCastView);
         
         CastView nextCastView = castViewDAO.findByMnemonic(strCastView);
         if (nextCastView == null) {
@@ -57,7 +58,7 @@ public class CoCastServlet extends HttpServlet {
             logger.log( Level.SEVERE, message );
             throw new RuntimeException( message );
         }
-        
+
         logger.info("Next cast view = " + nextCastView);
         
         //checks if this view has content

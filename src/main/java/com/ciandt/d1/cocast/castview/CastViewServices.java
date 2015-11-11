@@ -71,6 +71,7 @@ public class CastViewServices {
 	    if (castView == null) {
 	        throw new RuntimeException( "Cast view not found for mnemonic: " + mnemonic );
 	    }
+		logger.info( "Getting objects from cast view = " + castView);
 	    
 	    CastViewStrategy castViewStrategy = mapCastViewStrategy.get(castView.getStrategy());
 	    return castViewStrategy.castObjects(castView);
