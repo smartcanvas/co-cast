@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.ciandt.d1.cocast.castview.CastViewServices;
+import com.ciandt.d1.cocast.util.Constants;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -42,7 +43,7 @@ public class ContentResource {
 		try {
 
 			//put the date in a task queue
-			Queue queue = QueueFactory.getQueue( "fetch-content" );
+			Queue queue = QueueFactory.getQueue(Constants.FETCH_QUEUE);
 			queue.add(withUrl("/api/tasks/fetch/inbound").method(TaskOptions.Method.POST));
 		} catch (Exception exc) {
 			logger.log(Level.SEVERE, "Error fetching content", exc);

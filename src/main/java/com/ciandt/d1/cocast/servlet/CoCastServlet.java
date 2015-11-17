@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ciandt.d1.cocast.util.Constants;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import org.apache.commons.lang.StringUtils;
 
 import com.ciandt.d1.cocast.castview.CastView;
@@ -45,16 +48,26 @@ public class CoCastServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         
-        //gets the current view
-        String strCastView = (String) req.getAttribute("castView");
-        if (StringUtils.isEmpty(strCastView)) {
-            strCastView = req.getParameter("castView");
+        //gets the next cast view... first in the cache, later in the param string
+        String strNextCastView = null;
+        MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+        strNextCastView = (String) cache.get(Constants.NEXT_CASTVIEW_KEY);
+
+        if ( strNextCastView == null ) {
+            logger.info( "nextCastView not found in cache... getting from request attr or param");
+            strNextCastView = (String) req.getAttribute("castView");
+            if (StringUtils.isEmpty(strNextCastView)) {
+                strNextCastView = req.getParameter("castView");
+            }
+        } else {
+            logger.info( "nextCastView FOUND in cache! Using it!");
+            cache.delete( Constants.NEXT_CASTVIEW_KEY );
         }
-        logger.info("Current cast view = " + strCastView);
+        logger.info("Next cast view = " + strNextCastView);
         
-        CastView nextCastView = castViewDAO.findByMnemonic(strCastView);
+        CastView nextCastView = castViewDAO.findByMnemonic(strNextCastView);
         if (nextCastView == null) {
-            String message = "Could not find cast view for mnemonic = " + strCastView; 
+            String message = "Could not find cast view for mnemonic = " + strNextCastView;
             logger.log( Level.SEVERE, message );
             throw new RuntimeException( message );
         }

@@ -5,13 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -20,6 +14,10 @@ import com.ciandt.d1.cocast.castview.CastView;
 import com.ciandt.d1.cocast.castview.CastViewDAO;
 import com.ciandt.d1.cocast.castview.CastViewObject;
 import com.ciandt.d1.cocast.castview.CastViewServices;
+import com.ciandt.d1.cocast.util.Constants;
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -65,6 +63,14 @@ public class CastViewAPIResource {
 		}
 		
 		return listObjects;
+	}
+
+	@POST
+	@Path("/next/{mnemonic}")
+	public void changeNextView(@PathParam("mnemonic") final String mnemonic) {
+		logger.info("Changing next cast view API: mnemonic = " + mnemonic );
+		MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+		cache.put(Constants.NEXT_CASTVIEW_KEY, mnemonic, Expiration.byDeltaSeconds(600));
 	}
 	
 	@PUT
