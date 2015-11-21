@@ -1,5 +1,3 @@
-*.class
-
 # Package Files #
 *.jar
 *.ear
@@ -15,4 +13,4 @@ hs_err_pid*
 /out
 
 **/.gradle
-
+**/build

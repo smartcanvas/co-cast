@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.akhikhl.gretty:gretty:+'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'org.akhikhl.gretty'
+
+// Group ID
+group 'com.ciandt.d1'
+// Version
+version '1.0-SNAPSHOT'
+//WAR base name
+war.baseName = 'co-cast-backend'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+
+    //Constants with the versions used by the most important libraries
+    def jerseyVersion = '2.22.1'
+    def guiceVersion = '4.0'
+    def logBackVersion = '1.1.3'
+    def servletVersion = '2.5'
+    def junitVersion = '4.12'
+
+    //Testing libraries
+    testCompile "junit:junit:$junitVersion"
+
+    //Jersey
+    //compile "com.sun.jersey.contribs:jersey-guice:$jerseyVersion"
+    //compile "com.sun.jersey:jersey-client:$jerseyVersion"
+    //compile "com.sun.jersey:jersey-json:$jerseyVersion"
+    //compile "org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVersion"
+    //compile "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
+    //compile "org.glassfish.jersey.containers:jersey-container-jetty-http:$jerseyVersion"
+    compile "org.glassfish.jersey.containers:jersey-container-jetty-servlet:$jerseyVersion"
+
+    //Guice
+    //compile "com.google.inject:guice:$guiceVersion"
+    //compile "com.google.inject.extensions:guice-multibindings:$guiceVersion"
+    compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
+
+    //HK2 guice bridge
+    compile "org.glassfish.hk2:guice-bridge:2.3.0"
+
+    //LogBack
+    compile "ch.qos.logback:logback-classic:$logBackVersion"
+
+    //Servlet
+    providedCompile "javax.servlet:servlet-api:$servletVersion"
+}
+
+gretty {
+    port = 8080
+    contextPath = '/'
+    servletContainer = 'jetty9'
+}
