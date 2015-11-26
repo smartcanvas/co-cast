@@ -1,4 +1,4 @@
-package io.cocast.network.model;
+package io.cocast.core;
 
 import java.util.Date;
 

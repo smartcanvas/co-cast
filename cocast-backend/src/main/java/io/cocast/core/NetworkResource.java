@@ -1,10 +1,9 @@
-package io.cocast.network.resource;
+package io.cocast.core;
 
-import com.google.inject.servlet.RequestScoped;
-import io.cocast.network.services.NetworkServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

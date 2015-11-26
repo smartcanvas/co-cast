@@ -1,8 +1,4 @@
-package io.cocast.network.services.impl;
-
-import com.google.inject.Singleton;
-import io.cocast.network.model.Network;
-import io.cocast.network.services.NetworkServices;
+package io.cocast.core;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,8 +7,8 @@ import java.util.List;
 /**
  * Default implementation for network services
  */
-@Singleton
 public class DefaultNetworkServicesImpl implements NetworkServices {
+
 
     @Override
     public String sayHello() {

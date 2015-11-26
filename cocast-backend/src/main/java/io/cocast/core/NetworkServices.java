@@ -1,6 +1,4 @@
-package io.cocast.network.services;
-
-import io.cocast.network.model.Network;
+package io.cocast.core;
 
 import java.util.List;
 
