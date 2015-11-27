@@ -1,0 +1,9 @@
+{
+  "name": "co-cast",
+  "private": true,
+  "dependencies": {
+    "firebase": "~2.2.9",
+    "jquery": "2.0.3"
+  },
+  "devDependencies": {}
+}

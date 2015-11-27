@@ -1,0 +1,16 @@
+{
+  "engines": {
+    "node": "0.12.x"
+  },
+  "name": "Co-Cast",
+  "private": false,
+  "version": "2.0.0",
+  "description": "Co-Cast Node package dependencies",
+  "author": "Daniel Viveiros <viveiros@ciandt.com>",
+  "repository": "https://github.com/smartcanvas/co-cast",
+  "license": "MIT",
+  "main": "",
+  "dependencies": {
+    "bower": "^1.4.0"
+  }
+}
