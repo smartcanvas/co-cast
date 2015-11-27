@@ -8,11 +8,6 @@ import java.util.List;
 public interface NetworkServices {
 
     /**
-     * Say hello
-     */
-    String sayHello();
-
-    /**
      * List the existing networks available for a specific user
      */
     List<Network> list();

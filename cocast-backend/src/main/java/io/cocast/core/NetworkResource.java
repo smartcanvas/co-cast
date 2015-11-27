@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Network resources (API).
@@ -30,10 +31,9 @@ public class NetworkResource {
      * Get all the resources available for this specific user
      */
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String list() {
-        logger.debug("Entering list() method on NetworkResource");
-        return networkServices.sayHello();
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Network> list() {
+        return networkServices.list();
     }
 
 }

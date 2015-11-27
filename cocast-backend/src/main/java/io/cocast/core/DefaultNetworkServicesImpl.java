@@ -11,11 +11,6 @@ public class DefaultNetworkServicesImpl implements NetworkServices {
 
 
     @Override
-    public String sayHello() {
-        return "Hello world!";
-    }
-
-    @Override
     public List<Network> list() {
 
         Network network1 = new Network();

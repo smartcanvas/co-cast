@@ -1,6 +1,7 @@
 package io.cocast.config;
 
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
 import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
@@ -21,6 +22,9 @@ public class MyApplication extends ResourceConfig {
 
         //Resource packages
         packages("io.cocast.core");
+
+        //Activate Jackson-based JSON support
+        register(JacksonFeature.class);
 
         //Configuring the bridget between Guice and HK2 - Jersey 2 default injector
         GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
