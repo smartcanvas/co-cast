@@ -21,7 +21,7 @@ public class MyApplication extends ResourceConfig {
         System.out.println("Registering injectables...");
 
         //Resource packages
-        packages("io.cocast.core");
+        packages(true, "io.cocast.core", "io.cocast.auth");
 
         //Activate Jackson-based JSON support
         register(JacksonFeature.class);
@@ -29,7 +29,7 @@ public class MyApplication extends ResourceConfig {
         //Configuring the bridget between Guice and HK2 - Jersey 2 default injector
         GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
         GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
-        guiceBridge.bridgeGuiceInjector(CoCastGuiceServletContextListener.injector);
+        guiceBridge.bridgeGuiceInjector(BackendGuiceServletContextListener.injector);
 
     }
 

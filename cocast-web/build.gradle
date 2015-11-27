@@ -1,50 +1,44 @@
-/*
 buildscript {
-
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        jcenter()
     }
-
     dependencies {
-        classpath "com.moowork.gradle:gradle-node-plugin:0.11"
+        classpath 'org.akhikhl.gretty:gretty:+'
     }
 }
-*/
 
-//apply plugin: 'com.moowork.node'
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'org.akhikhl.gretty'
 
-group 'com.ciandt.d1'
-version '1.0-SNAPSHOT'
+// Group ID
+group "$group"
+// Version
+version "$version"
+//WAR base name
+war.baseName = "$warBackendBaseName"
 
 repositories {
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
+    //Testing libraries
+    testCompile "junit:junit:$junitVersion"
+
+    //Guice
+    compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
+
+    //LogBack
+    compile "ch.qos.logback:logback-classic:$logBackVersion"
 }
 
-/*
-node {
-    version = '0.12.2'
-    npmVersion = '2.7.5'
-    download = true
+gretty {
+    port = "$frontendPort".toInteger()
+    servletContainer = "jetty9"
+    contextPath = '/'
 }
-
-task npmCacheConfig(type: NpmTask) {
-    description = "Configure the NPM cache"
-    def npmCacheDir = "${gradle.getGradleUserHomeDir()}/caches/npm"
-    outputs.files file(npmCacheDir)
-    args = [ 'config', 'set', 'cache', npmCacheDir ]
-}
-
-task npmPackages(type: NpmTask, dependsOn: npmCacheConfig) {
-    description = "Install Node.js packages"
-    args = [ 'install' ]
-    inputs.files file('package.json')
-    outputs.files file('node_modules')
-}
-*/
 
 task bowerInstall(type: Exec) {
     workingDir projectDir
