@@ -1,8 +1,11 @@
 package io.cocast.config;
 
-import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.jvnet.hk2.guice.bridge.api.GuiceBridge;
+import org.jvnet.hk2.guice.bridge.api.GuiceIntoHK2Bridge;
 
+import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 
 /**
@@ -11,22 +14,18 @@ import javax.ws.rs.ApplicationPath;
 @ApplicationPath("/")
 public class MyApplication extends ResourceConfig {
 
-    /**
-     * Constructor
-     */
-    public MyApplication() {
+    @Inject
+    public MyApplication(ServiceLocator serviceLocator) {
 
         System.out.println("Registering injectables...");
 
         //Resource packages
         packages("io.cocast.core");
 
-        // activate Jackson-based JSON support
-        register(JacksonFeature.class);
-
-        //weld
-        //Weld weld = new Weld();
-        //weld.initialize();
+        //Configuring the bridget between Guice and HK2 - Jersey 2 default injector
+        GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);
+        GuiceIntoHK2Bridge guiceBridge = serviceLocator.getService(GuiceIntoHK2Bridge.class);
+        guiceBridge.bridgeGuiceInjector(CoCastGuiceServletContextListener.injector);
 
     }
 
