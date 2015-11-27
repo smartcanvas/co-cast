@@ -1,4 +1,4 @@
-package io.cocast.admin.config;
+package io.cocast.config;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -20,7 +20,7 @@ public class MyApplication extends ResourceConfig {
         System.out.println("Registering injectables...");
 
         //Resource packages
-        packages("io.cocast.network.resource");
+        packages("io.cocast.core");
 
         //Configuring the bridget between Guice and HK2 - Jersey 2 default injector
         GuiceBridge.getGuiceBridge().initializeGuiceBridge(serviceLocator);

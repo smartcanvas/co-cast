@@ -1,8 +1,9 @@
-package io.cocast.admin.config;
+package io.cocast.config;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import io.cocast.core.CoreModule;
 
 /**
  * Configures Guice
@@ -13,10 +14,10 @@ public class CoCastGuiceServletContextListener extends GuiceServletContextListen
 
     @Override
     protected Injector getInjector() {
+        if (injector == null) {
+            injector = Guice.createInjector(new BasicModule(), new CoreModule());
+        }
 
-        System.out.println("Getting injector");
-        injector = Guice.createInjector(new CoCastModule());
         return injector;
-
     }
 }

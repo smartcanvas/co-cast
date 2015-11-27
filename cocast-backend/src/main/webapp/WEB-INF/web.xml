@@ -14,7 +14,7 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>io.cocast.admin.config.CoCastGuiceServletContextListener</listener-class>
+        <listener-class>io.cocast.config.CoCastGuiceServletContextListener</listener-class>
     </listener>
 
 </web-app>
