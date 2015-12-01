@@ -18,6 +18,14 @@ public class AuthenticationException extends Exception {
     /**
      * Constructor
      */
+    public AuthenticationException(Integer status, String message) {
+        super(message);
+        this.status = status;
+    }
+
+    /**
+     * Constructor
+     */
     public AuthenticationException(Integer status, String message, Exception inner) {
         super(message, inner);
         this.status = status;

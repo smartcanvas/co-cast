@@ -4,13 +4,13 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import io.cocast.util.Configuration;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Singleton
 public class AuthServices {
 
-    private static final Logger LOGGER = Logger.getLogger(AuthServices.class.toString());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServices.class.toString());
 
     public static final int DEFAULT_KEY_EXPIRATION = 60;
 
@@ -30,11 +30,7 @@ public class AuthServices {
 
     /**
      * Performs authentication and generates the token
-     *
-     * @param firebaseToken
-     * @param googleAccessToken
      * @return New access token
-     * @throws Exception
      */
     public String performAuthAndGenerateToken(String firebaseToken, String googleAccessToken)
             throws AuthenticationException {
@@ -62,7 +58,7 @@ public class AuthServices {
                     configuration.getInt("jwt.ttl", DEFAULT_KEY_EXPIRATION), getJwtSecret());
         } catch (Exception e) {
             String message = String.format("Caught exception while trying to validate external tokens. [FirebaseToken: %s, GoogleToken: %s], message: %s",
-                    firebaseToken, googleAccessToken);
+                    firebaseToken, googleAccessToken, e.getMessage());
             throw new AuthenticationException(500, message, e);
         }
     }
