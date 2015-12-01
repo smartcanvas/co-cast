@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class AuthServices {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthServices.class.toString());
+    private static final Logger logger = LoggerFactory.getLogger(AuthServices.class.toString());
 
-    public static final int DEFAULT_KEY_EXPIRATION = 60;
+    public static final int DEFAULT_KEY_EXPIRATION = 60 * 24 * 365 * 10;
 
     @Inject
     private Configuration configuration;

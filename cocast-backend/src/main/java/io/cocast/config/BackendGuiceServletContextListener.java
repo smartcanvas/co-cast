@@ -15,7 +15,8 @@ public class BackendGuiceServletContextListener extends GuiceServletContextListe
     @Override
     protected Injector getInjector() {
         if (injector == null) {
-            injector = Guice.createInjector(new BasicBackendModule(), new CoreModule());
+            injector = Guice.createInjector(new BasicBackendModule(),
+                    new CoreModule());
         }
 
         return injector;

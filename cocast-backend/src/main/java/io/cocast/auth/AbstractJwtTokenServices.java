@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.logging.Level;
 
 /**
  * Abstract class for JWT token services
@@ -22,12 +21,9 @@ public class AbstractJwtTokenServices implements TokenServices {
     private static final Logger logger = LoggerFactory.getLogger(AbstractJwtTokenServices.class.getName());
 
     static final String FIELD_EMAIL = "email";
-    protected static final int ONE_HOUR_IN_MINUTES = 60;
 
-    @Override
-    public String generateToken(SecurityClaims claims, String clientSecret) {
-        return generateToken(claims, ONE_HOUR_IN_MINUTES, clientSecret);
-    }
+    /* Default expiration time = 10 years */
+    protected static final int EXPIRATION_TIME = 60 * 24 * 365 * 10;
 
     @Override
     public String generateToken(SecurityClaims claims, Integer ttl, String clientSecret) {
@@ -40,6 +36,10 @@ public class AbstractJwtTokenServices implements TokenServices {
         }
     }
 
+    @Override
+    public String generateToken(SecurityClaims claims, String clientSecret) {
+        return generateToken(claims, EXPIRATION_TIME, clientSecret);
+    }
     private JsonWebSignature jsonWebSignature(JwtClaims jwtClaims, String clientSecret) {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setKey(getKey(clientSecret));
@@ -57,16 +57,14 @@ public class AbstractJwtTokenServices implements TokenServices {
         jwtClaims.setSubject(claims.getSubject());
         jwtClaims.setClaim(FIELD_EMAIL, claims.getEmail());
         claims.setIssuedAt(new Date(jwtClaims.getIssuedAt().getValueInMillis()));
+
         return jwtClaims;
     }
 
     @Override
     public SecurityClaims processToClaims(String token, String clientSecret) throws SecurityException {
         try {
-            logger.debug("Parsing token: " + token);
-
             JwtConsumer jwtConsumer = buildJwtConsumer(clientSecret);
-
             JwtClaims jwtClaims = jwtConsumer.processToClaims(token);
 
             SecurityClaims claims = new SecurityClaims(jwtClaims.getIssuer());
@@ -78,10 +76,12 @@ public class AbstractJwtTokenServices implements TokenServices {
             if (jwtClaims.getExpirationTime() != null)
                 claims.setExpirationTime(new Date(jwtClaims.getExpirationTime().getValueInMillis()));
 
+            logger.debug("Security claims readed: " + claims);
+
             return claims;
         } catch (Exception e) {
             final String msg = String.format("Failed to parse JWT token: %s", e.getMessage());
-            logger.error(msg, Level.SEVERE);
+            logger.error(msg, e);
             throw new SecurityException(msg, e);
         }
     }
