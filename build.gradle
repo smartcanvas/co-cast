@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 /**
- * Generate the property files with local configuration
+ * Generate the property files with a specific configuration
  */
 task config(type: Copy) {
 

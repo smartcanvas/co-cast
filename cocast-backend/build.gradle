@@ -2,14 +2,11 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'org.akhikhl.gretty:gretty:+'
-    }
 }
 
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'jetty'
 
 // Group ID
 group "$group"
@@ -63,8 +60,7 @@ dependencies {
     compile "com.fasterxml.jackson.module:jackson-module-afterburner:2.6.3"
 }
 
-gretty {
-    port = "$backendPort".toInteger()
-    servletContainer = "jetty9"
+jettyRun {
+    httpPort = "$backendPort".toInteger()
     contextPath = '/'
 }
