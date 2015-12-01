@@ -1,5 +1,8 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
+evaluationDependsOn(':cocast-backend')
+evaluationDependsOn(':cocast-web')
+
 /**
  * Generate the property files with a specific configuration
  */
@@ -28,4 +31,10 @@ task config(type: Copy) {
     }
 
     filter(ReplaceTokens, tokens: envProps)
+}
+
+/**
+ * Deploys the container
+ */
+task deployBackend(dependsOn: [config, ":cocast-backend:war", ":cocast-backend:backendDocker"]) << {
 }
