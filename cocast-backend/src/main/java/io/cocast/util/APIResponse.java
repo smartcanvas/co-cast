@@ -39,12 +39,28 @@ public class APIResponse {
     }
 
     /**
+     * Create a bad request response
+     *
+     * @return Object with an error response
+     */
+    public static APIResponse badRequest(String message) {
+        return new APIResponse(HttpServletResponse.SC_BAD_REQUEST, message);
+    }
+
+    /**
      * Create an auth fail response
      *
      * @return Object with an auth fail response
      */
     public static APIResponse authFail(String message) {
         return new APIResponse(HttpServletResponse.SC_UNAUTHORIZED, message);
+    }
+
+    /**
+     * Entity created
+     */
+    public static APIResponse created(String message) {
+        return new APIResponse(HttpServletResponse.SC_CREATED, message);
     }
 
     /**

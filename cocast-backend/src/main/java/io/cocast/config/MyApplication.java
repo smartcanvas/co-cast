@@ -21,7 +21,7 @@ public class MyApplication extends ResourceConfig {
         System.out.println("Registering injectables...");
 
         //Resource packages
-        packages(true, "io.cocast.core", "io.cocast.auth");
+        packages(true, "io.cocast");
 
         //Activate Jackson-based JSON support
         register(JacksonFeature.class);

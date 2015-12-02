@@ -1,10 +1,14 @@
 package io.cocast.configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Singleton;
+import io.cocast.util.FirebaseException;
+import io.cocast.util.FirebaseUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -30,6 +34,9 @@ public class ConfigurationServices {
     private static final String ENV_KEY = "COCAST_ENV";
 
     private static ResourceBundle bundle;
+
+    @Inject
+    private FirebaseUtils firebaseUtils;
 
     static {
         //gets the environment information
@@ -86,6 +93,13 @@ public class ConfigurationServices {
         }
 
         return value;
+    }
+
+    /**
+     * Create a new configuration
+     */
+    public void create(Configuration configuration) throws JsonProcessingException, FirebaseException {
+        firebaseUtils.save(configuration, "/configurations/" + configuration.getName() + ".json");
     }
 
 }
