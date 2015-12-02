@@ -1,22 +1,22 @@
 apiVersion: v1
 kind: ReplicationController
 metadata:
-  name: cocast-backend-dev
+  name: cocast-backend-prd
 spec:
   replicas: 2
   selector:
-    app: cocast-backend-dev
+    app: cocast-backend-prd
   template:
     metadata:
-      name: cocast-backend-dev
+      name: cocast-backend-prd
       labels:
-        app: cocast-backend-dev
+        app: cocast-backend-prd
     spec:
       containers:
-      - name: cocast-backend-dev
+      - name: cocast-backend-prd
         image: gcr.io/co-cast/cocast-backend:latest
         ports:
         - containerPort: 8080
         env:
           - name: COCAST_ENV
-            value: dev
+            value: prd

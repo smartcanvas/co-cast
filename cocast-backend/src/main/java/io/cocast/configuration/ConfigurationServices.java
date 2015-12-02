@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -23,12 +24,18 @@ public class ConfigurationServices {
      */
     private static final String DEFAULT_ENV = "local";
 
+    /**
+     * Env KEY
+     */
+    private static final String ENV_KEY = "COCAST_ENV";
+
     private static ResourceBundle bundle;
 
     static {
         //gets the environment information
-        String env = System.getProperty("env");
-        logger.info("Initializing configuration mechanism... Env = " + env);
+        Map<String, String> externalVars = System.getenv();
+        String env = externalVars.get(ENV_KEY);
+        logger.info("Initializing configuration mechanism... " + ENV_KEY + " = " + env);
         if (StringUtils.isEmpty(env)) {
             env = ConfigurationServices.DEFAULT_ENV;
             logger.info("Environment is null. Initializing as " + env);
@@ -39,7 +46,7 @@ public class ConfigurationServices {
             bundle = ResourceBundle.getBundle(env);
         } catch (RuntimeException exc) {
             logger.error("FATAL ERROR: could find file " + env + ".properties. The system won't work properly. " +
-                    "Create this file of change the system property named 'env' to another value.");
+                    "Create this file of change the system property named '" + ENV_KEY + "' to another value.");
             throw exc;
         }
     }
