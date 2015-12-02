@@ -7,11 +7,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Configuration APIs
@@ -47,6 +45,52 @@ public class ConfigurationResource {
         }
 
         return APIResponse.created(configuration.getName() + " = " + configuration.getValue()).getResponse();
+    }
+
+    @GET
+    public Response listConfiguration() {
+        List<Configuration> result;
+
+        try {
+            //calls the creation service
+            result = configurationServices.list();
+        } catch (Exception exc) {
+            logger.error("Error listing configuration", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(result).build();
+    }
+
+    @GET
+    @Path("/{configKey}")
+    public Response getConfiguration(@PathParam("configKey") String configKey) {
+        Configuration result;
+
+        try {
+            //calls the creation service
+            result = configurationServices.get(configKey);
+        } catch (Exception exc) {
+            logger.error("Error getting configuration with config key = " + configKey, exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(result).build();
+    }
+
+    @POST
+    @Path("/clean")
+    public Response cleanUpConfigurationCache() {
+
+        try {
+            //calls the creation service
+            configurationServices.cleanUpCache();
+        } catch (Exception exc) {
+            logger.error("Error cleaning up configuration cache", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok().build();
     }
 
 

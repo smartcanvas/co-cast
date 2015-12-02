@@ -24,7 +24,7 @@ public class DefaultNetworkServicesImpl implements NetworkServices {
         network1.setOwner("viveiros@ciandt.com");
 
         Network network2 = new Network();
-        network2.setName("Name2");
+        network2.setName(configurationServices.getString("config1", "N/A"));
         network2.setCreatedDate(new Date());
         network2.setOwner("viveiros@ciandt.com");
 
