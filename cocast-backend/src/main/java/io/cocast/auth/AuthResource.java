@@ -2,9 +2,9 @@ package io.cocast.auth;
 
 import com.google.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response;
 @Singleton
 public class AuthResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthResource.class.toString());
+    private static final Logger logger = LogManager.getLogger(AuthResource.class.toString());
 
     @Inject
     private AuthServices authServices;

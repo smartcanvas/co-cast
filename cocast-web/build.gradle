@@ -2,21 +2,18 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'org.akhikhl.gretty:gretty:+'
-    }
 }
 
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'jetty'
 
 // Group ID
-group "$group"
+group "$groupId"
 // Version
-version "$version"
+version "$versionNumber"
 //WAR base name
-war.baseName = "$warBackendBaseName"
+war.baseName = "$webApp"
 
 repositories {
     mavenLocal()
@@ -30,13 +27,12 @@ dependencies {
     //Guice
     compile "com.google.inject.extensions:guice-servlet:$guiceVersion"
 
-    //LogBack
-    compile "ch.qos.logback:logback-classic:$logBackVersion"
+    //Java Libraries
+    providedCompile "javax.servlet:servlet-api:$servletVersion"
 }
 
-gretty {
-    port = "$frontendPort".toInteger()
-    servletContainer = "jetty9"
+jettyRun {
+    httpPort = "$frontendPort".toInteger()
     contextPath = '/'
 }
 

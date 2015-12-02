@@ -1,40 +1,31 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 evaluationDependsOn(':cocast-backend')
 evaluationDependsOn(':cocast-web')
 
 /**
- * Generate the property files with a specific configuration
+ * Copy the property files to proper resources dir
  */
-task config(type: Copy) {
-
-    //this task might be called with -Penv=<environemnt>
-    //and it will look for a <environment>.property on the root dir
-    def envFile = "local.properties"
-    if (project.hasProperty('env')) {
-        envFile = "$env" + ".properties"
+task config {
+    copy {
+        from(projectDir) {
+            include '*.properties'
+            exclude 'gradle.properties'
+        }
+        into "$projectDir/cocast-backend/src/main/resources"
     }
-
-    def configFile = "$projectDir/config.properties"
-    def targetDir = "$projectDir/cocast-backend/src/main/resources"
-
-    println "Config file = $configFile"
-    println "Target dir = $targetDir"
-    println "Env file = $envFile"
-
-    from configFile
-    into(targetDir)
-
-    def envProps = new Properties()
-    file(envFile).withInputStream {
-        envProps.load(it);
-    }
-
-    filter(ReplaceTokens, tokens: envProps)
 }
 
 /**
  * Deploys the container
  */
-task deployBackend(dependsOn: [config, ":cocast-backend:war", ":cocast-backend:backendDocker"]) << {
+task deployBackend {
+    dependsOn config
+    dependsOn ":cocast-backend:pushBackendDockerImage"
+}
+
+/**
+ * Runs the backend locally
+ */
+task runBackend {
+    dependsOn config
+    dependsOn ":cocast-backend:jettyRun"
 }

@@ -2,8 +2,8 @@ package io.cocast.auth;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SecurityContext {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityContext.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(SecurityContext.class.getName());
 
     private static ThreadLocal<SecurityContext> securityThreadLocal = new ThreadLocal<SecurityContext>();
 

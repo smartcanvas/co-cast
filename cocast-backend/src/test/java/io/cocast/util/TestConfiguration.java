@@ -1,5 +1,6 @@
 package io.cocast.util;
 
+import io.cocast.configuration.ConfigurationServices;
 import io.cocast.test.BaseTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +12,11 @@ import static org.junit.Assert.assertNotNull;
  */
 public class TestConfiguration extends BaseTest {
 
-    private Configuration configuration;
+    private ConfigurationServices configuration;
 
     @Before
     public void setUp() {
-        configuration = super.getInstance(Configuration.class);
+        configuration = super.getInstance(ConfigurationServices.class);
     }
 
     @Test

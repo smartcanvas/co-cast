@@ -3,19 +3,19 @@ package io.cocast.auth;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import io.cocast.util.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.cocast.configuration.ConfigurationServices;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 @Singleton
 public class AuthServices {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthServices.class.toString());
+    private static final Logger logger = LogManager.getLogger(AuthServices.class.toString());
 
     public static final int DEFAULT_KEY_EXPIRATION = 60 * 24 * 365 * 10;
 
     @Inject
-    private Configuration configuration;
+    private ConfigurationServices configuration;
 
     @Inject
     @Named("accessToken")

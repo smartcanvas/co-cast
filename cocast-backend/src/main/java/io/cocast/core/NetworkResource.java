@@ -1,8 +1,7 @@
 package io.cocast.core;
 
-import io.cocast.auth.SecurityContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -20,7 +19,7 @@ public class NetworkResource {
     /**
      * Logger
      */
-    private static final Logger logger = LoggerFactory.getLogger(NetworkResource.class);
+    private static final Logger logger = LogManager.getLogger(NetworkResource.class);
 
     /**
      * Network Services
@@ -34,7 +33,6 @@ public class NetworkResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Network> list() {
-        logger.debug("Logged user is " + SecurityContext.get().userIdentification());
         return networkServices.list();
     }
 

@@ -19,7 +19,5 @@ hs_err_pid*
 **/node_modules
 
 # Property files with sensetive information
-**/resources/config.properties
-/local.properties
-/dev.properties
+**/resources/*.properties
 /prd.properties

@@ -1,7 +1,7 @@
 package io.cocast.auth;
 
+import io.cocast.configuration.ConfigurationServices;
 import io.cocast.test.BaseTest;
-import io.cocast.util.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,11 +13,11 @@ import static org.junit.Assert.assertNotNull;
  */
 public class IntegrationTestFirebaseTokenReader extends BaseTest {
 
-    private Configuration configuration;
+    private ConfigurationServices configuration;
 
     @Before
     public void setUp() {
-        configuration = super.getInstance(Configuration.class);
+        configuration = super.getInstance(ConfigurationServices.class);
     }
 
     @Test

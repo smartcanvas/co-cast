@@ -3,8 +3,8 @@ package io.cocast.config;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.net.MediaType;
 import io.cocast.util.APIResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -19,7 +19,7 @@ import java.io.StringWriter;
  */
 public class GenericErrorHandlingFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(GenericErrorHandlingFilter.class.getName());
+    private static final Logger logger = LogManager.getLogger(GenericErrorHandlingFilter.class.getName());
 
     private ObjectWriter objectWriter;
 

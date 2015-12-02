@@ -5,10 +5,10 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
 import com.google.common.net.MediaType;
 import com.google.inject.name.Named;
+import io.cocast.configuration.ConfigurationServices;
 import io.cocast.util.APIResponse;
-import io.cocast.util.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -21,16 +21,17 @@ import java.io.IOException;
  */
 public class ApiTokenSecurityFilter implements Filter {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiTokenSecurityFilter.class.getName());
+    private static final Logger logger = LogManager.getLogger(ApiTokenSecurityFilter.class.getName());
 
     private final TokenServices tokenServices;
 
-    private final Configuration configuration;
+    private final ConfigurationServices configuration;
 
     private final ObjectWriter objectWriter;
 
     @Inject
-    public ApiTokenSecurityFilter(@Named("accessToken") TokenServices tokenServices, Configuration configuration,
+    public ApiTokenSecurityFilter(@Named("accessToken") TokenServices tokenServices,
+                                  ConfigurationServices configuration,
                                   ObjectWriter objectWriter) {
         super();
         this.tokenServices = Preconditions.checkNotNull(tokenServices, "tokenServices is mandatory");

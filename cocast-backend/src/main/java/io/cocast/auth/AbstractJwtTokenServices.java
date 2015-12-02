@@ -1,5 +1,7 @@
 package io.cocast.auth;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jose4j.jws.AlgorithmIdentifiers;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
@@ -7,8 +9,6 @@ import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.HmacKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.security.Key;
 import java.util.Date;
@@ -18,7 +18,7 @@ import java.util.Date;
  */
 public class AbstractJwtTokenServices implements TokenServices {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractJwtTokenServices.class.getName());
+    private static final Logger logger = LogManager.getLogger(AbstractJwtTokenServices.class.getName());
 
     static final String FIELD_EMAIL = "email";
 
