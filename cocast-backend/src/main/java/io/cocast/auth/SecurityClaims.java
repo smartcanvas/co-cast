@@ -1,16 +1,17 @@
 package io.cocast.auth;
 
 import com.google.common.base.MoreObjects;
+import io.cocast.util.DateUtils;
 import io.cocast.util.Email;
 
 import java.util.Date;
 
 /**
  * Utility class for adding contextual user information into security tokens.
- *
- * @author iluz
  */
 public class SecurityClaims {
+
+    private static SecurityClaims rootClaims;
 
     private String subject;
     private String email;
@@ -81,6 +82,18 @@ public class SecurityClaims {
 
     public Email getId() {
         return Email.of(email);
+    }
+
+    public static SecurityClaims root() {
+        if (rootClaims == null) {
+            rootClaims = new SecurityClaims(AuthConstants.DEFAULT_ISSUER);
+            rootClaims.setEmail(AuthConstants.ROOT_USER);
+            rootClaims.setSubject(AuthConstants.ROOT_USER);
+            rootClaims.setIssuedAt(DateUtils.now());
+            rootClaims.setExpirationTime(DateUtils.eternity());
+        }
+
+        return rootClaims;
     }
 
 }

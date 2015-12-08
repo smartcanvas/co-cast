@@ -1,5 +1,6 @@
-package io.cocast.configuration;
+package io.cocast.admin;
 
+import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
 import java.util.Date;
@@ -20,6 +21,7 @@ public class Configuration {
      */
     public Configuration() {
         lastUpdate = DateUtils.now();
+        createdBy = SecurityContext.get().userIdentification();
     }
 
     public String getName() {

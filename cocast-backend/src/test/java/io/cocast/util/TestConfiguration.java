@@ -1,6 +1,6 @@
 package io.cocast.util;
 
-import io.cocast.configuration.ConfigurationServices;
+import io.cocast.admin.ConfigurationServices;
 import io.cocast.test.BaseTest;
 import org.junit.Before;
 import org.junit.Test;

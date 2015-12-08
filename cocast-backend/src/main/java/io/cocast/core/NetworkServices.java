@@ -1,14 +1,35 @@
 package io.cocast.core;
 
-import java.util.List;
+import com.google.inject.Singleton;
+
+import javax.inject.Inject;
 
 /**
  * Business logic for Networks
  */
-public interface NetworkServices {
+@Singleton
+public class NetworkServices {
+
+    @Inject
+    private NetworkRepository networkRepository;
 
     /**
-     * List the existing networks available for a specific user
+     * Creates a new network
      */
-    List<Network> list();
+    public void create(Network network) throws Exception {
+
+        //checks if the mnemonic is defined
+        if (network.getMnemonic() == null) {
+            network.setMnemonic(this.generateMnemonic(network.getName()));
+        }
+        networkRepository.create(network);
+    }
+
+    /**
+     * Generates a mnemononic to this network
+     */
+    private String generateMnemonic(String name) {
+        //TODO: refinar
+        return name.toLowerCase();
+    }
 }

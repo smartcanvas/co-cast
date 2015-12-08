@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
  */
 @Produces("application/json")
 @Consumes("application/json")
-@Path("/auth/v1")
+@Path(AuthConstants.AUTH_PATH)
 @Singleton
 public class AuthResource {
 

@@ -19,8 +19,8 @@ gcloud container clusters get-credentials cocast-dev
 gcloud config list
 
 # Expose the container as a service on port 8080
-kubectl create -f ./cocast-backend/kubernetes/services-dev.yaml
-kubectl create -f ./cocast-backend/kubernetes/services-prd.yaml
+kubectl create -f ../cocast-backend/kubernetes/services-dev.yaml
+kubectl create -f ../cocast-backend/kubernetes/services-prd.yaml
 
 # List the services to get the IP
 kubectl get services

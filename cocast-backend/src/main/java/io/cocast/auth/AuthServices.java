@@ -3,7 +3,7 @@ package io.cocast.auth;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import io.cocast.configuration.ConfigurationServices;
+import io.cocast.admin.ConfigurationServices;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -54,8 +54,7 @@ public class AuthServices {
                 .setEmail(authData.getEmail().getValue()).setSubject(authData.getEmail().getValue());
 
         try {
-            return accessTokenServices.generateToken(securityClaims,
-                    configuration.getInt("jwt.ttl", DEFAULT_KEY_EXPIRATION), getJwtSecret());
+            return accessTokenServices.generateToken(securityClaims, AuthConstants.JWT_TTL, getJwtSecret());
         } catch (Exception e) {
             String message = String.format("Caught exception while trying to validate external tokens. [FirebaseToken: %s, GoogleToken: %s], message: %s",
                     firebaseToken, googleAccessToken, e.getMessage());
@@ -64,7 +63,7 @@ public class AuthServices {
     }
 
     private String getJwtSecret() {
-        return configuration.getString("jwt.secret", null);
+        return configuration.getString("cocast.secret", null);
     }
 
 }

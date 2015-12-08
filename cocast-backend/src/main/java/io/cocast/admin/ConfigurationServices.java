@@ -1,22 +1,14 @@
-package io.cocast.configuration;
+package io.cocast.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
-import io.cocast.util.FirebaseException;
-import io.cocast.util.FirebaseUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Configuration mechanism
@@ -40,24 +32,20 @@ public class ConfigurationServices {
     private static final String ENV_KEY = "COCAST_ENV";
 
     /**
-     * Cache and Bundle
+     * Repository
      */
-    private static final Cache<String, List<Configuration>> cache;
-    private static ResourceBundle bundle;
-
     @Inject
-    private FirebaseUtils firebaseUtils;
+    private ConfigurationRepository configurationRepository;
+
+    /**
+     * Bundle
+     */
+    private static ResourceBundle bundle;
 
     @Inject
     private ObjectMapper objectMapper;
 
     static {
-
-        //initializes the caches
-        cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
-                .build();
-
         //gets the environment information
         Map<String, String> externalVars = System.getenv();
         String env = externalVars.get(ENV_KEY);
@@ -106,7 +94,7 @@ public class ConfigurationServices {
             //try the configuration
             Configuration configuration = null;
             try {
-                configuration = this.get(key);
+                configuration = configurationRepository.get(key);
             } catch (Exception e2) {
                 logger.error("Error getting configuration with key = " + key, e2);
             }
@@ -137,48 +125,5 @@ public class ConfigurationServices {
         }
 
         return result;
-    }
-
-    /**
-     * Creates a new configuration
-     */
-    void create(Configuration configuration) throws JsonProcessingException, FirebaseException {
-        firebaseUtils.save(configuration, "/configurations/" + configuration.getName() + ".json");
-    }
-
-    /**
-     * Lists all configurations
-     */
-    List<Configuration> list() throws Exception {
-        //looks into the cache
-        return cache.get("cacheList", new Callable<List<Configuration>>() {
-            @Override
-            public List<Configuration> call() throws Exception {
-                logger.debug("Populating configuration cache...");
-                return firebaseUtils.get("/configurations.json", Configuration.class);
-            }
-        });
-    }
-
-    /**
-     * Gets a specific configuration
-     */
-    Configuration get(String key) throws Exception {
-        List<Configuration> confList = this.list();
-        for (Configuration configuration : confList) {
-            if (configuration.getName().equals(key)) {
-                return configuration;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Reloads the cache
-     */
-    void cleanUpCache() {
-        logger.debug("Cleaning up cache");
-        cache.invalidateAll();
     }
 }

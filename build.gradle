@@ -7,8 +7,7 @@ evaluationDependsOn(':cocast-web')
 task config {
     copy {
         from(projectDir) {
-            include '*.properties'
-            exclude 'gradle.properties'
+            include "env/*.properties"
         }
         into "$projectDir/cocast-backend/src/main/resources"
     }

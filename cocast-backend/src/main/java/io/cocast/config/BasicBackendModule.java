@@ -7,10 +7,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 import com.thetransactioncompany.cors.CORSFilter;
-import io.cocast.auth.*;
+import io.cocast.auth.ApiTokenSecurityFilter;
 
 /**
  * Common Guice configurations and bindings for Co-Cast
@@ -19,11 +18,6 @@ public class BasicBackendModule extends ServletModule {
 
     @Override
     protected void configureServlets() {
-
-        //Auth classes
-        bind(AuthServices.class);
-        bind(TokenServices.class).annotatedWith(Names.named("accessToken")).to(JwtAccessTokenServices.class);
-        bind(TokenServices.class).annotatedWith(Names.named("refreshToken")).to(JwtRefreshTokenServices.class);
 
         //filters
         bind(GenericErrorHandlingFilter.class).in(Scopes.SINGLETON);

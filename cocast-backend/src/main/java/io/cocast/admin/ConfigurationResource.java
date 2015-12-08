@@ -1,7 +1,6 @@
-package io.cocast.configuration;
+package io.cocast.admin;
 
 import com.google.inject.Singleton;
-import io.cocast.auth.SecurityContext;
 import io.cocast.util.APIResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,22 +22,21 @@ public class ConfigurationResource {
     private static Logger logger = LogManager.getLogger(ConfigurationResource.class.getName());
 
     @Inject
-    private ConfigurationServices configurationServices;
+    private ConfigurationRepository configurationRepository;
 
     @POST
-    public Response createTeam(Configuration configuration) {
+    public Response create(Configuration configuration) {
 
-        //validates and defines the createdBy based on authorization token
+        //validate the parameter
         if ((configuration == null) ||
                 (configuration.getName() == null) ||
                 (configuration.getValue() == null)) {
             return APIResponse.badRequest("Configuration name and value are required").getResponse();
         }
-        configuration.setCreatedBy(SecurityContext.get().userIdentification());
 
         try {
             //calls the creation service
-            configurationServices.create(configuration);
+            configurationRepository.create(configuration);
         } catch (Exception exc) {
             logger.error("Error creating configuration", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
@@ -48,12 +46,12 @@ public class ConfigurationResource {
     }
 
     @GET
-    public Response listConfiguration() {
+    public Response list() {
         List<Configuration> result;
 
         try {
-            //calls the creation service
-            result = configurationServices.list();
+            //calls the service
+            result = configurationRepository.list();
         } catch (Exception exc) {
             logger.error("Error listing configuration", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
@@ -64,12 +62,12 @@ public class ConfigurationResource {
 
     @GET
     @Path("/{configKey}")
-    public Response getConfiguration(@PathParam("configKey") String configKey) {
+    public Response get(@PathParam("configKey") String configKey) {
         Configuration result;
 
         try {
-            //calls the creation service
-            result = configurationServices.get(configKey);
+            //calls the service
+            result = configurationRepository.get(configKey);
         } catch (Exception exc) {
             logger.error("Error getting configuration with config key = " + configKey, exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
@@ -80,11 +78,11 @@ public class ConfigurationResource {
 
     @POST
     @Path("/clean")
-    public Response cleanUpConfigurationCache() {
+    public Response cleanUpCache() {
 
         try {
-            //calls the creation service
-            configurationServices.cleanUpCache();
+            //calls the clean service
+            configurationRepository.cleanUpCache();
         } catch (Exception exc) {
             logger.error("Error cleaning up configuration cache", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();

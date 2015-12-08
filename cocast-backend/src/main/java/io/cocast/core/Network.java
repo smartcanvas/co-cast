@@ -1,6 +1,11 @@
 package io.cocast.core;
 
+import io.cocast.auth.SecurityContext;
+import io.cocast.util.DateUtils;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A Network is the top-level organization structure for Co-cast. It represents a network that has many stations,
@@ -8,22 +13,20 @@ import java.util.Date;
  */
 public class Network {
 
-    /**
-     * Network name
-     */
     private String name;
-
-    /**
-     * Owner
-     */
-    private String owner;
-
-    /**
-     * Date created
-     */
-    private Date createdDate;
+    private String mnemonic;
+    private String createdBy;
+    private Date lastUpdate;
+    private String colorPalette;
+    private List<String> collaborators;
 
     public Network() {
+        lastUpdate = DateUtils.now();
+        createdBy = SecurityContext.get().userIdentification();
+
+        collaborators = new ArrayList<String>();
+        collaborators.add("Daniel");
+        collaborators.add("Viveiros");
     }
 
     public String getName() {
@@ -34,19 +37,43 @@ public class Network {
         this.name = name;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getMnemonic() {
+        return mnemonic;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public List<String> getCollaborators() {
+        return collaborators;
+    }
+
+    public void setCollaborators(List<String> collaborators) {
+        this.collaborators = collaborators;
+    }
+
+    public String getColorPalette() {
+        return colorPalette;
+    }
+
+    public void setColorPalette(String colorPalette) {
+        this.colorPalette = colorPalette;
     }
 }

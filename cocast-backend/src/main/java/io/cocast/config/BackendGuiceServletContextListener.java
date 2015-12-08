@@ -3,6 +3,8 @@ package io.cocast.config;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import io.cocast.admin.AdminModule;
+import io.cocast.auth.AuthModule;
 import io.cocast.core.CoreModule;
 
 /**
@@ -14,8 +16,11 @@ public class BackendGuiceServletContextListener extends GuiceServletContextListe
 
     @Override
     protected Injector getInjector() {
+
         if (injector == null) {
-            injector = Guice.createInjector(new BasicBackendModule(),
+            injector = Guice.createInjector(new AuthModule(),
+                    new AdminModule(),
+                    new BasicBackendModule(),
                     new CoreModule());
         }
 

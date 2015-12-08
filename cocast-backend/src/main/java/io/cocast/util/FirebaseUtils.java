@@ -3,7 +3,9 @@ package io.cocast.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.cocast.configuration.ConfigurationServices;
+import com.firebase.security.token.TokenGenerator;
+import io.cocast.admin.ConfigurationServices;
+import io.cocast.auth.SecurityContext;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -15,9 +17,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Utility class to interface with Firebase
@@ -26,16 +26,31 @@ public class FirebaseUtils {
 
     private static Logger logger = LogManager.getLogger(FirebaseUtils.class.getName());
 
-    @Inject
     private ConfigurationServices configurationServices;
-
-    @Inject
     private ObjectMapper objectMapper;
+
+    /**
+     * Firebase secret
+     */
+    private static String FIREBASE_SECRET;
 
     /**
      * Base firebase URL
      */
     private static String FIREBASE_URL;
+
+    /**
+     * Constructor
+     */
+    @Inject
+    public FirebaseUtils(ConfigurationServices configurationServices,
+                         ObjectMapper objectMapper) {
+        this.configurationServices = configurationServices;
+        this.objectMapper = objectMapper;
+
+        FIREBASE_SECRET = configurationServices.getString("firebase.secret", null);
+        FIREBASE_URL = configurationServices.getString("firebase.base_url", null);
+    }
 
     /**
      * Saves an object inside Firebase
@@ -88,15 +103,23 @@ public class FirebaseUtils {
      */
     private String getFirebaseURL(String uri) {
 
-        if (FIREBASE_URL == null) {
-            FIREBASE_URL = configurationServices.getString("firebase.base_url", null);
-        }
-
         if (!uri.startsWith("/")) {
             uri = "/" + uri;
         }
 
-        return FIREBASE_URL + uri;
+        return FIREBASE_URL + uri + "?auth=" + generateToken();
+    }
+
+    /**
+     * Generate token
+     */
+    private String generateToken() {
+
+        // Generate a new secure JWT
+        Map<String, Object> payload = new HashMap<String, Object>();
+        payload.put("uid", SecurityContext.get().userIdentification());
+        TokenGenerator tokenGenerator = new TokenGenerator(FIREBASE_SECRET);
+        return tokenGenerator.createToken(payload);
     }
 
     /**
