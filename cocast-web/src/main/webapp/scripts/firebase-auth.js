@@ -9,9 +9,7 @@ var rootRef = new Firebase("https://co-cast-dev.firebaseio.com/");
  * On document load
  */
 $(function () {
-    console.log("Initializing application");
     rootRef.onAuth(authDataCallback);
-    console.log("Application ready!");
 });
 
 /**
@@ -29,8 +27,13 @@ function authDataCallback(authData) {
         });
     }
     else {
-        console.log("authData is defined!");
         console.log("Authenticated successfully with payload:", authData);
+        rootRef.child("users").child(authData.uid).set({
+            provider: authData.provider,
+            name: authData.google.displayName,
+            email: authData.google.email,
+            lastLogin: new Date()
+        });
     }
 }
 

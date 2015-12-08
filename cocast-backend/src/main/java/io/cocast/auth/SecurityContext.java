@@ -37,7 +37,7 @@ public class SecurityContext {
     }
 
     public String userIdentification() {
-        return claims.getEmail();
+        return claims.getSubject();
     }
 
     /**
@@ -52,7 +52,7 @@ public class SecurityContext {
         }
 
         //subject
-        if (StringUtils.isEmpty(claims.getSubject()) || !claims.getSubject().equals(claims.getEmail())) {
+        if (StringUtils.isEmpty(claims.getSubject())) {
             throw new AuthenticationException(HttpServletResponse.SC_UNAUTHORIZED,
                     "Invalid subject: " + claims.getSubject());
         }

@@ -47,11 +47,8 @@ public class AuthServices {
             throw new AuthenticationException(403, googleTokenData.getEmail(), googleTokenData.getUser_id());
         }
 
-        AuthData authData = new AuthData(googleTokenData.getEmail(), firebaseTokenData.getProvider(),
-                firebaseTokenData.getUid());
-
         SecurityClaims securityClaims = new SecurityClaims(AuthConstants.DEFAULT_ISSUER)
-                .setEmail(authData.getEmail().getValue()).setSubject(authData.getEmail().getValue());
+                .setEmail(googleTokenData.getEmail()).setSubject(firebaseTokenData.getUid());
 
         try {
             return accessTokenServices.generateToken(securityClaims, AuthConstants.JWT_TTL, getJwtSecret());

@@ -87,8 +87,8 @@ public class SecurityClaims {
     public static SecurityClaims root() {
         if (rootClaims == null) {
             rootClaims = new SecurityClaims(AuthConstants.DEFAULT_ISSUER);
-            rootClaims.setEmail(AuthConstants.ROOT_USER);
-            rootClaims.setSubject(AuthConstants.ROOT_USER);
+            rootClaims.setEmail(AuthConstants.ROOT_USER_EMAIL);
+            rootClaims.setSubject(AuthConstants.ROOT_USER_SUBJECT);
             rootClaims.setIssuedAt(DateUtils.now());
             rootClaims.setExpirationTime(DateUtils.eternity());
         }

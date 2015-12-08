@@ -31,9 +31,14 @@ public class AuthConstants {
     public static final String X_ROOT_TOKEN = "x-root-token";
 
     /**
-     * Root user
+     * Root user email
      */
-    public static final String ROOT_USER = "root@cocast.io";
+    public static final String ROOT_USER_EMAIL = "root@cocast.io";
+
+    /**
+     * Root user subject
+     */
+    public static final String ROOT_USER_SUBJECT = "root";
 
     /**
      * JWT default issuer

@@ -1,5 +1,10 @@
 package io.cocast.admin;
 
+import io.cocast.auth.SecurityContext;
+import io.cocast.util.DateUtils;
+
+import java.util.Date;
+
 /**
  * Color palettes
  */
@@ -12,6 +17,16 @@ public class ColorPalette {
     private String primaryTextColor;
     private String secondaryTextColor;
     private String accentTextColor;
+    private String createdBy;
+    private Date lastUpdate;
+
+    /**
+     * Constructor
+     */
+    public ColorPalette() {
+        lastUpdate = DateUtils.now();
+        createdBy = SecurityContext.get().userIdentification();
+    }
 
     public String getMnemonic() {
         return mnemonic;
@@ -69,6 +84,22 @@ public class ColorPalette {
         this.accentTextColor = accentTextColor;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     @Override
     public String toString() {
         return "ColorPalette{" +
@@ -79,6 +110,8 @@ public class ColorPalette {
                 ", primaryTextColor='" + primaryTextColor + '\'' +
                 ", secondaryTextColor='" + secondaryTextColor + '\'' +
                 ", accentTextColor='" + accentTextColor + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 }

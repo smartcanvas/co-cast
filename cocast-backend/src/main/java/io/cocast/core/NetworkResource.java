@@ -7,12 +7,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Network resources (API).
@@ -28,18 +25,14 @@ public class NetworkResource {
      */
     private static final Logger logger = LogManager.getLogger(NetworkResource.class);
 
-    /**
-     * Network Services
-     */
     @Inject
-    private NetworkServices networkServices;
+    private NetworkRepository networkRepository;
 
     /**
      * Creates a network
      */
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createNetwork(Network network) {
+    public Response create(Network network) {
 
         //validates and defines the createdBy based on authorization token
         if ((network == null) ||
@@ -50,13 +43,31 @@ public class NetworkResource {
 
         try {
             //calls the creation service
-            networkServices.create(network);
+            networkRepository.create(network);
         } catch (Exception exc) {
-            logger.error("Error creating configuration", exc);
+            logger.error("Error creating network", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
         return APIResponse.created(network.getMnemonic()).getResponse();
+    }
+
+    /**
+     * Get a list of networks
+     */
+    @GET
+    public Response list() {
+
+        List<Network> networkList = null;
+
+        try {
+            networkList = networkRepository.list();
+        } catch (Exception exc) {
+            logger.error("Error listing networks", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(networkList).build();
     }
 
 }
