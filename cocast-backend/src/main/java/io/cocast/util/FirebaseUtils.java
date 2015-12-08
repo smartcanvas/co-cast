@@ -138,6 +138,26 @@ public class FirebaseUtils {
     }
 
     /**
+     * Fetchs data as JSON
+     */
+    public JsonNode get(String uri) throws IOException {
+        String completeURL = getFirebaseURL(uri);
+        Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Firebase URL = " + completeURL);
+        }
+
+        String strFirebaseResult = client.target(completeURL).request().get(String.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Return from Firebase = " + strFirebaseResult);
+        }
+
+        return objectMapper.readTree(strFirebaseResult);
+    }
+
+    /**
      * Fetchs a specific data from Firebase
      */
     public <T> T getAsRoot(String uri, Class<T> cls) throws IOException {

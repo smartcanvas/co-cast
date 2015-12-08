@@ -70,6 +70,9 @@ public class NetworkResource {
 
         try {
             networkList = networkRepository.list();
+        } catch (CoCastCallException exc) {
+            logger.error("Error listing network", exc);
+            return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
             logger.error("Error listing networks", exc);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
@@ -79,6 +82,55 @@ public class NetworkResource {
         }
 
         return Response.ok(networkList).build();
+    }
+
+    /**
+     * Get a specific of networks
+     */
+    @GET
+    @Path("/{mnemonic}")
+    public Response get(@PathParam("mnemonic") String mnemonic) {
+
+        Network network = null;
+
+        try {
+            network = networkRepository.get(mnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error getting network", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error getting network", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error getting network", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(network).build();
+    }
+
+    /**
+     * Updates a network
+     */
+    @PUT
+    public Response update(Network network) {
+
+        Network response = null;
+
+        try {
+            response = networkRepository.update(network);
+        } catch (CoCastCallException exc) {
+            logger.error("Error updating network", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error updating network", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error updating network", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(network).build();
     }
 
 }

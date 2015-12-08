@@ -19,11 +19,13 @@ public class Network {
     private Date lastUpdate;
     private String colorPalette;
     private List<String> collaborators;
+    private boolean active;
 
     public Network() {
         lastUpdate = DateUtils.now();
         createdBy = SecurityContext.get().userIdentification();
         collaborators = new ArrayList<String>();
+        active = true;
     }
 
     public String getName() {
@@ -72,5 +74,13 @@ public class Network {
 
     public void setColorPalette(String colorPalette) {
         this.colorPalette = colorPalette;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
