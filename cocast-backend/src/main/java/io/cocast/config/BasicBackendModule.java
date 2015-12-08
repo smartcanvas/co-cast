@@ -9,7 +9,10 @@ import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.thetransactioncompany.cors.CORSFilter;
+import io.cocast.admin.AdminModule;
 import io.cocast.auth.ApiTokenSecurityFilter;
+import io.cocast.auth.AuthModule;
+import io.cocast.core.CoreModule;
 
 /**
  * Common Guice configurations and bindings for Co-Cast
@@ -18,6 +21,10 @@ public class BasicBackendModule extends ServletModule {
 
     @Override
     protected void configureServlets() {
+
+        this.install(new AdminModule());
+        this.install(new AuthModule());
+        this.install(new CoreModule());
 
         //filters
         bind(GenericErrorHandlingFilter.class).in(Scopes.SINGLETON);

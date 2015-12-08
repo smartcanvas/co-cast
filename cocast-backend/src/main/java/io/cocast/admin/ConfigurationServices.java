@@ -1,7 +1,10 @@
 package io.cocast.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import io.cocast.config.BasicBackendModule;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -64,6 +67,14 @@ public class ConfigurationServices {
             throw exc;
         }
 
+    }
+
+    /**
+     * Return the singleton instance
+     */
+    public static ConfigurationServices getInstance() {
+        Injector injector = Guice.createInjector(new BasicBackendModule());
+        return injector.getInstance(ConfigurationServices.class);
     }
 
     /**

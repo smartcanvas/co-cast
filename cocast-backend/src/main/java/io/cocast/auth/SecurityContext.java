@@ -16,9 +16,7 @@ public class SecurityContext {
 
     private static ThreadLocal<SecurityContext> securityThreadLocal = new ThreadLocal<SecurityContext>();
 
-    static void unset() {
-        securityThreadLocal.remove();
-    }
+    private SecurityClaims claims;
 
     public static void set(final SecurityContext user) {
         securityThreadLocal.set(user);
@@ -28,7 +26,6 @@ public class SecurityContext {
         return securityThreadLocal.get();
     }
 
-    private SecurityClaims claims;
 
     public SecurityContext(SecurityClaims claims) throws AuthenticationException {
         Preconditions.checkNotNull(claims, "claims is mandatory");
@@ -69,6 +66,10 @@ public class SecurityContext {
             throw new AuthenticationException(HttpServletResponse.SC_UNAUTHORIZED,
                     "Invalid email: " + claims);
         }
+    }
+
+    static void unset() {
+        securityThreadLocal.remove();
     }
 
 }

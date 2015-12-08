@@ -19,7 +19,6 @@ public class TestFirebaseUtils extends BaseTest {
     @Before
     public void setUp() {
         firebaseUtils = super.getInstance(FirebaseUtils.class);
-
     }
 
     @Test
@@ -28,5 +27,12 @@ public class TestFirebaseUtils extends BaseTest {
         List<Configuration> list = firebaseUtils.getListFromResult(fromFirebase, Configuration.class);
         assertEquals(2, list.size());
         assertEquals("config1", list.get(0).getName());
+    }
+
+    @Test
+    public void shouldBeAbleToWriteStrings() throws Exception {
+        super.setSecurityContext();
+        String uri = "/members/google:118239183782204424177/network-teste-acao-3.json";
+        firebaseUtils.saveString("collaborator", uri);
     }
 }

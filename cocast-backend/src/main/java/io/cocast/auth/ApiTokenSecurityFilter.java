@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
 import com.google.common.net.MediaType;
-import com.google.inject.name.Named;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.util.APIResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +30,7 @@ public class ApiTokenSecurityFilter implements Filter {
     private final ObjectWriter objectWriter;
 
     @Inject
-    public ApiTokenSecurityFilter(@Named("accessToken") TokenServices tokenServices,
+    public ApiTokenSecurityFilter(TokenServices tokenServices,
                                   ConfigurationServices configuration,
                                   ObjectWriter objectWriter) {
         super();

@@ -64,6 +64,13 @@ public class APIResponse {
     }
 
     /**
+     * Co-cast exception happened
+     */
+    public static APIResponse fromException(CoCastCallException exc) {
+        return new APIResponse(exc.getStatus(), exc.getMessage());
+    }
+
+    /**
      * Creates the response based on the internal status
      *
      * @return Response object

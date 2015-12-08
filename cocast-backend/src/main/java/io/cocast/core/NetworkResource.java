@@ -3,10 +3,12 @@ package io.cocast.core;
 import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.APIResponse;
+import io.cocast.util.CoCastCallException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.validation.ValidationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -44,12 +46,18 @@ public class NetworkResource {
         try {
             //calls the creation service
             networkRepository.create(network);
+        } catch (ValidationException exc) {
+            logger.error("Error creating network", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (CoCastCallException exc) {
+            logger.error("Error creating network", exc);
+            return APIResponse.fromException(exc).getResponse();
         } catch (Exception exc) {
             logger.error("Error creating network", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
-        return APIResponse.created(network.getMnemonic()).getResponse();
+        return APIResponse.created("Network created successfully with mnemonic: " + network.getMnemonic()).getResponse();
     }
 
     /**
@@ -62,6 +70,9 @@ public class NetworkResource {
 
         try {
             networkList = networkRepository.list();
+        } catch (ValidationException exc) {
+            logger.error("Error listing networks", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error listing networks", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();

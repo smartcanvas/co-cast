@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
-import io.cocast.util.FirebaseException;
+import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -33,6 +33,10 @@ class ConfigurationRepository {
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();
     }
+
+    /**
+     * Cons
+     */
 
     /**
      * Lists all configurations
@@ -65,7 +69,7 @@ class ConfigurationRepository {
     /**
      * Creates a new configuration
      */
-    public void create(Configuration configuration) throws JsonProcessingException, FirebaseException {
+    public void create(Configuration configuration) throws JsonProcessingException, CoCastCallException {
         firebaseUtils.save(configuration, "/configurations/" + configuration.getName() + ".json");
         this.cleanUpCache();
     }

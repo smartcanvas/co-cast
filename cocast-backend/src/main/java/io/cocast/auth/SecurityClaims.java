@@ -1,6 +1,5 @@
 package io.cocast.auth;
 
-import com.google.common.base.MoreObjects;
 import io.cocast.util.DateUtils;
 import io.cocast.util.Email;
 
@@ -15,6 +14,8 @@ public class SecurityClaims {
 
     private String subject;
     private String email;
+    private String provider;
+    private String name;
     private String issuer;
     private Date expirationTime;
     private Date issuedAt;
@@ -51,6 +52,24 @@ public class SecurityClaims {
         return this;
     }
 
+    public String getProvider() {
+        return provider;
+    }
+
+    public SecurityClaims setProvider(String provider) {
+        this.provider = provider;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public SecurityClaims setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public Date getIssuedAt() {
         return issuedAt;
     }
@@ -59,16 +78,6 @@ public class SecurityClaims {
         this.issuedAt = issuedAt;
 
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("email", email)
-                .add("issuer", issuer)
-                .add("expirationTime", expirationTime)
-                .add("issuedAt", issuedAt)
-                .toString();
     }
 
     public String getEmail() {
@@ -89,6 +98,8 @@ public class SecurityClaims {
             rootClaims = new SecurityClaims(AuthConstants.DEFAULT_ISSUER);
             rootClaims.setEmail(AuthConstants.ROOT_USER_EMAIL);
             rootClaims.setSubject(AuthConstants.ROOT_USER_SUBJECT);
+            rootClaims.setProvider("CoCast");
+            rootClaims.setName("Root");
             rootClaims.setIssuedAt(DateUtils.now());
             rootClaims.setExpirationTime(DateUtils.eternity());
         }
@@ -96,4 +107,17 @@ public class SecurityClaims {
         return rootClaims;
     }
 
+
+    @Override
+    public String toString() {
+        return "SecurityClaims{" +
+                "subject='" + subject + '\'' +
+                ", email='" + email + '\'' +
+                ", provider='" + provider + '\'' +
+                ", name='" + name + '\'' +
+                ", issuer='" + issuer + '\'' +
+                ", expirationTime=" + expirationTime +
+                ", issuedAt=" + issuedAt +
+                '}';
+    }
 }

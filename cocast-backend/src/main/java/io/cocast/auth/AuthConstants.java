@@ -3,7 +3,7 @@ package io.cocast.auth;
 /**
  * Constants used in Auth module
  */
-public class AuthConstants {
+interface AuthConstants {
 
     /**
      * Path for Auth API
@@ -14,11 +14,6 @@ public class AuthConstants {
      * Key on header for Firebase token
      */
     public static final String FIREBASE_TOKEN = "x-firebase-token";
-
-    /**
-     * Key on header for Google Access token
-     */
-    public static final String GOOGLE_ACCESS_TOKEN = "x-google-access-token";
 
     /**
      * Key on header to hold the access token

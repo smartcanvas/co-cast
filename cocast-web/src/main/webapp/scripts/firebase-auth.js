@@ -16,7 +16,6 @@ $(function () {
  * Handles authentication
  */
 function authDataCallback(authData) {
-    console.log("authDataCallback called");
     if (!authData) {
         console.log("authData is undefined");
         rootRef.authWithOAuthRedirect("google", function (error) {
@@ -28,11 +27,14 @@ function authDataCallback(authData) {
     }
     else {
         console.log("Authenticated successfully with payload:", authData);
+        var nowUTC = Math.floor((new Date()).getTime() / 1000);
+
         rootRef.child("users").child(authData.uid).set({
+            uid: authData.uid,
             provider: authData.provider,
             name: authData.google.displayName,
             email: authData.google.email,
-            lastLogin: new Date()
+            lastLogin: nowUTC
         });
     }
 }

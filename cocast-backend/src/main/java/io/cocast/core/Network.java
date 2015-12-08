@@ -23,10 +23,7 @@ public class Network {
     public Network() {
         lastUpdate = DateUtils.now();
         createdBy = SecurityContext.get().userIdentification();
-
         collaborators = new ArrayList<String>();
-        collaborators.add("Daniel");
-        collaborators.add("Viveiros");
     }
 
     public String getName() {

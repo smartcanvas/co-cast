@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
-import io.cocast.util.FirebaseException;
+import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * Persistence methods for color palettes
  */
 @Singleton
-public class ColorPaletteRepository {
+class ColorPaletteRepository {
 
     private static Logger logger = LogManager.getLogger(ConfigurationRepository.class.getName());
 
@@ -65,7 +65,7 @@ public class ColorPaletteRepository {
     /**
      * Creates a new configuration
      */
-    public void create(ColorPalette colorPalette) throws JsonProcessingException, FirebaseException {
+    public void create(ColorPalette colorPalette) throws JsonProcessingException, CoCastCallException {
 
         //adds a hash to the beginning of each color
         if (!colorPalette.getPrimaryColor().startsWith("#")) {

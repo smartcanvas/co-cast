@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.*;
@@ -26,7 +27,6 @@ public class FirebaseUtils {
 
     private static Logger logger = LogManager.getLogger(FirebaseUtils.class.getName());
 
-    private ConfigurationServices configurationServices;
     private ObjectMapper objectMapper;
 
     /**
@@ -39,23 +39,20 @@ public class FirebaseUtils {
      */
     private static String FIREBASE_URL;
 
+    private ConfigurationServices configurationServices;
+
     /**
      * Constructor
      */
     @Inject
-    public FirebaseUtils(ConfigurationServices configurationServices,
-                         ObjectMapper objectMapper) {
-        this.configurationServices = configurationServices;
+    public FirebaseUtils(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-
-        FIREBASE_SECRET = configurationServices.getString("firebase.secret", null);
-        FIREBASE_URL = configurationServices.getString("firebase.base_url", null);
     }
 
     /**
      * Saves an object inside Firebase
      */
-    public void save(Object obj, String uri) throws JsonProcessingException, FirebaseException {
+    public void save(Object obj, String uri) throws JsonProcessingException {
 
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
@@ -73,7 +70,49 @@ public class FirebaseUtils {
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
-            throw new FirebaseException("Error creating entity " + obj + ". Status = " + response.getStatus());
+            throw new CoCastCallException("Error creating entity " + obj + ". Status = " + response.getStatus(),
+                    response.getStatus());
+        }
+    }
+
+    /**
+     * Saves an string to a Firebase property
+     */
+    public void saveString(String strValue, String uri) throws JsonProcessingException {
+
+        String completeURL = getFirebaseURL(uri);
+        Client client = ClientBuilder.newClient();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Firebase URL = " + completeURL);
+            logger.debug("String to be saved = " + strValue);
+        }
+
+        Response response = client.target(completeURL).request().accept(MediaType.TEXT_PLAIN).put(Entity.text("\"" + strValue + "\""));
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Response = " + response);
+        }
+
+        if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
+                !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
+            throw new CoCastCallException("Error saving string " + strValue + ". Status = " + response.getStatus(),
+                    response.getStatus());
+        }
+    }
+
+    /**
+     * Saves an object inside Firebase
+     */
+    public void saveAsRoot(Object obj, String uri) throws JsonProcessingException, CoCastCallException {
+
+        String completeURL = getFirebaseURLAsRoot(uri);
+        Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+        Response response = client.target(completeURL).request().put(Entity.json(obj));
+        if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
+                !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
+            throw new CoCastCallException("Error creating entity " + obj + ". Status = " + response.getStatus(),
+                    response.getStatus());
         }
     }
 
@@ -99,9 +138,38 @@ public class FirebaseUtils {
     }
 
     /**
+     * Fetchs a specific data from Firebase
+     */
+    public <T> T getAsRoot(String uri, Class<T> cls) throws IOException {
+        String completeURL = getFirebaseURLAsRoot(uri);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Firebase URL = " + completeURL);
+        }
+
+        Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+        Response response = client.target(completeURL).request().get();
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Return from Firebase: status =  " + response.getStatus() + ", response = " +
+                    response);
+        }
+
+        if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+            throw new CoCastCallException(response.readEntity(String.class), response.getStatus());
+        }
+
+        return response.readEntity(cls);
+    }
+
+    /**
      * Gets the complete URL
      */
     private String getFirebaseURL(String uri) {
+
+        if (FIREBASE_URL == null) {
+            FIREBASE_URL = getConfiguration("firebase.base_url");
+        }
 
         if (!uri.startsWith("/")) {
             uri = "/" + uri;
@@ -111,9 +179,32 @@ public class FirebaseUtils {
     }
 
     /**
+     * Gets the complete URL as root
+     */
+    private String getFirebaseURLAsRoot(String uri) {
+
+        if (FIREBASE_URL == null) {
+            FIREBASE_URL = getConfiguration("firebase.base_url");
+        }
+        if (FIREBASE_SECRET == null) {
+            FIREBASE_SECRET = getConfiguration("firebase.secret");
+        }
+
+        if (!uri.startsWith("/")) {
+            uri = "/" + uri;
+        }
+
+        return FIREBASE_URL + uri + "?auth=" + FIREBASE_SECRET;
+    }
+
+    /**
      * Generate token
      */
     private String generateToken() {
+
+        if (FIREBASE_SECRET == null) {
+            FIREBASE_SECRET = getConfiguration("firebase.secret");
+        }
 
         // Generate a new secure JWT
         Map<String, Object> payload = new HashMap<String, Object>();
@@ -135,5 +226,15 @@ public class FirebaseUtils {
         }
 
         return result;
+    }
+
+    /**
+     * Get configuration
+     */
+    private String getConfiguration(String key) {
+        if (configurationServices == null) {
+            configurationServices = ConfigurationServices.getInstance();
+        }
+        return configurationServices.getString(key, null);
     }
 }
