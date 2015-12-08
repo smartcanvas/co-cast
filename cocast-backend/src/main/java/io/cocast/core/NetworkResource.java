@@ -130,7 +130,30 @@ public class NetworkResource {
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
-        return Response.ok(network).build();
+        return APIResponse.updated("Network updated. Mnemonic: " + response.getMnemonic()).getResponse();
+    }
+
+    /**
+     * Delete a network
+     */
+    @DELETE
+    @Path("/{mnemonic}")
+    public Response delete(@PathParam("mnemonic") String mnemonic) {
+
+        try {
+            networkRepository.delete(mnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error getting network", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error getting network", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error getting network", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.deleted("Network deleted. Mnemonic: " + mnemonic).getResponse();
     }
 
 }

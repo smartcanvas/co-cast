@@ -64,6 +64,20 @@ public class APIResponse {
     }
 
     /**
+     * Entity deleted
+     */
+    public static APIResponse deleted(String message) {
+        return new APIResponse(HttpServletResponse.SC_NO_CONTENT, message);
+    }
+
+    /**
+     * Entity updated
+     */
+    public static APIResponse updated(String message) {
+        return new APIResponse(HttpServletResponse.SC_OK, message);
+    }
+
+    /**
      * Co-cast exception happened
      */
     public static APIResponse fromException(CoCastCallException exc) {

@@ -137,6 +137,36 @@ class NetworkRepository {
     }
 
     /**
+     * Delete a network
+     */
+    public void delete(String mnemonic) throws Exception {
+        Network existingNetwork = this.get(mnemonic);
+        if (existingNetwork == null) {
+            throw new ValidationException("Could not find network with mnemonic: " + mnemonic);
+        }
+
+        if (!existingNetwork.isActive()) {
+            throw new ValidationException("Network has been already deleted: " + mnemonic);
+        }
+
+        existingNetwork.setActive(false);
+        existingNetwork.setLastUpdate(DateUtils.now());
+        //update
+        firebaseUtils.save(existingNetwork, "/networks/" + existingNetwork.getMnemonic() + ".json");
+        cache.invalidate(existingNetwork.getMnemonic());
+
+        //remove collaborators
+        List<String> listCollaborators = existingNetwork.getCollaborators();
+        logger.debug("Collaborators to be removed = " + listCollaborators);
+        for (String strCollaborator : listCollaborators) {
+            firebaseUtils.saveString("removed", "/members/" + strCollaborator + "/" + mnemonic + ".json");
+        }
+
+        //remove owner
+        firebaseUtils.saveString("removed", "/members/" + existingNetwork.getCreatedBy() + "/" + mnemonic + ".json");
+    }
+
+    /**
      * Get the networks the user has access
      */
     List<NetworkMembership> listMemberships() throws IOException {
