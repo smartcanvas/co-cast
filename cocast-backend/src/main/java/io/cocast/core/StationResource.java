@@ -96,4 +96,30 @@ public class StationResource {
         return Response.ok(stationList).build();
     }
 
+    /**
+     * Get a specific station
+     */
+    @GET
+    @Path("/{networkMnemonic}/{mnemonic}")
+    public Response get(@PathParam("networkMnemonic") String networkMnemonic,
+                        @PathParam("mnemonic") String mnemonic) {
+
+        Station station;
+
+        try {
+            station = stationRepository.get(networkMnemonic, mnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error getting station", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error getting station", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error getting station", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(station).build();
+    }
+
 }

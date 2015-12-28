@@ -10,5 +10,6 @@ public class AdminModule extends ServletModule {
     @Override
     protected void configureServlets() {
         bind(ThemeRepository.class);
+        bind(ThemeServices.class);
     }
 }

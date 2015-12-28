@@ -24,7 +24,6 @@
     //Networks
     "networks": {
       "$mnemonic": {
-        ".read": "root.child('members/' + $mnemonic + '/' + auth.uid).exists()",
         ".write": "(!data.exists()) || (data.child('createdBy').val() === auth.uid)",
         "theme": {
           ".validate": "newData.exists() && (root.child('themes/' + newData.val()).exists())"
@@ -34,8 +33,6 @@
     //Stations
     "stations": {
       "$networkMnemonic": {
-        ".read": "root.child('members/' + $networkMnemonic + '/' + auth.uid).exists()",
-        ".write": "(!data.exists()) || (data.child('createdBy').val() === auth.uid)",
         "$mnemonic": {
           "theme": {
             ".validate": "!newData.exists() || (root.child('themes/' + newData.val()).exists())"

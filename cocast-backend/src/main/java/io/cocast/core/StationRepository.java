@@ -3,6 +3,7 @@ package io.cocast.core;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
+import io.cocast.admin.ThemeServices;
 import io.cocast.util.ExtraStringUtils;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Persistence methods for Stations
  */
 @Singleton
-public class StationRepository {
+class StationRepository {
 
     private static Logger logger = LogManager.getLogger(StationRepository.class.getName());
 
@@ -30,6 +31,9 @@ public class StationRepository {
 
     @Inject
     private NetworkRepository networkRepository;
+
+    @Inject
+    private ThemeServices themeServices;
 
     private static final Cache<String, List<Station>> cache;
 
@@ -46,6 +50,9 @@ public class StationRepository {
      */
     public void create(Station station) throws Exception {
 
+        //validate the theme
+        validateTheme(station.getTheme());
+
         validateNetwork(station.getNetworkMnemonic());
 
         //checks if the mnemonic is defined
@@ -54,14 +61,14 @@ public class StationRepository {
         }
 
         //checks if exists
-        Station existingStation = this.getAsRoot(station.getMnemonic(), station.getNetworkMnemonic());
+        Station existingStation = this.getAsRoot(station.getNetworkMnemonic(), station.getMnemonic());
         logger.debug("existingStation = " + existingStation);
         if (existingStation != null) {
             throw new ValidationException("Station with mnemonic = " + station.getMnemonic() + " already exists");
         }
 
         //insert
-        firebaseUtils.save(station, "/stations/" + station.getNetworkMnemonic() + "/" + station.getMnemonic() + ".json");
+        firebaseUtils.saveAsRoot(station, "/stations/" + station.getNetworkMnemonic() + "/" + station.getMnemonic() + ".json");
         cache.invalidate(station.getMnemonic() + "|" + station.getNetworkMnemonic());
     }
 
@@ -71,18 +78,30 @@ public class StationRepository {
     public List<Station> list(String networkMnemonic) throws Exception {
 
         validateNetwork(networkMnemonic);
-
-        List<Station> result = new ArrayList<Station>();
         String cacheKey = "_all_|" + networkMnemonic;
 
         //looks into the cache
-        List<Station> listStation = cache.get(cacheKey, new StationLoader(null, networkMnemonic));
+        List<Station> listStation = cache.get(cacheKey, new StationLoader(networkMnemonic, null));
         if (listStation == null) {
             //cannot cache null
             cache.invalidate(cacheKey);
         }
 
-        return result;
+        return listStation;
+    }
+
+    /**
+     * Get a specific station
+     */
+    public Station get(String networkMnemonic, String mnemonic) throws Exception {
+        List<Station> allStations = this.list(networkMnemonic);
+        for (Station station : allStations) {
+            if (station.getMnemonic().equals(mnemonic)) {
+                return station;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -102,12 +121,12 @@ public class StationRepository {
     /**
      * Get a list of stations
      */
-    private Station getAsRoot(String mnemonic, String networkMnemonic) throws IOException, ExecutionException {
+    private Station getAsRoot(String networkMnemonic, String mnemonic) throws IOException, ExecutionException {
 
         String cacheKey = mnemonic + "|" + networkMnemonic;
 
         //looks into the cache
-        List<Station> listStation = cache.get(cacheKey, new StationLoader(mnemonic, networkMnemonic));
+        List<Station> listStation = cache.get(cacheKey, new StationLoader(networkMnemonic, mnemonic));
         if ((listStation != null) && (listStation.size() > 0)) {
             return listStation.get(0);
         } else {
@@ -122,7 +141,7 @@ public class StationRepository {
         private String mnemonic;
         private String networkMnemonic;
 
-        public StationLoader(String mnemonic, String networkMnemonic) {
+        public StationLoader(String networkMnemonic, String mnemonic) {
             this.mnemonic = mnemonic;
             this.networkMnemonic = networkMnemonic;
         }
@@ -149,6 +168,15 @@ public class StationRepository {
 
 
             return resultList;
+        }
+    }
+
+    /**
+     * Validate the theme
+     */
+    private void validateTheme(String strTheme) throws Exception {
+        if ((strTheme != null) && (!themeServices.exists(strTheme))) {
+            throw new ValidationException("Theme doesn't exist: " + strTheme);
         }
     }
 

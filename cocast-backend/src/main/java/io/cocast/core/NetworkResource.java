@@ -86,7 +86,7 @@ public class NetworkResource {
     }
 
     /**
-     * Get a specific of networks
+     * Get a specific networks
      */
     @GET
     @Path("/{mnemonic}")

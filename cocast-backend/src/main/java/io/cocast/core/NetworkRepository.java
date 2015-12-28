@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
+import io.cocast.admin.ThemeServices;
 import io.cocast.auth.SecurityContext;
-import io.cocast.util.CoCastCallException;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
 import io.cocast.util.FirebaseUtils;
@@ -33,6 +33,9 @@ class NetworkRepository {
     @Inject
     private FirebaseUtils firebaseUtils;
 
+    @Inject
+    private ThemeServices themeServices;
+
     private static final Cache<String, List<Network>> cache;
     private static final Cache<String, List<NetworkMembership>> cacheMembership;
 
@@ -50,11 +53,14 @@ class NetworkRepository {
     /**
      * Creates a new network
      */
-    public void create(Network network) throws IOException, CoCastCallException, ExecutionException {
+    public void create(Network network) throws Exception {
         //checks if the mnemonic is defined
         if (network.getMnemonic() == null) {
             network.setMnemonic(ExtraStringUtils.generateMnemonic(network.getName()));
         }
+
+        //validate the theme
+        validateTheme(network.getTheme());
 
         //checks if exists
         Network existingNetwork = this.getAsRoot(network.getMnemonic());
@@ -122,6 +128,8 @@ class NetworkRepository {
         if (existingNetwork == null) {
             throw new ValidationException("Could not find network with mnemonic: " + network.getMnemonic());
         }
+
+        validateTheme(network.getTheme());
 
         //update info
         network.setLastUpdate(DateUtils.now());
@@ -265,6 +273,15 @@ class NetworkRepository {
             logger.debug("Returning membership = " + membershipList);
 
             return membershipList;
+        }
+    }
+
+    /**
+     * Validate the theme
+     */
+    private void validateTheme(String strTheme) throws Exception {
+        if ((strTheme != null) && (!themeServices.exists(strTheme))) {
+            throw new ValidationException("Theme doesn't exist: " + strTheme);
         }
     }
 
