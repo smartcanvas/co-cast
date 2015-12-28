@@ -155,4 +155,28 @@ public class StationResource {
         return APIResponse.updated("Station updated. Mnemonic: " + response.getMnemonic()).getResponse();
     }
 
+    /**
+     * Delete a station
+     */
+    @DELETE
+    @Path("/{networkMnemonic}/{mnemonic}")
+    public Response delete(@PathParam("networkMnemonic") String networkMnemonic,
+                           @PathParam("mnemonic") String mnemonic) {
+
+        try {
+            stationRepository.delete(networkMnemonic, mnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error getting station", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error getting station", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error getting station", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.deleted("Station deleted. Mnemonic: " + mnemonic).getResponse();
+    }
+
 }

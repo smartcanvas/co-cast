@@ -70,7 +70,7 @@ class NetworkRepository {
         }
 
         //insert
-        firebaseUtils.save(network, "/networks/" + network.getMnemonic() + ".json");
+        firebaseUtils.saveAsRoot(network, "/networks/" + network.getMnemonic() + ".json");
         cache.invalidate(network.getMnemonic());
 
         //insert collaborators and owners
@@ -159,7 +159,7 @@ class NetworkRepository {
         }
 
         //update
-        firebaseUtils.save(network, "/networks/" + network.getMnemonic() + ".json");
+        firebaseUtils.saveAsRoot(network, "/networks/" + network.getMnemonic() + ".json");
         cache.invalidate(network.getMnemonic());
         cacheMembership.invalidate(SecurityContext.get().userIdentification());
 
@@ -183,7 +183,7 @@ class NetworkRepository {
         existingNetwork.setLastUpdate(DateUtils.now());
 
         //update
-        firebaseUtils.save(existingNetwork, "/networks/" + existingNetwork.getMnemonic() + ".json");
+        firebaseUtils.saveAsRoot(existingNetwork, "/networks/" + existingNetwork.getMnemonic() + ".json");
         cache.invalidate(existingNetwork.getMnemonic());
 
         //remove collaborators

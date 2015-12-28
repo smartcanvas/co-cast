@@ -12,11 +12,9 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.validation.ValidationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,7 +60,7 @@ class StationRepository {
         }
 
         //checks if exists
-        Station existingStation = this.getAsRoot(station.getNetworkMnemonic(), station.getMnemonic());
+        Station existingStation = this.get(station.getNetworkMnemonic(), station.getMnemonic());
         logger.debug("existingStation = " + existingStation);
         if (existingStation != null) {
             throw new ValidationException("Station with mnemonic = " + station.getMnemonic() + " already exists");
@@ -70,7 +68,7 @@ class StationRepository {
 
         //insert
         firebaseUtils.saveAsRoot(station, "/stations/" + station.getNetworkMnemonic() + "/" + station.getMnemonic() + ".json");
-        invalidateCache(station.getNetworkMnemonic(), station.getMnemonic());
+        cache.invalidate(station.getNetworkMnemonic());
     }
 
     /**
@@ -79,13 +77,12 @@ class StationRepository {
     public List<Station> list(String networkMnemonic) throws Exception {
 
         validateNetwork(networkMnemonic);
-        String cacheKey = "_all_|" + networkMnemonic;
 
         //looks into the cache
-        List<Station> listStation = cache.get(cacheKey, new StationLoader(networkMnemonic, null));
+        List<Station> listStation = cache.get(networkMnemonic, new StationLoader(networkMnemonic));
         if (listStation == null) {
             //cannot cache null
-            cache.invalidate(cacheKey);
+            cache.invalidate(networkMnemonic);
         }
 
         return listStation;
@@ -136,9 +133,32 @@ class StationRepository {
 
         //update
         firebaseUtils.saveAsRoot(station, "/stations/" + networkMnemonic + "/" + station.getMnemonic() + ".json");
-        invalidateCache(station.getNetworkMnemonic(), station.getMnemonic());
+        cache.invalidate(networkMnemonic);
 
         return station;
+    }
+
+    /**
+     * Delete a station
+     */
+    public void delete(String networkMnemonic, String mnemonic) throws Exception {
+        validateNetwork(networkMnemonic);
+
+        Station existingStation = this.get(networkMnemonic, mnemonic);
+        if (existingStation == null) {
+            throw new ValidationException("Could not find station with mnemonic: " + mnemonic);
+        }
+
+        if (!existingStation.isActive()) {
+            throw new ValidationException("Station has been already deleted: " + mnemonic);
+        }
+
+        existingStation.setActive(false);
+        existingStation.setLastUpdate(DateUtils.now());
+
+        //update
+        firebaseUtils.saveAsRoot(existingStation, "/stations/" + networkMnemonic + "/" + existingStation.getMnemonic() + ".json");
+        cache.invalidate(networkMnemonic);
     }
 
     /**
@@ -155,31 +175,11 @@ class StationRepository {
         }
     }
 
-    /**
-     * Get a list of stations
-     */
-    private Station getAsRoot(String networkMnemonic, String mnemonic) throws IOException, ExecutionException {
-
-        String cacheKey = mnemonic + "|" + networkMnemonic;
-
-        //looks into the cache
-        List<Station> listStation = cache.get(cacheKey, new StationLoader(networkMnemonic, mnemonic));
-        if ((listStation != null) && (listStation.size() > 0)) {
-            return listStation.get(0);
-        } else {
-            //cannot cache null
-            cache.invalidate(mnemonic);
-            return null;
-        }
-    }
-
     private class StationLoader implements Callable<List<Station>> {
 
-        private String mnemonic;
         private String networkMnemonic;
 
-        public StationLoader(String networkMnemonic, String mnemonic) {
-            this.mnemonic = mnemonic;
+        public StationLoader(String networkMnemonic) {
             this.networkMnemonic = networkMnemonic;
         }
 
@@ -187,34 +187,22 @@ class StationRepository {
         public List<Station> call() throws Exception {
 
             logger.debug("Populating station cache...");
-            List<Station> resultList;
+            List<Station> resultList = new ArrayList<Station>();
 
-            if (mnemonic != null) {
-                //just one station
-                String uri = "/stations/" + networkMnemonic + "/" + mnemonic + ".json";
-                Station station = firebaseUtils.getAsRoot(uri, Station.class);
-                resultList = new ArrayList<Station>();
+            //a list of stations
+            String uri = "/stations/" + networkMnemonic + ".json";
+            List<Station> allStations = firebaseUtils.listAsRoot(uri, Station.class);
+            for (Station station : allStations) {
                 if ((station != null) && (station.isActive())) {
                     resultList.add(station);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Adding station to cache " + station);
+                    }
                 }
-            } else {
-                //a list of stations
-                String uri = "/stations/" + networkMnemonic + ".json";
-                resultList = firebaseUtils.listAsRoot(uri, Station.class);
             }
-
 
             return resultList;
         }
-    }
-
-    /**
-     * Invalidate the caches
-     */
-    private void invalidateCache(String networkMnemonic, String mnemonic) {
-        String cacheAllKey = "_all_|" + networkMnemonic;
-        cache.invalidate(cacheAllKey);
-        cache.invalidate(mnemonic + "|" + networkMnemonic);
     }
 
     /**
