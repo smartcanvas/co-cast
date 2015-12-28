@@ -11,5 +11,6 @@ public class CoreModule extends ServletModule {
     protected void configureServlets() {
         bind(NetworkRepository.class);
         bind(StationRepository.class);
+        bind(SettingsRepository.class);
     }
 }

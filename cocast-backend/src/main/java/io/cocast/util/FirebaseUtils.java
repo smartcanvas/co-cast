@@ -117,6 +117,21 @@ public class FirebaseUtils {
     }
 
     /**
+     * Deletes an object from Firebase
+     */
+    public void deleteAsRoot(String uri) throws JsonProcessingException, CoCastCallException {
+
+        String completeURL = getFirebaseURLAsRoot(uri);
+        Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+        Response response = client.target(completeURL).request().delete();
+        if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
+                !(response.getStatus() == HttpServletResponse.SC_NO_CONTENT)) {
+            throw new CoCastCallException("Error deleting entity with URI = " + uri + ". Status = " + response.getStatus(),
+                    response.getStatus());
+        }
+    }
+
+    /**
      * Fetchs data from Firebase
      */
     public <T> List<T> list(String uri, Class<T> cls) throws IOException {

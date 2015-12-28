@@ -29,7 +29,7 @@ class StationRepository {
     private FirebaseUtils firebaseUtils;
 
     @Inject
-    private NetworkRepository networkRepository;
+    private NetworkServices networkServices;
 
     @Inject
     private ThemeServices themeServices;
@@ -52,7 +52,7 @@ class StationRepository {
         //validate the theme
         validateTheme(station.getTheme());
 
-        validateNetwork(station.getNetworkMnemonic());
+        networkServices.validate(station.getNetworkMnemonic());
 
         //checks if the mnemonic is defined
         if (station.getMnemonic() == null) {
@@ -76,7 +76,7 @@ class StationRepository {
      */
     public List<Station> list(String networkMnemonic) throws Exception {
 
-        validateNetwork(networkMnemonic);
+        networkServices.validate(networkMnemonic);
 
         //looks into the cache
         List<Station> listStation = cache.get(networkMnemonic, new StationLoader(networkMnemonic));
@@ -92,7 +92,7 @@ class StationRepository {
      * Get a specific station
      */
     public Station get(String networkMnemonic, String mnemonic) throws Exception {
-        validateNetwork(networkMnemonic);
+        networkServices.validate(networkMnemonic);
 
         List<Station> allStations = this.list(networkMnemonic);
         for (Station station : allStations) {
@@ -110,7 +110,7 @@ class StationRepository {
      */
     public Station update(Station station, String networkMnemonic) throws Exception {
 
-        validateNetwork(networkMnemonic);
+        networkServices.validate(networkMnemonic);
         validateTheme(station.getTheme());
 
         Station existingStation = this.get(networkMnemonic, station.getMnemonic());
@@ -142,7 +142,7 @@ class StationRepository {
      * Delete a station
      */
     public void delete(String networkMnemonic, String mnemonic) throws Exception {
-        validateNetwork(networkMnemonic);
+        networkServices.validate(networkMnemonic);
 
         Station existingStation = this.get(networkMnemonic, mnemonic);
         if (existingStation == null) {
@@ -159,20 +159,6 @@ class StationRepository {
         //update
         firebaseUtils.saveAsRoot(existingStation, "/stations/" + networkMnemonic + "/" + existingStation.getMnemonic() + ".json");
         cache.invalidate(networkMnemonic);
-    }
-
-    /**
-     * Checks if the user has access to the specific network
-     */
-    private void validateNetwork(String networkMnemonic) throws Exception {
-        if (networkMnemonic == null) {
-            throw new ValidationException("Network mnemonic cannot be null");
-        }
-
-        Network network = networkRepository.get(networkMnemonic);
-        if (network == null) {
-            throw new ValidationException("The user doesn't have access to network " + networkMnemonic);
-        }
     }
 
     private class StationLoader implements Callable<List<Station>> {
