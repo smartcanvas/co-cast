@@ -122,4 +122,37 @@ public class StationResource {
         return Response.ok(station).build();
     }
 
+    /**
+     * Updates a station
+     */
+    @PUT
+    @Path("/{networkMnemonic}/{mnemonic}")
+    public Response update(Station station,
+                           @PathParam("networkMnemonic") String networkMnemonic,
+                           @PathParam("mnemonic") String mnemonic) {
+
+        Station response;
+
+        if (StringUtils.isEmpty(mnemonic)) {
+            return APIResponse.badRequest("Station mnemonic is required as a path param").getResponse();
+        } else {
+            station.setMnemonic(mnemonic);
+        }
+
+        try {
+            response = stationRepository.update(station, networkMnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error updating station", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error updating station", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error updating station", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.updated("Station updated. Mnemonic: " + response.getMnemonic()).getResponse();
+    }
+
 }

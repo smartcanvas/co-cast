@@ -13,6 +13,7 @@ public class Station {
     private String name;
     private String mnemonic;
     private String networkMnemonic;
+    private String location;
     private String createdBy;
     private Date lastUpdate;
     private String theme;
@@ -49,6 +50,14 @@ public class Station {
 
     public void setNetworkMnemonic(String networkMnemonic) {
         this.networkMnemonic = networkMnemonic;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getCreatedBy() {

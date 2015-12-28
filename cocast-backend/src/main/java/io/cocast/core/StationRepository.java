@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
 import io.cocast.admin.ThemeServices;
+import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
@@ -69,7 +70,7 @@ class StationRepository {
 
         //insert
         firebaseUtils.saveAsRoot(station, "/stations/" + station.getNetworkMnemonic() + "/" + station.getMnemonic() + ".json");
-        cache.invalidate(station.getMnemonic() + "|" + station.getNetworkMnemonic());
+        invalidateCache(station.getNetworkMnemonic(), station.getMnemonic());
     }
 
     /**
@@ -94,6 +95,8 @@ class StationRepository {
      * Get a specific station
      */
     public Station get(String networkMnemonic, String mnemonic) throws Exception {
+        validateNetwork(networkMnemonic);
+
         List<Station> allStations = this.list(networkMnemonic);
         for (Station station : allStations) {
             if (station.getMnemonic().equals(mnemonic)) {
@@ -102,6 +105,40 @@ class StationRepository {
         }
 
         return null;
+    }
+
+
+    /**
+     * Update a station
+     */
+    public Station update(Station station, String networkMnemonic) throws Exception {
+
+        validateNetwork(networkMnemonic);
+        validateTheme(station.getTheme());
+
+        Station existingStation = this.get(networkMnemonic, station.getMnemonic());
+        if (existingStation == null) {
+            throw new ValidationException("Could not find station with mnemonic: " + station.getMnemonic());
+        }
+
+        //update info
+        station.setLastUpdate(DateUtils.now());
+        station.setCreatedBy(existingStation.getCreatedBy());
+        if (station.getName() == null) {
+            station.setName(existingStation.getName());
+        }
+        if (station.getTheme() == null) {
+            station.setTheme(existingStation.getTheme());
+        }
+        if (station.getLocation() == null) {
+            station.setLocation(existingStation.getLocation());
+        }
+
+        //update
+        firebaseUtils.saveAsRoot(station, "/stations/" + networkMnemonic + "/" + station.getMnemonic() + ".json");
+        invalidateCache(station.getNetworkMnemonic(), station.getMnemonic());
+
+        return station;
     }
 
     /**
@@ -169,6 +206,15 @@ class StationRepository {
 
             return resultList;
         }
+    }
+
+    /**
+     * Invalidate the caches
+     */
+    private void invalidateCache(String networkMnemonic, String mnemonic) {
+        String cacheAllKey = "_all_|" + networkMnemonic;
+        cache.invalidate(cacheAllKey);
+        cache.invalidate(mnemonic + "|" + networkMnemonic);
     }
 
     /**
