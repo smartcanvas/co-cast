@@ -11,48 +11,50 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
- * APIs for color palette
+ * APIs for theme
  */
 @Produces("application/json")
 @Consumes("application/json")
-@Path("/api/admin/v1/colors")
+@Path("/api/admin/v1/themes")
 @Singleton
-public class ColorPaletteResource {
+public class ThemeResource {
 
-    private static Logger logger = LogManager.getLogger(ColorPaletteResource.class.getName());
+    private static Logger logger = LogManager.getLogger(ThemeResource.class.getName());
 
     @Inject
-    private ColorPaletteRepository colorPaletteRepository;
+    private ThemeRepository colorPaletteRepository;
 
     @POST
-    public Response create(ColorPalette colorPalette) {
+    public Response create(Theme theme) {
 
         //validate the parameter
-        if ((colorPalette == null) ||
-                (colorPalette.getMnemonic() == null) ||
-                (colorPalette.getPrimaryColor() == null) ||
-                (colorPalette.getSecondaryColor() == null) ||
-                (colorPalette.getAccentColor() == null) ||
-                (colorPalette.getPrimaryTextColor() == null) ||
-                (colorPalette.getSecondaryTextColor() == null) ||
-                (colorPalette.getAccentTextColor() == null)) {
-            return APIResponse.badRequest("All fields are required for color palettes").getResponse();
+        if ((theme == null) ||
+                (theme.getMnemonic() == null) ||
+                (theme.getPrimaryColor() == null) ||
+                (theme.getSecondaryColor() == null) ||
+                (theme.getAccentColor() == null) ||
+                (theme.getPrimaryFont() == null) ||
+                (theme.getSecondaryFont() == null) ||
+                (theme.getPrimaryFontColor() == null) ||
+                (theme.getSecondaryFontColor() == null) ||
+                (theme.getAccentFontColor() == null)) {
+            return APIResponse.badRequest("All fields are required for themes").getResponse();
         }
 
         try {
             //calls the creation service
-            colorPaletteRepository.create(colorPalette);
+            colorPaletteRepository.create(theme);
         } catch (Exception exc) {
-            logger.error("Error creating color palette", exc);
+            logger.error("Error creating theme", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
-        return APIResponse.created("Color palette create. Mnemonic = " + colorPalette.getMnemonic()).getResponse();
+        return APIResponse.created("Theme create. Mnemonic = " + theme.getMnemonic()).getResponse();
     }
 
     @GET
     public Response list() {
-        List<ColorPalette> result;
+        List<Theme> result;
 
         try {
             //calls the service
@@ -68,13 +70,13 @@ public class ColorPaletteResource {
     @GET
     @Path("/{mnemonic}")
     public Response get(@PathParam("mnemonic") String mnemonic) {
-        ColorPalette result;
+        Theme result;
 
         try {
             //calls the service
             result = colorPaletteRepository.get(mnemonic);
         } catch (Exception exc) {
-            logger.error("Error getting color palette with menomonic = " + mnemonic, exc);
+            logger.error("Error getting theme with menomonic = " + mnemonic, exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 

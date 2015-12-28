@@ -1,0 +1,46 @@
+{
+  "rules": {
+    //Users that has logged into the system in the past
+    "users": {
+      "$uid": {
+        // grants write access to the owner of this user account whose uid must exactly match the key ($uid)
+        ".write": "auth !== null && auth.uid === $uid",
+        // grants read access to any user who is logged in with Google
+        ".read": "auth !== null && auth.uid === $uid"
+      }
+    },
+    //System configurations
+    "configurations": {
+      ".read": "auth.uid !== null",
+      ".write": "auth.uid === 'root'"
+    },
+    //Themes
+    "themes": {
+      ".read": "auth.uid !== null",
+      ".write": "auth.uid === 'root'"
+    },
+    //Networks
+    "networks": {
+      "$mnemonic": {
+        ".read": "root.child('members/' + $mnemonic + '/' + auth.uid).exists()",
+        ".write": "(!data.exists()) || (data.child('createdBy').val() === auth.uid)",
+        "colorPalette": {
+          ".validate": "newData.exists() && (root.child('themes/' + newData.val()).exists())"
+        }
+      }
+    },
+    //Network members
+    "members": {
+      "$userId": {
+        // any member can read/write its own network list
+        ".read": "auth.uid === $userId",
+        ".write": "auth.uid === $userId",
+        // user must already exist to add a member
+        ".validate": "root.child('users/'+$userId).exists()",
+        "$networkMnemonic": {
+          ".write": "root.child( 'networks/' + $networkMnemonic ).exists()"
+        }
+      }
+    }
+  }
+}

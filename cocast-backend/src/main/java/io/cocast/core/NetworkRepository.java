@@ -113,7 +113,7 @@ class NetworkRepository {
         //Copy info
         existingNetwork.setName(network.getName());
         existingNetwork.setActive(network.isActive());
-        existingNetwork.setColorPalette(network.getColorPalette());
+        existingNetwork.setTheme(network.getTheme());
         existingNetwork.setLastUpdate(DateUtils.now());
 
         //remove collaborators
@@ -151,6 +151,7 @@ class NetworkRepository {
 
         existingNetwork.setActive(false);
         existingNetwork.setLastUpdate(DateUtils.now());
+
         //update
         firebaseUtils.save(existingNetwork, "/networks/" + existingNetwork.getMnemonic() + ".json");
         cache.invalidate(existingNetwork.getMnemonic());

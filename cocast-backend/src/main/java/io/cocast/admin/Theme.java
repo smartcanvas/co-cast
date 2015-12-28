@@ -6,24 +6,26 @@ import io.cocast.util.DateUtils;
 import java.util.Date;
 
 /**
- * Color palettes
+ * Themes
  */
-public class ColorPalette {
+public class Theme {
 
     private String mnemonic;
     private String primaryColor;
     private String secondaryColor;
     private String accentColor;
-    private String primaryTextColor;
-    private String secondaryTextColor;
-    private String accentTextColor;
+    private String primaryFont;
+    private String secondaryFont;
+    private String primaryFontColor;
+    private String secondaryFontColor;
+    private String accentFontColor;
     private String createdBy;
     private Date lastUpdate;
 
     /**
      * Constructor
      */
-    public ColorPalette() {
+    public Theme() {
         lastUpdate = DateUtils.now();
         createdBy = SecurityContext.get().userIdentification();
     }
@@ -60,28 +62,44 @@ public class ColorPalette {
         this.accentColor = accentColor;
     }
 
-    public String getPrimaryTextColor() {
-        return primaryTextColor;
+    public String getPrimaryFont() {
+        return primaryFont;
     }
 
-    public void setPrimaryTextColor(String primaryTextColor) {
-        this.primaryTextColor = primaryTextColor;
+    public void setPrimaryFont(String primaryFont) {
+        this.primaryFont = primaryFont;
     }
 
-    public String getSecondaryTextColor() {
-        return secondaryTextColor;
+    public String getSecondaryFont() {
+        return secondaryFont;
     }
 
-    public void setSecondaryTextColor(String secondaryTextColor) {
-        this.secondaryTextColor = secondaryTextColor;
+    public void setSecondaryFont(String secondaryFont) {
+        this.secondaryFont = secondaryFont;
     }
 
-    public String getAccentTextColor() {
-        return accentTextColor;
+    public String getPrimaryFontColor() {
+        return primaryFontColor;
     }
 
-    public void setAccentTextColor(String accentTextColor) {
-        this.accentTextColor = accentTextColor;
+    public void setPrimaryFontColor(String primaryFontColor) {
+        this.primaryFontColor = primaryFontColor;
+    }
+
+    public String getSecondaryFontColor() {
+        return secondaryFontColor;
+    }
+
+    public void setSecondaryFontColor(String secondaryFontColor) {
+        this.secondaryFontColor = secondaryFontColor;
+    }
+
+    public String getAccentFontColor() {
+        return accentFontColor;
+    }
+
+    public void setAccentFontColor(String accentFontColor) {
+        this.accentFontColor = accentFontColor;
     }
 
     public String getCreatedBy() {
@@ -102,14 +120,14 @@ public class ColorPalette {
 
     @Override
     public String toString() {
-        return "ColorPalette{" +
+        return "Theme{" +
                 "mnemonic='" + mnemonic + '\'' +
                 ", primaryColor='" + primaryColor + '\'' +
                 ", secondaryColor='" + secondaryColor + '\'' +
                 ", accentColor='" + accentColor + '\'' +
-                ", primaryTextColor='" + primaryTextColor + '\'' +
-                ", secondaryTextColor='" + secondaryTextColor + '\'' +
-                ", accentTextColor='" + accentTextColor + '\'' +
+                ", primaryFontColor='" + primaryFontColor + '\'' +
+                ", secondaryFontColor='" + secondaryFontColor + '\'' +
+                ", accentFontColor='" + accentFontColor + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", lastUpdate=" + lastUpdate +
                 '}';

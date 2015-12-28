@@ -17,7 +17,7 @@ public class Network {
     private String mnemonic;
     private String createdBy;
     private Date lastUpdate;
-    private String colorPalette;
+    private String theme;
     private List<String> collaborators;
     private boolean active;
 
@@ -68,12 +68,12 @@ public class Network {
         this.collaborators = collaborators;
     }
 
-    public String getColorPalette() {
-        return colorPalette;
+    public String getTheme() {
+        return theme;
     }
 
-    public void setColorPalette(String colorPalette) {
-        this.colorPalette = colorPalette;
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 
     public boolean isActive() {

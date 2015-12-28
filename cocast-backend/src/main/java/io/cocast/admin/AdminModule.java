@@ -9,6 +9,6 @@ public class AdminModule extends ServletModule {
 
     @Override
     protected void configureServlets() {
-        bind(ColorPaletteRepository.class);
+        bind(ThemeRepository.class);
     }
 }
