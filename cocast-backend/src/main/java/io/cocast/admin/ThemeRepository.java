@@ -43,7 +43,7 @@ class ThemeRepository {
             @Override
             public List<Theme> call() throws Exception {
                 logger.debug("Populating theme cache...");
-                return firebaseUtils.get("/themes.json", Theme.class);
+                return firebaseUtils.list("/themes.json", Theme.class);
             }
         });
     }

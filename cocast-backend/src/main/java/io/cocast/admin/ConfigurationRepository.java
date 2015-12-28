@@ -47,7 +47,7 @@ class ConfigurationRepository {
             @Override
             public List<Configuration> call() throws Exception {
                 logger.debug("Populating configuration cache...");
-                return firebaseUtils.get("/configurations.json", Configuration.class);
+                return firebaseUtils.list("/configurations.json", Configuration.class);
             }
         });
     }

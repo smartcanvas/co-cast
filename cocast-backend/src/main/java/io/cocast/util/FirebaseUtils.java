@@ -119,7 +119,7 @@ public class FirebaseUtils {
     /**
      * Fetchs data from Firebase
      */
-    public <T> List<T> get(String uri, Class<T> cls) throws IOException {
+    public <T> List<T> list(String uri, Class<T> cls) throws IOException {
 
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
@@ -138,9 +138,30 @@ public class FirebaseUtils {
     }
 
     /**
+     * Fetchs data from Firebase
+     */
+    public <T> List<T> listAsRoot(String uri, Class<T> cls) throws IOException {
+
+        String completeURL = getFirebaseURLAsRoot(uri);
+        Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Firebase URL = " + completeURL);
+        }
+
+        String strFirebaseResult = client.target(completeURL).request().get(String.class);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Return from Firebase = " + strFirebaseResult);
+        }
+
+        return getListFromResult(strFirebaseResult, cls);
+    }
+
+    /**
      * Fetchs data as JSON
      */
-    public JsonNode get(String uri) throws IOException {
+    public JsonNode listAsJsonNode(String uri) throws IOException {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 

@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.APIResponse;
 import io.cocast.util.CoCastCallException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -66,7 +67,7 @@ public class NetworkResource {
     @GET
     public Response list() {
 
-        List<Network> networkList = null;
+        List<Network> networkList;
 
         try {
             networkList = networkRepository.list();
@@ -91,7 +92,7 @@ public class NetworkResource {
     @Path("/{mnemonic}")
     public Response get(@PathParam("mnemonic") String mnemonic) {
 
-        Network network = null;
+        Network network;
 
         try {
             network = networkRepository.get(mnemonic);
@@ -113,9 +114,16 @@ public class NetworkResource {
      * Updates a network
      */
     @PUT
-    public Response update(Network network) {
+    @Path("/{mnemonic}")
+    public Response update(Network network, @PathParam("mnemonic") String mnemonic) {
 
-        Network response = null;
+        Network response;
+
+        if (StringUtils.isEmpty(mnemonic)) {
+            return APIResponse.badRequest("Network mnemonic is required as a path param").getResponse();
+        } else {
+            network.setMnemonic(mnemonic);
+        }
 
         try {
             response = networkRepository.update(network);

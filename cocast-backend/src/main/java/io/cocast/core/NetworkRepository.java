@@ -34,10 +34,15 @@ class NetworkRepository {
     private FirebaseUtils firebaseUtils;
 
     private static final Cache<String, List<Network>> cache;
+    private static final Cache<String, List<NetworkMembership>> cacheMembership;
 
     static {
         //initializes the caches
         cache = CacheBuilder.newBuilder().maximumSize(1000)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
+                .build();
+
+        cacheMembership = CacheBuilder.newBuilder().maximumSize(1000)
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();
     }
@@ -68,6 +73,8 @@ class NetworkRepository {
         for (String strCollaborator : listCollaborators) {
             firebaseUtils.saveString("collaborator", "/members/" + strCollaborator + "/" + network.getMnemonic() + ".json");
         }
+
+        cacheMembership.invalidate(SecurityContext.get().userIdentification());
     }
 
     /**
@@ -79,11 +86,17 @@ class NetworkRepository {
 
         for (NetworkMembership membership : membershipList) {
             Network network = this.getAsRoot(membership.getNetworkMnemonic());
+            if (logger.isDebugEnabled()) {
+                logger.debug("Found network to list: " + network);
+            }
             if (network != null) {
                 result.add(network);
             }
         }
 
+        if (logger.isDebugEnabled()) {
+            logger.debug("Network.list: returning " + result.size() + " entries: " + result);
+        }
         return result;
     }
 
@@ -110,30 +123,39 @@ class NetworkRepository {
             throw new ValidationException("Could not find network with mnemonic: " + network.getMnemonic());
         }
 
-        //Copy info
-        existingNetwork.setName(network.getName());
-        existingNetwork.setActive(network.isActive());
-        existingNetwork.setTheme(network.getTheme());
-        existingNetwork.setLastUpdate(DateUtils.now());
+        //update info
+        network.setLastUpdate(DateUtils.now());
+        network.setCreatedBy(existingNetwork.getCreatedBy());
+        if (network.getName() == null) {
+            network.setName(existingNetwork.getName());
+        }
+        if (network.getTheme() == null) {
+            network.setTheme(existingNetwork.getTheme());
+        }
 
-        //remove collaborators
-        List<String> listCollaborators = existingNetwork.getCollaborators();
-        logger.debug("Collaborators to be removed = " + listCollaborators);
-        for (String strCollaborator : listCollaborators) {
-            firebaseUtils.saveString("removed", "/members/" + strCollaborator + "/" + network.getMnemonic() + ".json");
+        if (network.getCollaborators() == null) {
+            network.setCollaborators(existingNetwork.getCollaborators());
+        } else {
+            //remove collaborators
+            List<String> listCollaborators = existingNetwork.getCollaborators();
+            logger.debug("Collaborators to be removed = " + listCollaborators);
+            for (String strCollaborator : listCollaborators) {
+                firebaseUtils.saveString("removed", "/members/" + strCollaborator + "/" + network.getMnemonic() + ".json");
+            }
+
+            //add new collaborators
+            listCollaborators = network.getCollaborators();
+            for (String strCollaborator : listCollaborators) {
+                firebaseUtils.saveString("collaborator", "/members/" + strCollaborator + "/" + network.getMnemonic() + ".json");
+            }
         }
 
         //update
         firebaseUtils.save(network, "/networks/" + network.getMnemonic() + ".json");
         cache.invalidate(network.getMnemonic());
+        cacheMembership.invalidate(SecurityContext.get().userIdentification());
 
-        //add new collaborators
-        listCollaborators = network.getCollaborators();
-        for (String strCollaborator : listCollaborators) {
-            firebaseUtils.saveString("collaborator", "/members/" + strCollaborator + "/" + network.getMnemonic() + ".json");
-        }
-
-        return null;
+        return network;
     }
 
     /**
@@ -165,32 +187,17 @@ class NetworkRepository {
 
         //remove owner
         firebaseUtils.saveString("removed", "/members/" + existingNetwork.getCreatedBy() + "/" + mnemonic + ".json");
+
+        cacheMembership.invalidate(SecurityContext.get().userIdentification());
     }
 
     /**
      * Get the networks the user has access
      */
-    List<NetworkMembership> listMemberships() throws IOException {
+    List<NetworkMembership> listMemberships() throws IOException, ExecutionException {
+        //looks into the cache
         String uid = SecurityContext.get().userIdentification();
-
-        logger.debug("Getting memberships for " + uid);
-        JsonNode jsonNode = firebaseUtils.get("/members/" + uid + ".json");
-        Iterator<String> iterator = jsonNode.fieldNames();
-        List<NetworkMembership> membershipList = new ArrayList<NetworkMembership>();
-        while (iterator.hasNext()) {
-            String field = iterator.next();
-            String role = jsonNode.findValue(field).asText();
-            if (!"removed".equals(role)) {
-                NetworkMembership networkMembership = new NetworkMembership();
-                networkMembership.setNetworkMnemonic(field);
-                networkMembership.setRole(role);
-                membershipList.add(networkMembership);
-            }
-        }
-
-        logger.debug("Returning membership = " + membershipList);
-
-        return membershipList;
+        return cacheMembership.get(uid, new NetworkMembershipLoader(uid));
     }
 
     /**
@@ -226,6 +233,38 @@ class NetworkRepository {
                 resultList.add(network);
             }
             return resultList;
+        }
+    }
+
+    private class NetworkMembershipLoader implements Callable<List<NetworkMembership>> {
+
+        private String uid;
+
+        public NetworkMembershipLoader(String uid) {
+            this.uid = uid;
+        }
+
+        @Override
+        public List<NetworkMembership> call() throws Exception {
+
+            logger.debug("Getting memberships for " + uid);
+            JsonNode jsonNode = firebaseUtils.listAsJsonNode("/members/" + uid + ".json");
+            Iterator<String> iterator = jsonNode.fieldNames();
+            List<NetworkMembership> membershipList = new ArrayList<NetworkMembership>();
+            while (iterator.hasNext()) {
+                String field = iterator.next();
+                String role = jsonNode.findValue(field).asText();
+                if (!"removed".equals(role)) {
+                    NetworkMembership networkMembership = new NetworkMembership();
+                    networkMembership.setNetworkMnemonic(field);
+                    networkMembership.setRole(role);
+                    membershipList.add(networkMembership);
+                }
+            }
+
+            logger.debug("Returning membership = " + membershipList);
+
+            return membershipList;
         }
     }
 

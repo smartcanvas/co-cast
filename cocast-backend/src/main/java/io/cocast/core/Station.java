@@ -3,28 +3,27 @@ package io.cocast.core;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
- * A Network is the top-level organization structure for Co-cast. It represents a network that has many stations,
- * channels and schedules of contents that needs to be casted.
+ * Station
  */
-public class Network {
+public class Station {
 
     private String name;
     private String mnemonic;
+    private String networkMnemonic;
     private String createdBy;
     private Date lastUpdate;
     private String theme;
-    private List<String> collaborators;
     private boolean active;
 
-    public Network() {
+    /**
+     * Constructor
+     */
+    public Station() {
         lastUpdate = DateUtils.now();
         createdBy = SecurityContext.get().userIdentification();
-        collaborators = new ArrayList<String>();
         active = true;
     }
 
@@ -44,6 +43,14 @@ public class Network {
         this.mnemonic = mnemonic;
     }
 
+    public String getNetworkMnemonic() {
+        return networkMnemonic;
+    }
+
+    public void setNetworkMnemonic(String networkMnemonic) {
+        this.networkMnemonic = networkMnemonic;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }
@@ -58,14 +65,6 @@ public class Network {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    public List<String> getCollaborators() {
-        return collaborators;
-    }
-
-    public void setCollaborators(List<String> collaborators) {
-        this.collaborators = collaborators;
     }
 
     public String getTheme() {
@@ -86,16 +85,13 @@ public class Network {
 
     @Override
     public String toString() {
-        return "Network{" +
+        return "Station{" +
                 "name='" + name + '\'' +
                 ", mnemonic='" + mnemonic + '\'' +
                 ", createdBy='" + createdBy + '\'' +
                 ", lastUpdate=" + lastUpdate +
                 ", theme='" + theme + '\'' +
-                ", collaborators=" + collaborators +
                 ", active=" + active +
                 '}';
     }
-
-
 }

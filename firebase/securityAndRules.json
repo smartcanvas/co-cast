@@ -1,5 +1,6 @@
 {
   "rules": {
+
     //Users that has logged into the system in the past
     "users": {
       "$uid": {
@@ -9,6 +10,7 @@
         ".read": "auth !== null && auth.uid === $uid"
       }
     },
+
     //System configurations
     "configurations": {
       ".read": "auth.uid !== null",
@@ -24,11 +26,24 @@
       "$mnemonic": {
         ".read": "root.child('members/' + $mnemonic + '/' + auth.uid).exists()",
         ".write": "(!data.exists()) || (data.child('createdBy').val() === auth.uid)",
-        "colorPalette": {
+        "theme": {
           ".validate": "newData.exists() && (root.child('themes/' + newData.val()).exists())"
         }
       }
     },
+    //Stations
+    "stations": {
+      "$networkMnemonic": {
+        ".read": "root.child('members/' + $networkMnemonic + '/' + auth.uid).exists()",
+        ".write": "(!data.exists()) || (data.child('createdBy').val() === auth.uid)",
+        "$mnemonic": {
+          "theme": {
+            ".validate": "!newData.exists() || (root.child('themes/' + newData.val()).exists())"
+          }
+        }
+      }
+    },
+
     //Network members
     "members": {
       "$userId": {
