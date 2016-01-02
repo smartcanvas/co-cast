@@ -13,5 +13,6 @@ public class CoreModule extends ServletModule {
         bind(StationRepository.class);
         bind(SettingsRepository.class);
         bind(ChannelRepository.class);
+        bind(ContentRepository.class);
     }
 }
