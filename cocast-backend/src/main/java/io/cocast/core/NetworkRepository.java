@@ -62,6 +62,8 @@ class NetworkRepository {
         //validate the theme
         validateTheme(network.getTheme());
 
+        validate(network);
+
         //checks if exists
         Network existingNetwork = this.getAsRoot(network.getMnemonic());
         logger.debug("existingNetwork = " + existingNetwork);
@@ -141,6 +143,8 @@ class NetworkRepository {
             network.setTheme(existingNetwork.getTheme());
         }
 
+        validate(network);
+
         if (network.getCollaborators() == null) {
             network.setCollaborators(existingNetwork.getCollaborators());
         } else {
@@ -206,6 +210,16 @@ class NetworkRepository {
         //looks into the cache
         String uid = SecurityContext.get().userIdentification();
         return cacheMembership.get(uid, new NetworkMembershipLoader(uid));
+    }
+
+    /**
+     * Validate the object for creation or update
+     */
+    private void validate(Network network) {
+        if ((network == null) ||
+                (network.getName() == null)) {
+            throw new ValidationException("Network name is required");
+        }
     }
 
     /**

@@ -26,6 +26,7 @@ public class Channel {
     private String title;
     private String theme;
     private List<String> tags;
+    private String source;
     private Integer maxAgeInHours;
     private Integer limitToFirst;
     private String orderBy;
@@ -82,6 +83,14 @@ public class Channel {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public Integer getMaxAgeInHours() {

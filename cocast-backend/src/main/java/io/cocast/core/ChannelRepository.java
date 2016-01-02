@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 class ChannelRepository {
 
-    private static Logger logger = LogManager.getLogger(StationRepository.class.getName());
+    private static Logger logger = LogManager.getLogger(ChannelRepository.class.getName());
 
     @Inject
     private FirebaseUtils firebaseUtils;
@@ -101,6 +101,77 @@ class ChannelRepository {
         }
 
         return null;
+    }
+
+    /**
+     * Update a channel
+     */
+    public Channel update(Channel channel, String networkMnemonic) throws Exception {
+
+        networkServices.validate(networkMnemonic);
+        validateTheme(channel.getTheme());
+
+        Channel existingChannel = this.get(networkMnemonic, channel.getMnemonic());
+        if (existingChannel == null) {
+            throw new ValidationException("Could not find channel with mnemonic: " + channel.getMnemonic());
+        }
+
+        //update info
+        channel.setLastUpdate(DateUtils.now());
+        channel.setCreatedBy(existingChannel.getCreatedBy());
+        if (channel.getTitle() == null) {
+            channel.setTitle(existingChannel.getTitle());
+        }
+        if (channel.getTheme() == null) {
+            channel.setTheme(existingChannel.getTheme());
+        }
+        if (channel.getTags() == null) {
+            channel.setTags(existingChannel.getTags());
+        }
+        if (channel.getSource() == null) {
+            channel.setSource(existingChannel.getSource());
+        }
+        if (channel.getMaxAgeInHours() == null) {
+            channel.setMaxAgeInHours(existingChannel.getMaxAgeInHours());
+        }
+        if (channel.getLimitToFirst() == null) {
+            channel.setLimitToFirst(existingChannel.getLimitToFirst());
+        }
+        if (channel.getOrderBy() == null) {
+            channel.setOrderBy(existingChannel.getOrderBy());
+        }
+        if (channel.getOrderBy() == null) {
+            channel.setOrderBy(existingChannel.getOrderBy());
+        }
+
+        //update
+        firebaseUtils.saveAsRoot(channel, "/channels/" + networkMnemonic + "/" + channel.getMnemonic() + ".json");
+        cache.invalidate(networkMnemonic);
+
+        return channel;
+    }
+
+    /**
+     * Delete a channel
+     */
+    public void delete(String networkMnemonic, String mnemonic) throws Exception {
+        networkServices.validate(networkMnemonic);
+
+        Channel existingChannel = this.get(networkMnemonic, mnemonic);
+        if (existingChannel == null) {
+            throw new ValidationException("Could not find channel with mnemonic: " + mnemonic);
+        }
+
+        if (!existingChannel.isActive()) {
+            throw new ValidationException("Channel has been already deleted: " + mnemonic);
+        }
+
+        existingChannel.setActive(false);
+        existingChannel.setLastUpdate(DateUtils.now());
+
+        //update
+        firebaseUtils.saveAsRoot(existingChannel, "/channels/" + networkMnemonic + "/" + existingChannel.getMnemonic() + ".json");
+        cache.invalidate(networkMnemonic);
     }
 
     /**

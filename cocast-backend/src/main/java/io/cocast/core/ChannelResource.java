@@ -45,14 +45,13 @@ public class ChannelResource {
         if (!StringUtils.isEmpty(networkMnemonic)) {
             channel.setNetworkMnemonic(networkMnemonic);
         }
-
         channel.setCreatedBy(SecurityContext.get().userIdentification());
 
         try {
             //calls the creation service
             channelRepository.create(channel);
         } catch (ValidationException exc) {
-            logger.error("Error creating channel", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (CoCastCallException exc) {
             logger.error("Error creating channel", exc);
@@ -80,7 +79,7 @@ public class ChannelResource {
             logger.error("Error listing channels", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error listing channels", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error listing channels", exc);
@@ -106,7 +105,7 @@ public class ChannelResource {
             logger.error("Error getting channel", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error getting channel", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error getting channel", exc);
@@ -114,5 +113,62 @@ public class ChannelResource {
         }
 
         return Response.ok(channel).build();
+    }
+
+    /**
+     * Updates a channel
+     */
+    @PUT
+    @Path("/{networkMnemonic}/{mnemonic}")
+    public Response update(Channel channel,
+                           @PathParam("networkMnemonic") String networkMnemonic,
+                           @PathParam("mnemonic") String mnemonic) {
+
+        Channel response;
+
+        if (StringUtils.isEmpty(mnemonic)) {
+            return APIResponse.badRequest("Channel mnemonic is required as a path param").getResponse();
+        } else {
+            channel.setMnemonic(mnemonic);
+        }
+
+        try {
+            response = channelRepository.update(channel, networkMnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error updating channel", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error updating channel", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error updating channel", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.updated("Channel updated. Mnemonic: " + response.getMnemonic()).getResponse();
+    }
+
+    /**
+     * Delete a channel
+     */
+    @DELETE
+    @Path("/{networkMnemonic}/{mnemonic}")
+    public Response delete(@PathParam("networkMnemonic") String networkMnemonic,
+                           @PathParam("mnemonic") String mnemonic) {
+
+        try {
+            channelRepository.delete(networkMnemonic, mnemonic);
+        } catch (CoCastCallException exc) {
+            logger.error("Error getting channel", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error getting channel", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error getting channel", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.deleted("Channel deleted. Mnemonic: " + mnemonic).getResponse();
     }
 }

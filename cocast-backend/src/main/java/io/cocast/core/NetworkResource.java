@@ -37,18 +37,13 @@ public class NetworkResource {
     @POST
     public Response create(Network network) {
 
-        //validates and defines the createdBy based on authorization token
-        if ((network == null) ||
-                (network.getName() == null)) {
-            return APIResponse.badRequest("Network name is required").getResponse();
-        }
         network.setCreatedBy(SecurityContext.get().userIdentification());
 
         try {
             //calls the creation service
             networkRepository.create(network);
         } catch (ValidationException exc) {
-            logger.error("Error creating network", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (CoCastCallException exc) {
             logger.error("Error creating network", exc);
@@ -75,7 +70,7 @@ public class NetworkResource {
             logger.error("Error listing network", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error listing networks", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error listing networks", exc);
@@ -100,7 +95,7 @@ public class NetworkResource {
             logger.error("Error getting network", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error getting network", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error getting network", exc);
@@ -131,7 +126,7 @@ public class NetworkResource {
             logger.error("Error updating network", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error updating network", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error updating network", exc);
@@ -154,7 +149,7 @@ public class NetworkResource {
             logger.error("Error getting network", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error getting network", exc);
+            logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
             logger.error("Error getting network", exc);
