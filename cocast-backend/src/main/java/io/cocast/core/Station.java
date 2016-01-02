@@ -4,6 +4,7 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Station
@@ -14,9 +15,10 @@ public class Station {
     private String mnemonic;
     private String networkMnemonic;
     private String location;
+    private String theme;
+    private List<String> channels;
     private String createdBy;
     private Date lastUpdate;
-    private String theme;
     private boolean active;
 
     /**
@@ -60,6 +62,14 @@ public class Station {
         this.location = location;
     }
 
+    public List<String> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(List<String> channels) {
+        this.channels = channels;
+    }
+
     public String getCreatedBy() {
         return createdBy;
     }
@@ -97,9 +107,12 @@ public class Station {
         return "Station{" +
                 "name='" + name + '\'' +
                 ", mnemonic='" + mnemonic + '\'' +
+                ", networkMnemonic='" + networkMnemonic + '\'' +
+                ", location='" + location + '\'' +
+                ", theme='" + theme + '\'' +
+                ", channels=" + channels +
                 ", createdBy='" + createdBy + '\'' +
                 ", lastUpdate=" + lastUpdate +
-                ", theme='" + theme + '\'' +
                 ", active=" + active +
                 '}';
     }

@@ -9,6 +9,8 @@ public class CoreModule extends ServletModule {
 
     @Override
     protected void configureServlets() {
+
+        //Repositories
         bind(NetworkRepository.class);
         bind(StationRepository.class);
         bind(SettingsRepository.class);

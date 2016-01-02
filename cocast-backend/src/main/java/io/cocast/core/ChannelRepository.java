@@ -37,7 +37,7 @@ class ChannelRepository {
     static {
         //initializes the caches
         cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
+                .expireAfterWrite(60 * 12, TimeUnit.MINUTES)
                 .build();
     }
 

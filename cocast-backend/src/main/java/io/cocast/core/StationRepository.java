@@ -32,6 +32,9 @@ class StationRepository {
     private NetworkServices networkServices;
 
     @Inject
+    private ChannelServices channelServices;
+
+    @Inject
     private ThemeServices themeServices;
 
     private static final Cache<String, List<Station>> cache;
@@ -39,7 +42,7 @@ class StationRepository {
     static {
         //initializes the caches
         cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
+                .expireAfterWrite(60 * 12, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -48,11 +51,6 @@ class StationRepository {
      * Creates a new station
      */
     public void create(Station station) throws Exception {
-
-        //validate the theme
-        validateTheme(station.getTheme());
-
-        networkServices.validate(station.getNetworkMnemonic());
 
         //checks if the mnemonic is defined
         if (station.getMnemonic() == null) {
@@ -65,6 +63,8 @@ class StationRepository {
         if (existingStation != null) {
             throw new ValidationException("Station with mnemonic = " + station.getMnemonic() + " already exists");
         }
+
+        validate(station);
 
         //insert
         firebaseUtils.saveAsRoot(station, "/stations/" + station.getNetworkMnemonic() + "/" + station.getMnemonic() + ".json");
@@ -110,9 +110,7 @@ class StationRepository {
      */
     public Station update(Station station, String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
-        validateTheme(station.getTheme());
-
+        station.setNetworkMnemonic(networkMnemonic);
         Station existingStation = this.get(networkMnemonic, station.getMnemonic());
         if (existingStation == null) {
             throw new ValidationException("Could not find station with mnemonic: " + station.getMnemonic());
@@ -130,6 +128,8 @@ class StationRepository {
         if (station.getLocation() == null) {
             station.setLocation(existingStation.getLocation());
         }
+
+        validate(station);
 
         //update
         firebaseUtils.saveAsRoot(station, "/stations/" + networkMnemonic + "/" + station.getMnemonic() + ".json");
@@ -159,6 +159,30 @@ class StationRepository {
         //update
         firebaseUtils.saveAsRoot(existingStation, "/stations/" + networkMnemonic + "/" + existingStation.getMnemonic() + ".json");
         cache.invalidate(networkMnemonic);
+    }
+
+    /**
+     * Validate
+     */
+    private void validate(Station station) throws Exception {
+
+        //validate the theme
+        validateTheme(station.getTheme());
+
+        //validate the network
+        networkServices.validate(station.getNetworkMnemonic());
+
+        //validate the name
+        if (station.getName() == null) {
+            throw new ValidationException("Station name is required");
+        }
+
+        //validate the channels
+        if (station.getChannels() != null) {
+            for (String strChannel : station.getChannels()) {
+                channelServices.validate(station.getNetworkMnemonic(), strChannel);
+            }
+        }
     }
 
     private class StationLoader implements Callable<List<Station>> {
