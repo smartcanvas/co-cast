@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Cache methods
@@ -69,7 +70,17 @@ public class CacheUtils {
      * Stores an object into the cache
      */
     public void set(String key, Integer timeout, Object value) {
-        memcachedClient.set(generateKey(key), timeout, value);
+        try {
+            Object storedValue = memcachedClient.set(generateKey(key), timeout, value).get();
+            if (storedValue == null) {
+                logger.error("Memcached returned a null object after trying to store object " + value
+                        + " under key = " + key);
+            }
+        } catch (InterruptedException e) {
+            logger.error("Error putting object " + value + " into memcached under key = " + key);
+        } catch (ExecutionException e) {
+            logger.error("Error putting object " + value + " into memcached under key = " + key);
+        }
     }
 
     /**

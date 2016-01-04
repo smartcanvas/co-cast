@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+// Group ID
+group "$groupId"
+// Version
+version "$versionNumber"
+// Archive base name
+archivesBaseName = 'cocast-sc1-connector'
+
+
+mainClassName = "com.cocast.io.connector.sc1.SmartCanvasConnector"
+
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Co-Cast Smart Canvas 1.0 Connector', 'Implementation-Version': version
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+
+dependencies {
+    //Testing libraries
+    testCompile "junit:junit:$junitVersion"
+
+    //Logs
+    compile "log4j:log4j:$log4jVersion"
+    compile "com.logentries:logentries-appender:$logEntriesVersion"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}

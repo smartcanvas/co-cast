@@ -1,4 +1,5 @@
 evaluationDependsOn(':cocast-backend')
+evaluationDependsOn(':cocast-sc1-connector')
 evaluationDependsOn(':cocast-web')
 
 /**
@@ -27,4 +28,12 @@ task deployBackend {
 task runBackend {
     dependsOn config
     dependsOn ":cocast-backend:jettyRun"
+}
+
+/**
+ * Runs the SC1 connector locally
+ */
+task runSC1Connector {
+    dependsOn config
+    dependsOn ":cocast-sc1-connector:run"
 }

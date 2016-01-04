@@ -1,1 +1,1 @@
-include 'cocast-backend', 'cocast-web'
+include 'cocast-backend', 'cocast-sc1-connector', 'cocast-web'
