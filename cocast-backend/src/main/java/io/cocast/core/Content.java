@@ -4,6 +4,7 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Daniel Viveiros
  */
-public class Content {
+public class Content implements Serializable {
 
     /* Basic Info */
     private String id;

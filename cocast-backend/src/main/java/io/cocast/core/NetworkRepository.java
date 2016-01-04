@@ -1,11 +1,10 @@
 package io.cocast.core;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
 import io.cocast.admin.ThemeServices;
 import io.cocast.auth.SecurityContext;
+import io.cocast.util.CacheUtils;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
 import io.cocast.util.FirebaseUtils;
@@ -20,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Persistence methods for networks
@@ -36,19 +34,8 @@ class NetworkRepository {
     @Inject
     private ThemeServices themeServices;
 
-    private static final Cache<String, List<Network>> cache;
-    private static final Cache<String, List<NetworkMembership>> cacheMembership;
-
-    static {
-        //initializes the caches
-        cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(60 * 12, TimeUnit.MINUTES)
-                .build();
-
-        cacheMembership = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(60 * 12, TimeUnit.MINUTES)
-                .build();
-    }
+    private CacheUtils cache = CacheUtils.getInstance(Network.class);
+    private CacheUtils cacheMembership = CacheUtils.getInstance(NetworkMembership.class);
 
     /**
      * Creates a new network

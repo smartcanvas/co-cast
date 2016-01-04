@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.security.token.TokenGenerator;
+import com.google.inject.Singleton;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.auth.SecurityContext;
 import org.apache.log4j.LogManager;
@@ -23,6 +24,7 @@ import java.util.*;
 /**
  * Utility class to interface with Firebase
  */
+@Singleton
 public class FirebaseUtils {
 
     private static Logger logger = LogManager.getLogger(FirebaseUtils.class.getName());

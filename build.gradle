@@ -6,8 +6,8 @@ evaluationDependsOn(':cocast-web')
  */
 task config {
     copy {
-        from(projectDir) {
-            include "env/*.properties"
+        from("$projectDir/env") {
+            include "*.properties"
         }
         into "$projectDir/cocast-backend/src/main/resources"
     }

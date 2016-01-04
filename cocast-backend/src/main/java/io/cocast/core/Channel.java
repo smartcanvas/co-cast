@@ -3,13 +3,14 @@ package io.cocast.core;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Channel
  */
-public class Channel {
+public class Channel implements Serializable {
 
     /**
      * Order By AGE

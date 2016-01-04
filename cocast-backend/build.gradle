@@ -64,6 +64,9 @@ dependencies {
     //Jackson
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion"
     compile "com.fasterxml.jackson.module:jackson-module-afterburner:$jacksonVersion"
+
+    //Memcached
+    compile "net.spy:spymemcached:$spymemcachedVersion"
 }
 
 jettyRun {

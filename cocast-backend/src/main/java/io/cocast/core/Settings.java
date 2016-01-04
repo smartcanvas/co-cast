@@ -3,12 +3,13 @@ package io.cocast.core;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Settings for a specific network
  */
-public class Settings {
+public class Settings implements Serializable {
 
     private String networkMnemonic;
     private String name;

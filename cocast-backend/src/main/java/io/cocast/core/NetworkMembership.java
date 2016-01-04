@@ -1,9 +1,11 @@
 package io.cocast.core;
 
+import java.io.Serializable;
+
 /**
  * Network membership of this user
  */
-public class NetworkMembership {
+public class NetworkMembership implements Serializable {
 
     private String networkMnemonic;
     private String role;

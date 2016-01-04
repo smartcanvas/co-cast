@@ -3,6 +3,7 @@ package io.cocast.core;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * A Network is the top-level organization structure for Co-cast. It represents a network that has many stations,
  * channels and schedules of contents that needs to be casted.
  */
-public class Network {
+public class Network implements Serializable {
 
     private String name;
     private String mnemonic;

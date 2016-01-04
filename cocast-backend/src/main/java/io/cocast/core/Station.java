@@ -3,13 +3,14 @@ package io.cocast.core;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Station
  */
-public class Station {
+public class Station implements Serializable {
 
     private String name;
     private String mnemonic;
