@@ -2,21 +2,23 @@ buildscript {
     repositories {
         jcenter()
     }
+    dependencies {
+        classpath "se.transmode.gradle:gradle-docker:$gradleDockerVersion"
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'docker'
 
 // Group ID
 group "$groupId"
 // Version
 version "$versionNumber"
 // Archive base name
-archivesBaseName = 'cocast-sc1-connector'
-
-
-mainClassName = "com.cocast.io.connector.sc1.SmartCanvasConnector"
-
+archivesBaseName = "$sc1ConnectorApp"
+// Main class to be executed
+mainClassName = "io.cocast.connector.sc1.SmartCanvasConnector"
 
 jar {
     manifest {
@@ -25,7 +27,8 @@ jar {
 }
 
 repositories {
-    jcenter()
+    mavenLocal()
+    mavenCentral()
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -46,6 +49,17 @@ dependencies {
     //Logs
     compile "log4j:log4j:$log4jVersion"
     compile "com.logentries:logentries-appender:$logEntriesVersion"
+
+    //Commons
+    compile "commons-configuration:commons-configuration:$commonsConfigurationVersion"
+
+    //Jersey
+    compile "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
+    compile "org.glassfish.jersey.media:jersey-media-json-jackson:$jerseyVersion"
+
+    //Jackson
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-afterburner:$jacksonVersion"
 }
 
 task wrapper(type: Wrapper) {
@@ -55,4 +69,38 @@ task wrapper(type: Wrapper) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+
+docker {
+    baseImage "java:8"
+    maintainer 'Daniel Viveiros "viveiros@ciandt.com"'
+}
+
+/**
+ * Updates the docker image
+ */
+task sc1ConnectorDocker(dependsOn: installDist, type: Docker) {
+    applicationName = "$sc1ConnectorApp"
+    tagVersion = "$versionNumber"
+    //dockerfile = project.file('Dockerfile')
+
+    addFile('build/install/cocast-sc1-connector/', '/usr/src/app')
+    defaultCommand(['/usr/src/app/bin/cocast-sc1-connector'])
+}
+
+/**
+ * Tag the docker image to push to google registry
+ */
+task tagSC1ConnectorDockerImage(dependsOn: sc1ConnectorDocker, type: Exec) {
+    //command to be executed
+    commandLine 'docker', 'tag', '-f', "$groupId/$sc1ConnectorApp:$versionNumber", "gcr.io/co-cast/$sc1ConnectorApp:latest"
+}
+
+/**
+ * Push the docker image to Google Registry
+ */
+task pushSC1ConnectorDockerImage(dependsOn: tagSC1ConnectorDockerImage, type: Exec) {
+    //command to be executed
+    commandLine 'gcloud', 'docker', 'push', "gcr.io/co-cast/$sc1ConnectorApp"
 }

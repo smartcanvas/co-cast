@@ -31,6 +31,14 @@ task runBackend {
 }
 
 /**
+ * Deploys the connector container
+ */
+task deploySC1Connector {
+    dependsOn config
+    dependsOn ":cocast-sc1-connector:pushSC1ConnectorDockerImage"
+}
+
+/**
  * Runs the SC1 connector locally
  */
 task runSC1Connector {

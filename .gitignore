@@ -21,3 +21,6 @@ hs_err_pid*
 # Property files with sensetive information
 **/resources/*.properties
 /env/prd.properties
+
+# Project-specific files
+**/teamwork*.*

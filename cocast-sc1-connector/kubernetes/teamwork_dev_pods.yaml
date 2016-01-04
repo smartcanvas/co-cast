@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: smartcanvas-teamwork
+spec:  # specification of the pod’s contents
+  restartPolicy: Never
+  containers:
+  - name: smartcanvas-teamwork
+    image: "gcr.io/co-cast/cocast-sc1-connector:latest"
+    env:
+      - name: COCAST_API_KEY
+        value: "Pa2tSk5D7w487uIZwZ55x0Ha39VP1Bdv"
+      - name: CLIENT_ID
+        value: "XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f"

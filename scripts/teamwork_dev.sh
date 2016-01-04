@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+export COCAST_API_KEY=Pa2tSk5D7w487uIZwZ55x0Ha39VP1Bdv
+export COCAST_CLIENT_ID=XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f
+export SMART_CANVAS_API_KEY=52ba6f68c9bcecfcd7d6e3f4520beff9a514ea33fbbea2a11d7b23b93c68e1e9
+export SMART_CANVAS_CLIENT_ID=1
+export SMART_CANVAS_TENANT=teamwork
+export SEARCH_TERMS=discussion:photos
+export LOCALE=zz-zz
+
