@@ -60,6 +60,9 @@ dependencies {
     //Jackson
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion"
     compile "com.fasterxml.jackson.module:jackson-module-afterburner:$jacksonVersion"
+
+    //Jsoup
+    compile "org.jsoup:jsoup:$jsoupVersion"
 }
 
 task wrapper(type: Wrapper) {

@@ -28,8 +28,8 @@ public class Block {
     //type = photo
     private String imageURL;
     private String imageType;
-    private String imageHeight;
-    private String imageWidth;
+    private Integer imageHeight;
+    private Integer imageWidth;
     private String originalImageURL;
 
     //type = userActivity
@@ -155,19 +155,19 @@ public class Block {
         this.imageType = imageType;
     }
 
-    public String getImageHeight() {
+    public Integer getImageHeight() {
         return imageHeight;
     }
 
-    public void setImageHeight(String imageHeight) {
+    public void setImageHeight(Integer imageHeight) {
         this.imageHeight = imageHeight;
     }
 
-    public String getImageWidth() {
+    public Integer getImageWidth() {
         return imageWidth;
     }
 
-    public void setImageWidth(String imageWidth) {
+    public void setImageWidth(Integer imageWidth) {
         this.imageWidth = imageWidth;
     }
 

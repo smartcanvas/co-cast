@@ -7,4 +7,7 @@ export SMART_CANVAS_CLIENT_ID=1
 export SMART_CANVAS_TENANT=teamwork
 export SEARCH_TERMS=discussion:photos
 export LOCALE=zz-zz
+export IS_DEV=true
+export COCAST_NETWORK=teamwork
+
 
