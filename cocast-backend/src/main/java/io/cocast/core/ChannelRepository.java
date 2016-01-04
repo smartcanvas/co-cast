@@ -1,8 +1,7 @@
 package io.cocast.core;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import io.cocast.admin.ThemeServices;
+import io.cocast.util.CacheUtils;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
 import io.cocast.util.FirebaseUtils;
@@ -14,7 +13,6 @@ import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Persistence methods for Channels
@@ -32,14 +30,7 @@ class ChannelRepository {
     @Inject
     private ThemeServices themeServices;
 
-    private static final Cache<String, List<Channel>> cache;
-
-    static {
-        //initializes the caches
-        cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(60 * 12, TimeUnit.MINUTES)
-                .build();
-    }
+    private static CacheUtils cache = CacheUtils.getInstance(Channel.class);
 
     /**
      * Creates a new channel

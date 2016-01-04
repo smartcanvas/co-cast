@@ -1,9 +1,8 @@
 package io.cocast.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
+import io.cocast.util.CacheUtils;
 import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
@@ -12,7 +11,6 @@ import org.apache.log4j.Logger;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Persistence methods for Configurations
@@ -25,18 +23,7 @@ class ConfigurationRepository {
     @Inject
     private FirebaseUtils firebaseUtils;
 
-    private static final Cache<String, List<Configuration>> cache;
-
-    static {
-        //initializes the caches
-        cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
-                .build();
-    }
-
-    /**
-     * Cons
-     */
+    private static CacheUtils cache = CacheUtils.getInstance(Configuration.class);
 
     /**
      * Lists all configurations

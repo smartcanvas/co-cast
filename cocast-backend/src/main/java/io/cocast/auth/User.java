@@ -1,9 +1,11 @@
 package io.cocast.auth;
 
+import java.io.Serializable;
+
 /**
  * User registered in the system
  */
-class User {
+class User implements Serializable {
 
     private String uid;
     private String email;

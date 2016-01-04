@@ -3,12 +3,13 @@ package io.cocast.admin;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Configuration used by co-cast
  */
-public class Configuration {
+public class Configuration implements Serializable {
 
     private String name;
     private String value;

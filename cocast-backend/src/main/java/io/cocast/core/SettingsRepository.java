@@ -1,8 +1,7 @@
 package io.cocast.core;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.inject.Singleton;
+import io.cocast.util.CacheUtils;
 import io.cocast.util.DateUtils;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
@@ -12,7 +11,6 @@ import javax.inject.Inject;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Persistence methods for settings
@@ -28,14 +26,7 @@ public class SettingsRepository {
     @Inject
     private NetworkServices networkServices;
 
-    private static final Cache<String, List<Settings>> cache;
-
-    static {
-        //initializes the caches
-        cache = CacheBuilder.newBuilder().maximumSize(1000)
-                .expireAfterWrite(30, TimeUnit.MINUTES)
-                .build();
-    }
+    private static CacheUtils cache = CacheUtils.getInstance(Settings.class);
 
     /**
      * Creates a new settings

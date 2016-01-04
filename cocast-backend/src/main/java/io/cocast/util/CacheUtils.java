@@ -105,6 +105,13 @@ public class CacheUtils {
     }
 
     /**
+     * Cleans the cache
+     */
+    public void invalidateAll() {
+        memcachedClient.flush();
+    }
+
+    /**
      * Generate the cache key
      */
     private String generateKey(String key) {

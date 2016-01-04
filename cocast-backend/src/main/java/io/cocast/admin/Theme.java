@@ -3,12 +3,13 @@ package io.cocast.admin;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Themes
  */
-public class Theme {
+public class Theme implements Serializable {
 
     private String mnemonic;
     private String primaryColor;
