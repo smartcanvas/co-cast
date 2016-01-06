@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.APIResponse;
 import io.cocast.util.CoCastCallException;
+import io.cocast.util.PaginatedResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -18,7 +19,7 @@ import javax.ws.rs.core.Response;
  */
 @Produces("application/json")
 @Consumes("application/json")
-@Path("/api/ext/v1/people")
+@Path("/api/ext/people/v1/persons")
 @Singleton
 public class PeopleResource {
 
@@ -72,6 +73,45 @@ public class PeopleResource {
         }
 
         return Response.ok(person).build();
+    }
+
+    /**
+     * Get a list of persons
+     */
+    @GET
+    @Path("/{networkMnemonic}")
+    public Response list(@PathParam("networkMnemonic") String networkMnemonic,
+                         @QueryParam("email") String email,
+                         @QueryParam("limit") Integer limit,
+                         @QueryParam("offset") Integer offset) {
+
+        if (limit == null) {
+            limit = 10;
+        }
+        if (offset == null) {
+            offset = 0;
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Persons.list(): email = " + email + ", limit = " + limit + ", offset = " + offset);
+        }
+
+        PaginatedResponse response;
+
+        try {
+            response = personRepository.list(networkMnemonic, email, limit, offset);
+        } catch (CoCastCallException exc) {
+            logger.error("Error listing persons", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error listing persons", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error listing persons", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(response).build();
     }
 
     /**

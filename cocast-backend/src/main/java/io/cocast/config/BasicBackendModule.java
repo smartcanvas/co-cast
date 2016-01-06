@@ -13,6 +13,7 @@ import io.cocast.admin.AdminModule;
 import io.cocast.auth.ApiTokenSecurityFilter;
 import io.cocast.auth.AuthModule;
 import io.cocast.core.CoreModule;
+import io.cocast.ext.ExtensionsModule;
 
 /**
  * Common Guice configurations and bindings for Co-Cast
@@ -25,6 +26,7 @@ public class BasicBackendModule extends ServletModule {
         this.install(new AdminModule());
         this.install(new AuthModule());
         this.install(new CoreModule());
+        this.install(new ExtensionsModule());
 
         //filters
         bind(GenericErrorHandlingFilter.class).in(Scopes.SINGLETON);

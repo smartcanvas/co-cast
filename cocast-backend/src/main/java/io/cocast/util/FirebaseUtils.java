@@ -233,7 +233,12 @@ public class FirebaseUtils {
             uri = "/" + uri;
         }
 
-        return FIREBASE_URL + uri + "?auth=" + generateToken();
+        if (uri.indexOf("?") == -1) {
+            return FIREBASE_URL + uri + "?auth=" + generateToken();
+        } else {
+            return FIREBASE_URL + uri + "&auth=" + generateToken();
+        }
+
     }
 
     /**
@@ -252,7 +257,11 @@ public class FirebaseUtils {
             uri = "/" + uri;
         }
 
-        return FIREBASE_URL + uri + "?auth=" + FIREBASE_SECRET;
+        if (uri.indexOf("?") == -1) {
+            return FIREBASE_URL + uri + "?auth=" + FIREBASE_SECRET;
+        } else {
+            return FIREBASE_URL + uri + "&auth=" + FIREBASE_SECRET;
+        }
     }
 
     /**

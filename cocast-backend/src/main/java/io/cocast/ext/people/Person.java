@@ -3,6 +3,7 @@ package io.cocast.ext.people;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Person in CoCast
  */
-public class Person {
+public class Person implements Serializable {
 
     private String id;
     private String networkMnemonic;
@@ -37,6 +38,9 @@ public class Person {
     }
 
     public String getId() {
+        if (this.id == null) {
+            id = this.source + "_" + this.email.replace('.', '-');
+        }
         return id;
     }
 
