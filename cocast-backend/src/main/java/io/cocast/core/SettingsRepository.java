@@ -2,6 +2,7 @@ package io.cocast.core;
 
 import com.google.inject.Singleton;
 import io.cocast.util.CacheUtils;
+import io.cocast.util.CoCastCallException;
 import io.cocast.util.DateUtils;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
@@ -97,7 +98,7 @@ public class SettingsRepository {
 
         Settings existingSettings = this.get(networkMnemonic, settings.getName());
         if (existingSettings == null) {
-            throw new ValidationException("Could not find settings with name: " + settings.getName());
+            throw new CoCastCallException("Could not find settings with name: " + settings.getName(), 404);
         }
 
         //update info
@@ -126,7 +127,7 @@ public class SettingsRepository {
 
         Settings existingSettings = this.get(networkMnemonic, name);
         if (existingSettings == null) {
-            throw new ValidationException("Could not find settings with name: " + name);
+            throw new CoCastCallException("Could not find settings with name: " + name, 404);
         }
 
         //delete

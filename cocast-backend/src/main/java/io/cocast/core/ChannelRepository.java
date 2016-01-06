@@ -1,10 +1,8 @@
 package io.cocast.core;
 
+import com.google.inject.Singleton;
 import io.cocast.admin.ThemeServices;
-import io.cocast.util.CacheUtils;
-import io.cocast.util.DateUtils;
-import io.cocast.util.ExtraStringUtils;
-import io.cocast.util.FirebaseUtils;
+import io.cocast.util.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -17,6 +15,7 @@ import java.util.concurrent.Callable;
 /**
  * Persistence methods for Channels
  */
+@Singleton
 class ChannelRepository {
 
     private static Logger logger = LogManager.getLogger(ChannelRepository.class.getName());
@@ -104,7 +103,7 @@ class ChannelRepository {
 
         Channel existingChannel = this.get(networkMnemonic, channel.getMnemonic());
         if (existingChannel == null) {
-            throw new ValidationException("Could not find channel with mnemonic: " + channel.getMnemonic());
+            throw new CoCastCallException("Could not find channel with mnemonic: " + channel.getMnemonic(), 404);
         }
 
         //update info
@@ -150,7 +149,7 @@ class ChannelRepository {
 
         Channel existingChannel = this.get(networkMnemonic, mnemonic);
         if (existingChannel == null) {
-            throw new ValidationException("Could not find channel with mnemonic: " + mnemonic);
+            throw new CoCastCallException("Could not find channel with mnemonic: " + mnemonic, 404);
         }
 
         if (!existingChannel.isActive()) {

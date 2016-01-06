@@ -59,7 +59,7 @@ class ContentRepository {
     }
 
     /**
-     * Validate is the content is ready to be created or updated
+     * Validate if the content is ready to be created or updated
      */
     private void validate(Content content) {
 

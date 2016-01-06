@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Singleton;
 import io.cocast.admin.ThemeServices;
 import io.cocast.auth.SecurityContext;
-import io.cocast.util.CacheUtils;
-import io.cocast.util.DateUtils;
-import io.cocast.util.ExtraStringUtils;
-import io.cocast.util.FirebaseUtils;
+import io.cocast.util.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -115,7 +112,7 @@ class NetworkRepository {
     public Network update(Network network) throws Exception {
         Network existingNetwork = this.get(network.getMnemonic());
         if (existingNetwork == null) {
-            throw new ValidationException("Could not find network with mnemonic: " + network.getMnemonic());
+            throw new CoCastCallException("Could not find network with mnemonic: " + network.getMnemonic(), 404);
         }
 
         validateTheme(network.getTheme());
@@ -163,7 +160,7 @@ class NetworkRepository {
     public void delete(String mnemonic) throws Exception {
         Network existingNetwork = this.get(mnemonic);
         if (existingNetwork == null) {
-            throw new ValidationException("Could not find network with mnemonic: " + mnemonic);
+            throw new CoCastCallException("Could not find network with mnemonic: " + mnemonic, 404);
         }
 
         if (!existingNetwork.isActive()) {

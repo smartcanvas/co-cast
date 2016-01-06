@@ -2,10 +2,7 @@ package io.cocast.core;
 
 import com.google.inject.Singleton;
 import io.cocast.admin.ThemeServices;
-import io.cocast.util.CacheUtils;
-import io.cocast.util.DateUtils;
-import io.cocast.util.ExtraStringUtils;
-import io.cocast.util.FirebaseUtils;
+import io.cocast.util.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -103,7 +100,7 @@ class StationRepository {
         station.setNetworkMnemonic(networkMnemonic);
         Station existingStation = this.get(networkMnemonic, station.getMnemonic());
         if (existingStation == null) {
-            throw new ValidationException("Could not find station with mnemonic: " + station.getMnemonic());
+            throw new CoCastCallException("Could not find station with mnemonic: " + station.getMnemonic(), 404);
         }
 
         //update info
@@ -136,7 +133,7 @@ class StationRepository {
 
         Station existingStation = this.get(networkMnemonic, mnemonic);
         if (existingStation == null) {
-            throw new ValidationException("Could not find station with mnemonic: " + mnemonic);
+            throw new CoCastCallException("Could not find station with mnemonic: " + mnemonic, 404);
         }
 
         if (!existingStation.isActive()) {
