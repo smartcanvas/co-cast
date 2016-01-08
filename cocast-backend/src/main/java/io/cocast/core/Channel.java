@@ -1,5 +1,6 @@
 package io.cocast.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Channel
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Channel implements Serializable {
 
     /**

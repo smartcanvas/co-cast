@@ -31,6 +31,14 @@ task runBackend {
 }
 
 /**
+ * Runs the frontend locally
+ */
+task runWeb {
+    dependsOn config
+    dependsOn ":cocast-web:jettyRun"
+}
+
+/**
  * Deploys the connector container
  */
 task deploySC1Connector {

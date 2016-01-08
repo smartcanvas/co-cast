@@ -1,5 +1,6 @@
 package io.cocast.ext.people;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * Person in CoCast
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable {
 
     private String id;

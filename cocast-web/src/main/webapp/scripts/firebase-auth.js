@@ -3,7 +3,7 @@
  */
 
 /* Gets the reference for a Firebase object */
-var rootRef = new Firebase("https://co-cast-dev.firebaseio.com/");
+var rootRef = new Firebase("https://co-cast.firebaseio.com/");
 
 /**
  * On document load

@@ -1,5 +1,6 @@
 package io.cocast.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 /**
  * Settings for a specific network
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Settings implements Serializable {
 
     private String networkMnemonic;

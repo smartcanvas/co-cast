@@ -1,5 +1,6 @@
 package io.cocast.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * A Network is the top-level organization structure for Co-cast. It represents a network that has many stations,
  * channels and schedules of contents that needs to be casted.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Network implements Serializable {
 
     private String name;

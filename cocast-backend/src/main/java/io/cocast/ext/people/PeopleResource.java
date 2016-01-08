@@ -115,6 +115,20 @@ public class PeopleResource {
     }
 
     /**
+     * Get a list of persons shuffled
+     */
+    @GET
+    @Path("/{networkMnemonic}/shuffle")
+    public Response shuffle(@PathParam("networkMnemonic") String networkMnemonic,
+                            @QueryParam("email") String email,
+                            @QueryParam("limit") Integer limit,
+                            @QueryParam("offset") Integer offset) {
+
+        //TODO: alterar
+        return this.list(networkMnemonic, email, limit, offset);
+    }
+
+    /**
      * Save a Person
      */
     private Response save(Person person, String networkMnemonic) {

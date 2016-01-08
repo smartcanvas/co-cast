@@ -16,6 +16,7 @@
       ".read": "auth.uid !== null",
       ".write": "auth.uid === 'root'"
     },
+
     //Themes
     "themes": {
       ".read": "auth.uid !== null",
@@ -33,6 +34,14 @@
         "$networkMnemonic": {
           ".write": "root.child( 'networks/' + $networkMnemonic ).exists()"
         }
+      }
+    },
+    //Persons
+    "persons": {
+      "$network": {
+        ".indexOn": [
+          "email"
+        ]
       }
     }
   }

@@ -1,5 +1,6 @@
 package io.cocast.core;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
@@ -13,6 +14,7 @@ import java.util.List;
  *
  * @author Daniel Viveiros
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Content implements Serializable {
 
     /* Basic Info */

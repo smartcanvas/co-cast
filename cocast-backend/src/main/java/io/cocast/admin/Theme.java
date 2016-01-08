@@ -1,5 +1,6 @@
 package io.cocast.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 /**
  * Themes
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Theme implements Serializable {
 
     private String mnemonic;
