@@ -44,6 +44,10 @@ public class SecurityContext {
         return claims.getIssuer();
     }
 
+    public String email() {
+        return claims.getEmail();
+    }
+
     /**
      * Validate the security claims
      */

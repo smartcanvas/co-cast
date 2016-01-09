@@ -31,6 +31,9 @@ public class PersonResource {
     @Inject
     private PersonRepository personRepository;
 
+    @Inject
+    private PersonServices personServices;
+
     /**
      * Creates a person
      */
@@ -186,8 +189,33 @@ public class PersonResource {
                             @QueryParam("limit") Integer limit,
                             @QueryParam("offset") Integer offset) {
 
-        //TODO: alterar
-        return this.list(networkMnemonic, email, limit, offset);
+        if (limit == null) {
+            limit = 10;
+        }
+        if (offset == null) {
+            offset = 0;
+        }
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Persons.list(): email = " + email + ", limit = " + limit + ", offset = " + offset);
+        }
+
+        PaginatedResponse response;
+
+        try {
+            response = personServices.shuffle(networkMnemonic, email, limit, offset);
+        } catch (CoCastCallException exc) {
+            logger.error("Error listing persons", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error listing persons", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error listing persons", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return Response.ok(response).build();
     }
 
     /**

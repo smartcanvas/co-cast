@@ -1,6 +1,8 @@
 package io.cocast.ext;
 
 import com.google.inject.servlet.ServletModule;
+import io.cocast.ext.match.MatchActionRepository;
+import io.cocast.ext.match.MatchRepository;
 import io.cocast.ext.people.PersonRepository;
 
 /**
@@ -11,6 +13,8 @@ public class ExtensionsModule extends ServletModule {
     @Override
     protected void configureServlets() {
         bind(PersonRepository.class);
+        bind(MatchActionRepository.class);
+        bind(MatchRepository.class);
     }
 }
 

@@ -107,6 +107,9 @@ public class PersonRepository {
             cachedListPerson.add(person);
             cacheList.set(listCacheKey, cachedListPerson);
         }
+
+        //clears the nominated cache list
+        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), person.getId()));
     }
 
     /**
@@ -147,6 +150,25 @@ public class PersonRepository {
         }
 
         return new PaginatedResponse(results, offset + results.size(), listPerson.size());
+    }
+
+    /**
+     * List all persons w/o pages
+     */
+    public List<Person> listAll(String networkMnemonic) throws Exception {
+        networkServices.validateWithIssuer(networkMnemonic);
+
+        String cacheKey = generateCacheListKey(networkMnemonic, null);
+
+        //looks into the cache
+        List<Person> listPerson = cacheList.get(cacheKey, new ListPersonLoader(networkMnemonic, null));
+        if (listPerson == null) {
+            //cannot cache null
+            cache.invalidate(cacheKey);
+            return new ArrayList<Person>();
+        }
+
+        return listPerson;
     }
 
     /**
