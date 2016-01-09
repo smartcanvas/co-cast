@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
- * Created by dviveiros on 09/01/16.
+ * Resource for matches
  */
 @Produces("application/json")
 @Consumes("application/json")
