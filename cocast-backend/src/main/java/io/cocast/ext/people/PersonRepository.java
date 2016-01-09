@@ -52,12 +52,16 @@ public class PersonRepository {
         //insert
         firebaseUtils.saveAsRoot(person, "/persons/" + person.getNetworkMnemonic() + "/" + person.getId() + ".json");
 
-        //update the cache for current user
+        //update the cache for specified person
         cache.set(generateCacheKey(person.getNetworkMnemonic(), person.getId()), person);
 
-        //clears the cache list
-        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), person.getId()));
-        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), null));
+        //updates the anonymous list cache
+        String listCacheKey = generateCacheListKey(person.getNetworkMnemonic(), null);
+        List<Person> cachedListPerson = cacheList.get(listCacheKey);
+        if (cachedListPerson != null) {
+            cachedListPerson.add(person);
+            cacheList.set(listCacheKey, cachedListPerson);
+        }
     }
 
     /**
@@ -85,12 +89,24 @@ public class PersonRepository {
         //insert
         firebaseUtils.saveAsRoot(person, "/persons/" + person.getNetworkMnemonic() + "/" + person.getId() + ".json");
 
-        //update the cache for current user
+        //update the cache for specified person
         cache.set(generateCacheKey(person.getNetworkMnemonic(), person.getId()), person);
 
-        //clears the cache list
-        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), person.getId()));
-        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), null));
+        //updates the anonymous list cache
+        String listCacheKey = generateCacheListKey(person.getNetworkMnemonic(), null);
+        List<Person> cachedListPerson = cacheList.get(listCacheKey);
+        if (cachedListPerson != null) {
+            int count = 0;
+            for (Person cachedPerson : cachedListPerson) {
+                if (cachedPerson.getId().equals(person.getId())) {
+                    cachedListPerson.remove(count);
+                    break;
+                }
+                count++;
+            }
+            cachedListPerson.add(person);
+            cacheList.set(listCacheKey, cachedListPerson);
+        }
     }
 
     /**
@@ -153,7 +169,7 @@ public class PersonRepository {
     /**
      * Deletes a person
      */
-    public void delete(String personId, String networkMnemonic) throws Exception {
+    public void delete(String networkMnemonic, String personId) throws Exception {
         networkServices.validate(networkMnemonic);
 
         Person existingPerson = this.get(networkMnemonic, personId);
@@ -171,12 +187,26 @@ public class PersonRepository {
         //update
         firebaseUtils.saveAsRoot(existingPerson, "/persons/" + networkMnemonic + "/" + existingPerson.getId() + ".json");
 
-        //invaliadte the cache for current user
+        //invalidate the cache for specified person
         cache.invalidate(generateCacheKey(networkMnemonic, personId));
 
-        //clears the cache list
+        //clears the nominated cache list
         cacheList.invalidate(generateCacheListKey(networkMnemonic, personId));
-        cacheList.invalidate(generateCacheListKey(networkMnemonic, null));
+
+        //updates the anonymous list cache
+        String listCacheKey = generateCacheListKey(networkMnemonic, null);
+        List<Person> cachedListPerson = cacheList.get(listCacheKey);
+        if (cachedListPerson != null) {
+            int count = 0;
+            for (Person cachedPerson : cachedListPerson) {
+                if (cachedPerson.getId().equals(personId)) {
+                    cachedListPerson.remove(count);
+                    break;
+                }
+                count++;
+            }
+            cacheList.set(listCacheKey, cachedListPerson);
+        }
     }
 
 

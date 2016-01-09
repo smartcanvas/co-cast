@@ -166,13 +166,13 @@ public class StationResource {
         try {
             stationRepository.delete(networkMnemonic, mnemonic);
         } catch (CoCastCallException exc) {
-            logger.error("Error getting station", exc);
+            logger.error("Error deleting station", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error getting station", exc);
+            logger.error("Error deleting station", exc);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error getting station", exc);
+            logger.error("Error deleting station", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 

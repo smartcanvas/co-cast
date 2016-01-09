@@ -162,13 +162,13 @@ public class SettingsResource {
         try {
             settingsRepository.delete(networkMnemonic, name);
         } catch (CoCastCallException exc) {
-            logger.error("Error getting settings", exc);
+            logger.error("Error deleting settings", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error getting settings", exc);
+            logger.error("Error deleting settings", exc);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error getting settings", exc);
+            logger.error("Error deleting settings", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 

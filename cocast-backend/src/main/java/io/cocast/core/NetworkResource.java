@@ -146,13 +146,13 @@ public class NetworkResource {
         try {
             networkRepository.delete(mnemonic);
         } catch (CoCastCallException exc) {
-            logger.error("Error getting network", exc);
+            logger.error("Error deleting network", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
             logger.error(exc.getMessage());
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error getting network", exc);
+            logger.error("Error deleting network", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 

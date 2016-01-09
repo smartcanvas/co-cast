@@ -159,13 +159,13 @@ public class ChannelResource {
         try {
             channelRepository.delete(networkMnemonic, mnemonic);
         } catch (CoCastCallException exc) {
-            logger.error("Error getting channel", exc);
+            logger.error("Error deleting channel", exc);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error("Error getting channel", exc);
+            logger.error("Error deleting channel", exc);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error getting channel", exc);
+            logger.error("Error deleting channel", exc);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 

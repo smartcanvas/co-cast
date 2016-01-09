@@ -15,18 +15,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 /**
- * People resources (API)
+ * Person resources (API)
  */
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/api/ext/people/v1/persons")
 @Singleton
-public class PeopleResource {
+public class PersonResource {
 
     /**
      * Logger
      */
-    private static final Logger logger = LogManager.getLogger(PeopleResource.class);
+    private static final Logger logger = LogManager.getLogger(PersonResource.class);
 
     @Inject
     private PersonRepository personRepository;
@@ -188,6 +188,30 @@ public class PeopleResource {
 
         //TODO: alterar
         return this.list(networkMnemonic, email, limit, offset);
+    }
+
+    /**
+     * Delete a station
+     */
+    @DELETE
+    @Path("/{networkMnemonic}/{id}")
+    public Response delete(@PathParam("networkMnemonic") String networkMnemonic,
+                           @PathParam("id") String id) {
+
+        try {
+            personRepository.delete(networkMnemonic, id);
+        } catch (CoCastCallException exc) {
+            logger.error("Error deleting person", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (ValidationException exc) {
+            logger.error("Error deleting person", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error deleting person", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.deleted("Person deleted. ID: " + id).getResponse();
     }
 
 

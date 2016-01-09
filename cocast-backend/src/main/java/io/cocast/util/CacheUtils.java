@@ -98,6 +98,19 @@ public class CacheUtils {
     /**
      * Retrieves an object from cache
      */
+    public <T> T get(String key) {
+
+        Object value = memcachedClient.get(generateKey(key));
+        if (value == null) {
+            return null;
+        }
+
+        return (T) value;
+    }
+
+    /**
+     * Retrieves an object from cache
+     */
     public <T> T get(String key, Callable<? extends T> valueLoader) {
 
         Object value = memcachedClient.get(generateKey(key));
