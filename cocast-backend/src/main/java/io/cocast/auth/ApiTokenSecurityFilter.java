@@ -57,6 +57,7 @@ public class ApiTokenSecurityFilter implements Filter {
             return;
         }
 
+
         String secret = configuration.getString("cocast.secret", null);
         try {
             //check if we have the secret in the header. if so, the security context will be defined as 'root'
@@ -65,14 +66,17 @@ public class ApiTokenSecurityFilter implements Filter {
             if (!StringUtils.isEmpty(xSecret)) {
                 if (xSecret.equals(secret)) {
                     logger.debug("Defining security context for root access");
-                    SecurityContext.set(new SecurityContext(SecurityClaims.root()));
+                    SecurityContext.set(new SecurityContext(SecurityClaims.root(), AuthConstants.DEFAULT_ISSUER));
                 }
             } else {
                 //if the root token is not present, the auth token must be
                 String authToken = authToken(req);
+                String issuer = getIssuer(req);
+                String jwtSecret = getJWTSecret(issuer);
+
                 if (!Strings.isNullOrEmpty(authToken)) {
                     logger.debug("Creating the security context.");
-                    SecurityContext.set(new SecurityContext(tokenServices.processToClaims(authToken, secret)));
+                    SecurityContext.set(new SecurityContext(tokenServices.processToClaims(authToken, jwtSecret, issuer), issuer));
                     logger.debug("Provided access token is valid. Proceeding with filter chain.");
 
                 } else {
@@ -87,12 +91,18 @@ public class ApiTokenSecurityFilter implements Filter {
                 SecurityContext.unset();
             }
         } catch (SecurityException se) {
-            String logMessage = "Unable to create security context. Auth token or root token missing?";
+            String logMessage = "Unable to create security context. Auth token or root token missing or expired?";
             logger.error(logMessage, se);
             unauthorized(resp, logMessage);
         } catch (AuthenticationException ae) {
             logger.error("Error authenticating: ", ae);
             unauthorized(resp, ae.getMessage());
+        } catch (Exception exc) {
+            logger.error("Generic error while authenticating", exc);
+            response.setContentType(MediaType.JSON_UTF_8.toString());
+            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            APIResponse apiResponse = APIResponse.authFail("Generic error while authenticating");
+            objectWriter.writeValue(response.getWriter(), apiResponse);
         }
     }
 
@@ -111,6 +121,30 @@ public class ApiTokenSecurityFilter implements Filter {
      */
     private String authToken(HttpServletRequest req) {
         return req.getHeader(AuthConstants.X_ACCESS_TOKEN);
+    }
+
+    /**
+     * Retrieves the issuer
+     */
+    private String getIssuer(HttpServletRequest req) {
+        String issuer = req.getHeader(AuthConstants.X_ISSUER);
+        if (StringUtils.isEmpty(issuer)) {
+            issuer = AuthConstants.DEFAULT_ISSUER;
+        }
+
+        return issuer;
+    }
+
+    /**
+     * Retrives the JWT Secret to be used to process the claims
+     */
+    private String getJWTSecret(String issuer) {
+        if (AuthConstants.DEFAULT_ISSUER.equals(issuer)) { //Co-cast
+            return configuration.getString("cocast.secret", null);
+        } else {
+            //SmartCanvas (only these two are supported right now
+            return configuration.getString("smartcanvas.secret", null);
+        }
     }
 
     @Override

@@ -22,10 +22,6 @@ class TokenServices {
 
     private static final Logger logger = LogManager.getLogger(TokenServices.class.getName());
 
-    static final String FIELD_EMAIL = "email";
-    static final String FIELD_PROVIDER = "provider";
-    static final String FIELD_NAME = "name";
-
     /* Default expiration time = 10 years */
     protected static final int EXPIRATION_TIME = 60 * 24 * 365 * 10;
 
@@ -53,23 +49,14 @@ class TokenServices {
     /**
      * Create the SecurityClaims based on the security token
      */
-    public SecurityClaims processToClaims(String token, String clientSecret) throws SecurityException {
+    public SecurityClaims processToClaims(String token, String clientSecret, String issuer) throws SecurityException {
         try {
+
             JwtConsumer jwtConsumer = buildJwtConsumer(clientSecret);
             JwtClaims jwtClaims = jwtConsumer.processToClaims(token);
 
-            SecurityClaims claims = new SecurityClaims(jwtClaims.getIssuer());
-            claims.setEmail(jwtClaims.getStringClaimValue(FIELD_EMAIL));
-            claims.setIssuer(jwtClaims.getIssuer());
-            claims.setSubject(jwtClaims.getSubject());
-            claims.setIssuedAt(new Date(jwtClaims.getIssuedAt().getValueInMillis()));
-            claims.setProvider(jwtClaims.getStringClaimValue(FIELD_PROVIDER));
-            claims.setName(jwtClaims.getStringClaimValue(FIELD_NAME));
-
-            if (jwtClaims.getExpirationTime() != null)
-                claims.setExpirationTime(new Date(jwtClaims.getExpirationTime().getValueInMillis()));
-
-            logger.debug("Security claims readed: " + claims);
+            SecurityClaimsBuilder securityClaimsBuilder = SecurityClaimsBuilder.getInstance(issuer);
+            SecurityClaims claims = securityClaimsBuilder.createSecurityClaims(jwtClaims, issuer);
 
             return claims;
         } catch (Exception e) {
@@ -82,10 +69,10 @@ class TokenServices {
     /**
      * Validates the token
      */
-    public boolean isValid(String token, String clientSecret) {
+    public boolean isValid(String token, String clientSecret, String issuer) {
         logger.debug("Starting token validation {}" + token);
         try {
-            SecurityClaims claims = processToClaims(token, clientSecret);
+            SecurityClaims claims = processToClaims(token, clientSecret, issuer);
             return (claims != null);
         } catch (Exception e) {
             logger.warn(String.format("Failed to validate token: %s, message: %s", token, e.getMessage()));
@@ -102,9 +89,9 @@ class TokenServices {
         jwtClaims.setIssuedAtToNow();
         jwtClaims.setGeneratedJwtId();
         jwtClaims.setSubject(claims.getSubject());
-        jwtClaims.setClaim(FIELD_EMAIL, claims.getEmail());
-        jwtClaims.setClaim(FIELD_PROVIDER, claims.getProvider());
-        jwtClaims.setClaim(FIELD_NAME, claims.getName());
+        jwtClaims.setClaim(AuthConstants.JWT_FIELD_EMAIL, claims.getEmail());
+        jwtClaims.setClaim(AuthConstants.JWT_FIELD_PROVIDER, claims.getProvider());
+        jwtClaims.setClaim(AuthConstants.JWT_FIELD_NAME, claims.getName());
         claims.setIssuedAt(new Date(jwtClaims.getIssuedAt().getValueInMillis()));
         jwtClaims.setExpirationTimeMinutesInTheFuture(ttl);
 

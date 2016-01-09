@@ -57,6 +57,7 @@ dependencies {
     //Security
     compile "org.bitbucket.b_c:jose4j:$jose4jVersion"
     compile "com.firebase:firebase-token-generator:$firebaseTokenGeneratorVersion"
+    compile 'io.jsonwebtoken:jjwt:0.6.0'
 
     //CORS filter
     compile "com.thetransactioncompany:cors-filter:$corsFilterVersion"

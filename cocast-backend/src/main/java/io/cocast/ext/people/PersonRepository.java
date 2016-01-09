@@ -54,7 +54,7 @@ public class PersonRepository {
      * List persons
      */
     public PaginatedResponse list(String networkMnemonic, String email, Integer limit, Integer offset) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
 
         String cacheKey = generateCacheKey(networkMnemonic, email);
 
@@ -94,7 +94,7 @@ public class PersonRepository {
      * Get a specific person
      */
     public Person get(String networkMnemonic, String id) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
         String cacheKey = generateCacheKey(networkMnemonic, id);
 
         //looks into the cache

@@ -26,24 +26,31 @@ public class SecurityContext {
         return securityThreadLocal.get();
     }
 
-
     public SecurityContext(SecurityClaims claims) throws AuthenticationException {
+        this(claims, AuthConstants.DEFAULT_ISSUER);
+    }
+
+    public SecurityContext(SecurityClaims claims, String issuer) throws AuthenticationException {
         Preconditions.checkNotNull(claims, "claims is mandatory");
         this.claims = claims;
-        this.validate(claims);
+        this.validate(claims, issuer);
     }
 
     public String userIdentification() {
         return claims.getSubject();
     }
 
+    public String issuer() {
+        return claims.getIssuer();
+    }
+
     /**
      * Validate the security claims
      */
-    private void validate(SecurityClaims claims) throws AuthenticationException {
+    private void validate(SecurityClaims claims, String issuer) throws AuthenticationException {
 
         //issuer
-        if (!AuthConstants.DEFAULT_ISSUER.equals(claims.getIssuer())) {
+        if (!issuer.equals(claims.getIssuer())) {
             throw new AuthenticationException(HttpServletResponse.SC_UNAUTHORIZED,
                     "Invalid issuer: " + claims.getIssuer());
         }

@@ -26,6 +26,11 @@ interface AuthConstants {
     public static final String X_ROOT_TOKEN = "x-root-token";
 
     /**
+     * Key on header to hold the issuer
+     */
+    public static final String X_ISSUER = "x-issuer";
+
+    /**
      * Root user email
      */
     public static final String ROOT_USER_EMAIL = "root@cocast.io";
@@ -44,5 +49,31 @@ interface AuthConstants {
      * JWT TTL
      */
     public static final Integer JWT_TTL = 5256000;
+
+    /**
+     * Field email on JWT
+     */
+    public static final String JWT_FIELD_EMAIL = "email";
+
+    /**
+     * Field provider on JWT
+     */
+    public static final String JWT_FIELD_PROVIDER = "provider";
+
+    /**
+     * Field name on JWT
+     */
+    public static final String JWT_FIELD_NAME = "name";
+
+    /**
+     * Client ID header on Smart Canvas
+     */
+    public static final String SMART_CANVAS_CLIENT_ID_HEADER = "CLIENT_ID";
+
+    /**
+     * API key header on Smart Canvas
+     */
+    public static final String SMART_CANVAS_API_KEY_HEADER = "API_KEY";
+
 
 }

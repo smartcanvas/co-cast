@@ -76,6 +76,10 @@ class NetworkRepository {
         List<Network> result = new ArrayList<Network>();
         List<NetworkMembership> membershipList = this.listMemberships();
 
+        if (membershipList == null) {
+            return result;
+        }
+
         for (NetworkMembership membership : membershipList) {
             Network network = this.getAsRoot(membership.getNetworkMnemonic());
             if (logger.isDebugEnabled()) {
