@@ -1,8 +1,10 @@
 package io.cocast.ext.match;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.cocast.util.DateUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Represents a match inside Co-Cast
@@ -12,11 +14,14 @@ public class Match implements Serializable {
 
     private PersonMatch personMatch1;
     private PersonMatch personMatch2;
+    private Date timestamp;
 
     public Match() {
+        timestamp = DateUtils.now();
     }
 
     public Match(PersonMatch personMatch1, PersonMatch personMatch2) {
+        this();
         this.personMatch1 = personMatch1;
         this.personMatch2 = personMatch2;
     }
@@ -35,6 +40,14 @@ public class Match implements Serializable {
 
     public void setPersonMatch2(PersonMatch personMatch2) {
         this.personMatch2 = personMatch2;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     /**
