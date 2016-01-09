@@ -37,7 +37,38 @@ public class PeopleResource {
     @POST
     @Path("/{networkMnemonic}")
     public Response create(Person person, @PathParam("networkMnemonic") String networkMnemonic) {
-        return this.save(person, networkMnemonic);
+        //validates the ID
+        if ((person == null) ||
+                (person.getId() == null)) {
+            return APIResponse.badRequest("Person ID is required").getResponse();
+        }
+
+        //validates the network mnemonic
+        if (StringUtils.isEmpty(networkMnemonic) && StringUtils.isEmpty(person.getNetworkMnemonic())) {
+            return APIResponse.badRequest("Network mnemonic is required").getResponse();
+        }
+        if (!StringUtils.isEmpty(networkMnemonic)) {
+            person.setNetworkMnemonic(networkMnemonic);
+        }
+
+        if ((SecurityContext.get() != null) && (SecurityContext.get().userIdentification() != null)) {
+            person.setCreatedBy(SecurityContext.get().userIdentification());
+        }
+
+        try {
+            personRepository.create(person);
+        } catch (ValidationException exc) {
+            logger.error("Error creating person", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (CoCastCallException exc) {
+            logger.error("Error creating person", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error creating person", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.created("Person created successfully with ID: " + person.getId()).getResponse();
     }
 
     /**
@@ -46,7 +77,38 @@ public class PeopleResource {
     @PUT
     @Path("/{networkMnemonic}")
     public Response update(Person person, @PathParam("networkMnemonic") String networkMnemonic) {
-        return this.save(person, networkMnemonic);
+        //validates the ID
+        if ((person == null) ||
+                (person.getId() == null)) {
+            return APIResponse.badRequest("Person ID is required").getResponse();
+        }
+
+        //validates the network mnemonic
+        if (StringUtils.isEmpty(networkMnemonic) && StringUtils.isEmpty(person.getNetworkMnemonic())) {
+            return APIResponse.badRequest("Network mnemonic is required").getResponse();
+        }
+        if (!StringUtils.isEmpty(networkMnemonic)) {
+            person.setNetworkMnemonic(networkMnemonic);
+        }
+
+        if ((SecurityContext.get() != null) && (SecurityContext.get().userIdentification() != null)) {
+            person.setCreatedBy(SecurityContext.get().userIdentification());
+        }
+
+        try {
+            personRepository.update(person);
+        } catch (ValidationException exc) {
+            logger.error("Error updating person", exc);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (CoCastCallException exc) {
+            logger.error("Error updating person", exc);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (Exception exc) {
+            logger.error("Error updating person", exc);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        return APIResponse.created("Person updated successfully with ID: " + person.getId()).getResponse();
     }
 
     /**
@@ -128,41 +190,5 @@ public class PeopleResource {
         return this.list(networkMnemonic, email, limit, offset);
     }
 
-    /**
-     * Save a Person
-     */
-    private Response save(Person person, String networkMnemonic) {
-        //validates the ID
-        if ((person == null) ||
-                (person.getId() == null)) {
-            return APIResponse.badRequest("Person ID is required").getResponse();
-        }
 
-        //validates the network mnemonic
-        if (StringUtils.isEmpty(networkMnemonic) && StringUtils.isEmpty(person.getNetworkMnemonic())) {
-            return APIResponse.badRequest("Network mnemonic is required").getResponse();
-        }
-        if (!StringUtils.isEmpty(networkMnemonic)) {
-            person.setNetworkMnemonic(networkMnemonic);
-        }
-
-        if ((SecurityContext.get() != null) && (SecurityContext.get().userIdentification() != null)) {
-            person.setCreatedBy(SecurityContext.get().userIdentification());
-        }
-
-        try {
-            personRepository.save(person);
-        } catch (ValidationException exc) {
-            logger.error("Error saving person", exc);
-            return APIResponse.badRequest(exc.getMessage()).getResponse();
-        } catch (CoCastCallException exc) {
-            logger.error("Error saving person", exc);
-            return APIResponse.fromException(exc).getResponse();
-        } catch (Exception exc) {
-            logger.error("Error saving person", exc);
-            return APIResponse.serverError(exc.getMessage()).getResponse();
-        }
-
-        return APIResponse.created("Person saved successfully with ID: " + person.getId()).getResponse();
-    }
 }

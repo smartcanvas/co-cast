@@ -70,6 +70,11 @@ public class CacheUtils {
      * Stores an object into the cache
      */
     public void set(String key, Integer timeout, Object value) {
+
+        if (value == null) {
+            return;
+        }
+
         try {
             Object storedValue = memcachedClient.set(generateKey(key), timeout, value).get();
             if (storedValue == null) {

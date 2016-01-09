@@ -41,7 +41,7 @@ public class Person implements Serializable {
 
     public String getId() {
         if (this.id == null) {
-            id = this.source + "_" + this.email.replace('.', '-');
+            id = Person.getIdFromEmail(this.email);
         }
         return id;
     }
@@ -168,6 +168,57 @@ public class Person implements Serializable {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    /**
+     * Get ID from email
+     */
+    public static String getIdFromEmail(String email) {
+        if (email == null) {
+            return null;
+        }
+        return email.replace('.', '-');
+    }
+
+    /**
+     * Merge information of this person with another one
+     */
+    public void merge(Person anotherPerson) {
+        //merge info
+        if (this.getDisplayName() == null) {
+            this.setDisplayName(anotherPerson.getDisplayName());
+        }
+        if (this.getEmail() == null) {
+            this.setEmail(anotherPerson.getEmail());
+        }
+        if (this.getPosition() == null) {
+            this.setPosition(anotherPerson.getPosition());
+        }
+        if (this.getCompanyName() == null) {
+            this.setCompanyName(anotherPerson.getCompanyName());
+        }
+        if (this.getAlias() == null) {
+            this.setAlias(anotherPerson.getAlias());
+        }
+        if (this.getBackgroundImageURL() == null) {
+            this.setBackgroundImageURL(anotherPerson.getBackgroundImageURL());
+        }
+        if (this.getImageURL() == null) {
+            this.setImageURL(anotherPerson.getImageURL());
+        }
+        if (this.getSource() == null) {
+            this.setSource(anotherPerson.getSource());
+        }
+        if ((this.getTags() == null) || (this.getTags().size() == 0)) {
+            this.setTags(anotherPerson.getTags());
+        }
+        if (this.getDepartment() == null) {
+            this.setDepartment(anotherPerson.getDepartment());
+        }
+        if (this.getPhoneNumber() == null) {
+            this.setPhoneNumber(anotherPerson.getPhoneNumber());
+        }
+
     }
 
     @Override

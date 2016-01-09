@@ -2,9 +2,7 @@ package io.cocast.ext.people;
 
 import com.google.inject.Singleton;
 import io.cocast.core.NetworkServices;
-import io.cocast.util.CacheUtils;
-import io.cocast.util.FirebaseUtils;
-import io.cocast.util.PaginatedResponse;
+import io.cocast.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -34,19 +32,64 @@ public class PersonRepository {
     private static CacheUtils cacheList = CacheUtils.getInstance(List.class);
 
     /**
-     * Create or update a new person
+     * Create a new person
      */
-    public void save(Person person) throws Exception {
+    public void create(Person person) throws Exception {
 
         networkServices.validate(person.getNetworkMnemonic());
+
+        //checks if exists
+        Person existingPerson = this.get(person.getNetworkMnemonic(), person.getId());
+        logger.debug("existingPerson = " + existingPerson);
+        if (existingPerson != null) {
+            throw new ValidationException("Person with ID = " + person.getId() + " already exists. Name = "
+                    + existingPerson.getDisplayName());
+        }
 
         //validate the person
         this.validate(person);
 
         //insert
         firebaseUtils.saveAsRoot(person, "/persons/" + person.getNetworkMnemonic() + "/" + person.getId() + ".json");
+
+        //update the cache for current user
         cache.set(generateCacheKey(person.getNetworkMnemonic(), person.getId()), person);
-        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), person.getEmail()));
+
+        //clears the cache list
+        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), person.getId()));
+        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), null));
+    }
+
+    /**
+     * Update an existing person
+     */
+    public void update(Person person) throws Exception {
+
+        networkServices.validate(person.getNetworkMnemonic());
+
+        //checks if exists
+        Person existingPerson = this.get(person.getNetworkMnemonic(), person.getId());
+        logger.debug("existingPerson = " + existingPerson);
+        if (existingPerson == null) {
+            throw new CoCastCallException("Person with ID = " + person.getId()
+                    + " doens't exist. Use POST to create persons", 404);
+        }
+
+        person.setCreatedBy(existingPerson.getCreatedBy());
+        person.setLastUpdate(DateUtils.now());
+        person.merge(existingPerson);
+
+        //validate the person
+        this.validate(person);
+
+        //insert
+        firebaseUtils.saveAsRoot(person, "/persons/" + person.getNetworkMnemonic() + "/" + person.getId() + ".json");
+
+        //update the cache for current user
+        cache.set(generateCacheKey(person.getNetworkMnemonic(), person.getId()), person);
+
+        //clears the cache list
+        cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), person.getId()));
         cacheList.invalidate(generateCacheListKey(person.getNetworkMnemonic(), null));
     }
 
@@ -56,7 +99,7 @@ public class PersonRepository {
     public PaginatedResponse list(String networkMnemonic, String email, Integer limit, Integer offset) throws Exception {
         networkServices.validateWithIssuer(networkMnemonic);
 
-        String cacheKey = generateCacheKey(networkMnemonic, email);
+        String cacheKey = generateCacheListKey(networkMnemonic, Person.getIdFromEmail(email));
 
         //looks into the cache
         List<Person> listPerson = cacheList.get(cacheKey, new ListPersonLoader(networkMnemonic, email));
@@ -107,6 +150,35 @@ public class PersonRepository {
         return person;
     }
 
+    /**
+     * Deletes a person
+     */
+    public void delete(String personId, String networkMnemonic) throws Exception {
+        networkServices.validate(networkMnemonic);
+
+        Person existingPerson = this.get(networkMnemonic, personId);
+        if (existingPerson == null) {
+            throw new CoCastCallException("Could not find person with ID: " + personId, 404);
+        }
+
+        if (!existingPerson.isActive()) {
+            throw new ValidationException("Person has been already deleted: " + personId);
+        }
+
+        existingPerson.setActive(false);
+        existingPerson.setLastUpdate(DateUtils.now());
+
+        //update
+        firebaseUtils.saveAsRoot(existingPerson, "/persons/" + networkMnemonic + "/" + existingPerson.getId() + ".json");
+
+        //invaliadte the cache for current user
+        cache.invalidate(generateCacheKey(networkMnemonic, personId));
+
+        //clears the cache list
+        cacheList.invalidate(generateCacheListKey(networkMnemonic, personId));
+        cacheList.invalidate(generateCacheListKey(networkMnemonic, null));
+    }
+
 
     /**
      * Validate if the person is ready to be created or updated
@@ -134,8 +206,8 @@ public class PersonRepository {
     /**
      * Generates the key for person list cache
      */
-    private String generateCacheListKey(String networkMnemonic, String email) {
-        return networkMnemonic + "_" + email;
+    private String generateCacheListKey(String networkMnemonic, String id) {
+        return "personList_" + networkMnemonic + "_" + id;
     }
 
     /**
