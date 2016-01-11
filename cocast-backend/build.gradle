@@ -106,5 +106,22 @@ task pushBackendDockerImage(dependsOn: tagBackendDockerImage, type: Exec) {
     commandLine 'gcloud', 'docker', 'push', "gcr.io/co-cast/$backendApp"
 }
 
+/**
+ * Redeploys the DEV environment
+ */
+task redeployDevBackend(dependsOn: pushBackendDockerImage, type: Exec) {
+    //command to be executed
+    workingDir "$projectDir/../scripts"
+    commandLine "$projectDir/../scripts/redeploy-dev.sh"
+}
+
+/**
+ * Redeploys the PRD environment
+ */
+task redeployPrdBackend(type: Exec) {
+    //command to be executed
+    workingDir "$projectDir/../scripts"
+    commandLine "$projectDir/../scripts/redeploy-prd.sh"
+}
 
 

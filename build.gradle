@@ -19,7 +19,15 @@ task config {
  */
 task deployBackend {
     dependsOn config
-    dependsOn ":cocast-backend:pushBackendDockerImage"
+    dependsOn ":cocast-backend:redeployDevBackend"
+}
+
+/**
+ * Deploys the container
+ */
+task deployBackendPrd {
+    dependsOn config
+    dependsOn ":cocast-backend:redeployPrdBackend"
 }
 
 /**
