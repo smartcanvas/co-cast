@@ -258,7 +258,12 @@ class NetworkRepository {
         public List<NetworkMembership> call() throws Exception {
 
             logger.debug("Getting memberships for " + uid);
-            JsonNode jsonNode = firebaseUtils.listAsJsonNode("/members/" + uid + ".json");
+            JsonNode jsonNode;
+            try {
+                jsonNode = firebaseUtils.listAsJsonNode("/members/" + uid + ".json");
+            } catch (Exception exc) {
+                return null;
+            }
             Iterator<String> iterator = jsonNode.fieldNames();
             List<NetworkMembership> membershipList = new ArrayList<NetworkMembership>();
             while (iterator.hasNext()) {

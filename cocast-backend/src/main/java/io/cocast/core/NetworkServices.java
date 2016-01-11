@@ -1,10 +1,12 @@
 package io.cocast.core;
 
 import io.cocast.auth.SecurityContext;
+import io.cocast.util.CoCastCallException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 
 /**
@@ -27,7 +29,8 @@ public class NetworkServices {
 
         Network network = networkRepository.get(networkMnemonic);
         if (network == null) {
-            throw new ValidationException("The user doesn't have access to network " + networkMnemonic);
+            throw new CoCastCallException("The user doesn't have access to network " + networkMnemonic,
+                    HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 

@@ -1,6 +1,7 @@
 package io.cocast.ext.people;
 
 import com.google.inject.Singleton;
+import io.cocast.auth.SecurityContext;
 import io.cocast.core.NetworkServices;
 import io.cocast.util.*;
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -69,7 +71,18 @@ public class PersonRepository {
      */
     public void update(Person person) throws Exception {
 
-        networkServices.validate(person.getNetworkMnemonic());
+        try {
+            networkServices.validate(person.getNetworkMnemonic());
+        } catch (CoCastCallException exc) {
+            //check if the person is valid with issuer
+            networkServices.validateWithIssuer(person.getNetworkMnemonic());
+
+            //check if the person is trying to update his own data
+            if (!person.getEmail().equals(SecurityContext.get().email())) {
+                throw new CoCastCallException("User " + SecurityContext.get().email() + " doesn't have access "
+                        + "to update this person (" + person.getEmail() + ")", HttpServletResponse.SC_UNAUTHORIZED);
+            }
+        }
 
         //checks if exists
         Person existingPerson = this.get(person.getNetworkMnemonic(), person.getId());
