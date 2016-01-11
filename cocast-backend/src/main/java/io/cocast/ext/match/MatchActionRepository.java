@@ -4,12 +4,15 @@ import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.core.NetworkServices;
 import io.cocast.ext.people.Person;
+import io.cocast.ext.people.PersonServices;
 import io.cocast.util.CacheUtils;
+import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,9 @@ public class MatchActionRepository {
     private NetworkServices networkServices;
 
     @Inject
+    private PersonServices personServices;
+
+    @Inject
     MatchRepository matchRepository;
 
     private static CacheUtils cache = CacheUtils.getInstance(MatchAction.class);
@@ -40,7 +46,8 @@ public class MatchActionRepository {
      * @return If a match has occured or not
      */
     public boolean save(String networkMnemonic, String email, String action) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
+
         String personId = Person.getIdFromEmail(SecurityContext.get().email());
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list match actions");
@@ -62,10 +69,7 @@ public class MatchActionRepository {
             List<MatchAction> likes = this.listActions(networkMnemonic, email, MatchAction.LIKE);
             for (MatchAction likeAction : likes) {
                 if (likeAction.getPersonId().equals(personId)) {
-                    PersonMatch personMatch1 = new PersonMatch(personId, SecurityContext.get().email());
-                    PersonMatch personMatch2 = new PersonMatch(Person.getIdFromEmail(email), email);
-                    Match match = new Match(personMatch1, personMatch2);
-                    matchRepository.save(networkMnemonic, match);
+                    matchRepository.save(networkMnemonic, SecurityContext.get().email(), email);
                     return true;
                 }
             }
@@ -79,10 +83,15 @@ public class MatchActionRepository {
      */
     public List<MatchAction> listActions(String networkMnemonic, String email, String action) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
         String personId = Person.getIdFromEmail(email);
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list likes");
+        }
+
+        Person person = personServices.get(networkMnemonic, email);
+        if (person == null) {
+            throw new CoCastCallException("Person doesn't exist: " + email, HttpServletResponse.SC_NOT_FOUND);
         }
 
         //looks into the cache
@@ -106,7 +115,7 @@ public class MatchActionRepository {
      */
     public List<MatchAction> list(String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
         String personId = Person.getIdFromEmail(SecurityContext.get().email());
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list match actions");

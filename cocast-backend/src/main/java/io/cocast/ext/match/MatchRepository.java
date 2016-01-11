@@ -4,13 +4,18 @@ import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.core.NetworkServices;
 import io.cocast.ext.people.Person;
+import io.cocast.ext.people.PersonServices;
 import io.cocast.util.CacheUtils;
+import io.cocast.util.CoCastCallException;
+import io.cocast.util.DateUtils;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -28,6 +33,9 @@ public class MatchRepository {
     @Inject
     private NetworkServices networkServices;
 
+    @Inject
+    private PersonServices personServices;
+
     private static CacheUtils cache = CacheUtils.getInstance(Match.class);
 
     /**
@@ -40,15 +48,20 @@ public class MatchRepository {
     /**
      * Saves a match
      */
-    public void save(String networkMnemonic, Match match) throws Exception {
-        networkServices.validate(networkMnemonic);
+    public void save(String networkMnemonic, String personEmail1, String personEmail2) throws Exception {
+        networkServices.validateWithIssuer(networkMnemonic);
 
-        if ((match.getPersonMatch1() == null) || (match.getPersonMatch2() == null)) {
-            throw new ValidationException("A match must have two not-null persons: person1 = " + match.getPersonMatch1()
-                    + ", person2 = " + match.getPersonMatch2());
+        Person person1 = personServices.get(networkMnemonic, personEmail1);
+        if (person1 == null) {
+            throw new CoCastCallException("Person not found: " + personEmail1, HttpServletResponse.SC_NOT_FOUND);
         }
 
-        SaveMatchThread saveMatchThread = new SaveMatchThread(networkMnemonic, match);
+        Person person2 = personServices.get(networkMnemonic, personEmail2);
+        if (person2 == null) {
+            throw new CoCastCallException("Person not found: " + personEmail1, HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        SaveMatchThread saveMatchThread = new SaveMatchThread(networkMnemonic, person1, person2);
         saveMatchThread.start();
     }
 
@@ -61,6 +74,15 @@ public class MatchRepository {
         //updates the cache
         List<Match> cachedMatchList = cache.get(cacheKey);
         if (cachedMatchList != null) {
+            int count = 0;
+            for (Match cachedMatch : cachedMatchList) {
+                if (cachedMatch.getPerson().getId().equals(match.getPerson().getId())) {
+                    cachedMatchList.remove(count);
+                    break;
+                }
+                count++;
+            }
+
             cachedMatchList.add(match);
             cache.set(cacheKey, cachedMatchList);
         }
@@ -71,7 +93,7 @@ public class MatchRepository {
      */
     public List<Match> list(String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
         String personId = Person.getIdFromEmail(SecurityContext.get().email());
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list matches");
@@ -123,27 +145,35 @@ public class MatchRepository {
     public class SaveMatchThread extends Thread {
 
         private String networkMnemonic;
-        private Match match;
+        private Person person1;
+        private Person person2;
 
-        public SaveMatchThread(String networkMnemonic, Match match) {
+        public SaveMatchThread(String networkMnemonic, Person person1, Person person2) {
             this.networkMnemonic = networkMnemonic;
-            this.match = match;
+            this.person1 = person1;
+            this.person2 = person2;
         }
 
         @Override
         public void run() {
 
             try {
-                //insert on both ends
-                firebaseUtils.saveAsRoot(match, "/matches/" + networkMnemonic + "/" + match.getPersonMatch1().getId() + "/" +
-                        match.getPersonMatch2().getId() + ".json");
-                firebaseUtils.saveAsRoot(match.reverse(), "/matches/" + networkMnemonic + "/" + match.getPersonMatch2().getId() + "/" +
-                        match.getPersonMatch1().getId() + ".json");
+                Date timestamp = DateUtils.now();
 
-                updatesCache(networkMnemonic, match.getPersonMatch1().getId(), match);
-                updatesCache(networkMnemonic, match.getPersonMatch2().getId(), match.reverse());
+                //insert on both ends
+                Match match1 = new Match(person1, timestamp);
+                Match match2 = new Match(person2, timestamp);
+
+                firebaseUtils.saveAsRoot(match1, "/matches/" + networkMnemonic + "/" + person2.getId() + "/" +
+                        match1.getPerson().getId() + ".json");
+                firebaseUtils.saveAsRoot(match2, "/matches/" + networkMnemonic + "/" + person1.getId() + "/" +
+                        match2.getPerson().getId() + ".json");
+
+                updatesCache(networkMnemonic, match1.getPerson().getId(), match2);
+                updatesCache(networkMnemonic, match2.getPerson().getId(), match1);
             } catch (Exception exc) {
-                logger.error("Error saving match: " + match, exc);
+                logger.error("Error saving match between " + person1.getEmail() + " and " +
+                        person2.getEmail(), exc);
             }
         }
     }
