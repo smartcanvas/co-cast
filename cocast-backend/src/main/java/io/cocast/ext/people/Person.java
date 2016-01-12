@@ -31,12 +31,18 @@ public class Person implements Serializable {
     private boolean isActive;
     private String createdBy;
     private Date lastUpdate;
+    private String deviceType;
+    private String deviceIdentifier;
+    private List<String> deviceTypeList;
+    private List<String> deviceIdentifierList;
 
     public Person() {
         tags = new ArrayList<String>();
         this.isActive = true;
         lastUpdate = DateUtils.now();
         createdBy = SecurityContext.get().userIdentification();
+        deviceTypeList = new ArrayList<String>();
+        deviceIdentifierList = new ArrayList<String>();
     }
 
     public String getId() {
@@ -170,6 +176,40 @@ public class Person implements Serializable {
         this.lastUpdate = lastUpdate;
     }
 
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+        addDeviceType(deviceType);
+    }
+
+    public String getDeviceIdentifier() {
+        return deviceIdentifier;
+    }
+
+    public void setDeviceIdentifier(String deviceIdentifier) {
+        this.deviceIdentifier = deviceIdentifier;
+        addDeviceIdentifier(deviceIdentifier);
+    }
+
+    public List<String> getDeviceTypeList() {
+        return deviceTypeList;
+    }
+
+    public void setDeviceTypeList(List<String> deviceTypeList) {
+        this.deviceTypeList = deviceTypeList;
+    }
+
+    public List<String> getDeviceIdentifierList() {
+        return deviceIdentifierList;
+    }
+
+    public void setDeviceIdentifierList(List<String> deviceIdentifierList) {
+        this.deviceIdentifierList = deviceIdentifierList;
+    }
+
     /**
      * Get ID from email
      */
@@ -218,6 +258,16 @@ public class Person implements Serializable {
         if (this.getPhoneNumber() == null) {
             this.setPhoneNumber(anotherPerson.getPhoneNumber());
         }
+        if (anotherPerson.getDeviceTypeList() != null) {
+            for (String strDeviceType : anotherPerson.getDeviceTypeList()) {
+                this.addDeviceType(strDeviceType);
+            }
+        }
+        if (anotherPerson.getDeviceIdentifierList() != null) {
+            for (String strDeviceIdentifier : anotherPerson.getDeviceIdentifierList()) {
+                this.addDeviceIdentifier(strDeviceIdentifier);
+            }
+        }
 
     }
 
@@ -225,6 +275,7 @@ public class Person implements Serializable {
     public String toString() {
         return "Person{" +
                 "id='" + id + '\'' +
+                ", networkMnemonic='" + networkMnemonic + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", email='" + email + '\'' +
                 ", position='" + position + '\'' +
@@ -239,6 +290,32 @@ public class Person implements Serializable {
                 ", isActive=" + isActive +
                 ", createdBy='" + createdBy + '\'' +
                 ", lastUpdate=" + lastUpdate +
+                ", deviceType='" + deviceType + '\'' +
+                ", deviceIdentifier='" + deviceIdentifier + '\'' +
+                ", deviceTypeList=" + deviceTypeList +
+                ", deviceIdentifierList=" + deviceIdentifierList +
                 '}';
+    }
+
+    private void addDeviceType(String deviceType) {
+        if (this.deviceTypeList != null) {
+            if (!deviceTypeList.contains(deviceType)) {
+                deviceTypeList.add(deviceType);
+            }
+        } else {
+            deviceTypeList = new ArrayList<String>();
+            deviceTypeList.add(deviceType);
+        }
+    }
+
+    private void addDeviceIdentifier(String deviceIdentifier) {
+        if (this.deviceIdentifierList != null) {
+            if (!deviceIdentifierList.contains(deviceIdentifier)) {
+                deviceIdentifierList.add(deviceIdentifier);
+            }
+        } else {
+            deviceIdentifierList = new ArrayList<String>();
+            deviceIdentifierList.add(deviceIdentifier);
+        }
     }
 }
