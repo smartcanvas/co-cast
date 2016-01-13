@@ -79,16 +79,15 @@ public class ApiTokenSecurityFilter implements Filter {
                     SecurityContext.set(new SecurityContext(tokenServices.processToClaims(authToken, jwtSecret, issuer), issuer));
                     logger.debug("Provided access token is valid. Proceeding with filter chain.");
 
+                    //execute the action
+                    if (!StringUtils.isEmpty(SecurityContext.get().userIdentification())) {
+                        filterChain.doFilter(request, response);
+                        SecurityContext.unset();
+                    }
                 } else {
                     logger.error("Auth token is missing");
                     unauthorized(resp, "Auth token is missing");
                 }
-            }
-
-            //execute the action
-            if (!StringUtils.isEmpty(SecurityContext.get().userIdentification())) {
-                filterChain.doFilter(request, response);
-                SecurityContext.unset();
             }
         } catch (SecurityException se) {
             String logMessage = "Unable to create security context. Auth token or root token missing or expired?";

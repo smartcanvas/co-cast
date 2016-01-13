@@ -5,108 +5,54 @@
 	"order": [],
 	"folders": [
 		{
-			"id": "ed069901-45a3-a822-9dc4-907955657725",
-			"name": "Auth",
-			"description": "",
-			"order": [
-				"262de49c-ed88-7f54-ef71-eb9539e5bf36"
-			],
-			"owner": "95125"
-		},
-		{
-			"id": "ed5ec57e-9171-9ae3-c78d-77321a6242e7",
-			"name": "Channels",
-			"description": "",
-			"order": [
-				"a90fc2fd-2538-83b5-2003-b78688629899",
-				"e32a2e9f-c0d1-0ca1-a83a-286527aeabe1",
-				"c4b10db0-37bd-a4fa-4ec1-ca512a784739",
-				"464bceea-f7e2-8808-e7a2-f90871291a21",
-				"e0d65fcd-75f1-ade9-9090-adb81cd5d151"
-			],
-			"owner": "95125"
-		},
-		{
-			"id": "9b41ad08-b426-fbee-85d3-77f9c7cf95f3",
-			"name": "Configurations",
+			"id": "4c67056c-f16d-8c53-4015-6da132cf8d1b",
+			"name": "Admin API",
 			"description": "",
 			"order": [
 				"3fab4a45-d92a-e07a-0c2a-f3ce19dc879b",
 				"da2647da-b7b0-2164-e381-109d500df828",
 				"cefd2ecc-1c9a-730c-bf06-d83af979837a",
-				"2ab09203-9b08-f59b-1540-e5125f94c89d"
-			],
-			"owner": "95125",
-			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55"
-		},
-		{
-			"id": "534b59e8-289a-a6e8-32db-ea05fa234d6b",
-			"name": "Contents",
-			"description": "",
-			"order": [
-				"3d1fc5a5-1bb6-e294-db37-79f72e71fc1c",
-				"a6d5f755-b26b-3005-313c-9cfef6af0462",
-				"77e13679-9ef9-73fa-5d28-171895f159e8"
+				"2ab09203-9b08-f59b-1540-e5125f94c89d",
+				"2ee77ef0-3807-1fee-dbae-018c2e9895bd",
+				"9140f6ed-0fcb-8f29-bdf6-0b16fbb735ae",
+				"b757d0b0-fe10-c449-9343-ceca3f4f06d6",
+				"0d355dbc-b26a-bf55-a59b-bf3d07c56943"
 			],
 			"owner": "95125"
 		},
 		{
-			"id": "d9c3fea0-64a8-763d-97e7-8fc9e828d8be",
-			"name": "Matches",
+			"id": "ed069901-45a3-a822-9dc4-907955657725",
+			"name": "Auth API",
 			"description": "",
 			"order": [
-				"16e87c82-1229-25df-44d1-c2391d6c61d7",
-				"a1453ab3-5748-4116-1377-f90ac3a6b9d7"
+				"262de49c-ed88-7f54-ef71-eb9539e5bf36"
 			],
 			"owner": "95125",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55"
 		},
 		{
-			"id": "76bf57d6-629f-f27c-3469-7dd417830ee8",
-			"name": "Networks",
+			"id": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
+			"name": "Core API",
 			"description": "",
 			"order": [
+				"a90fc2fd-2538-83b5-2003-b78688629899",
+				"e32a2e9f-c0d1-0ca1-a83a-286527aeabe1",
+				"c4b10db0-37bd-a4fa-4ec1-ca512a784739",
+				"e0d65fcd-75f1-ade9-9090-adb81cd5d151",
+				"464bceea-f7e2-8808-e7a2-f90871291a21",
+				"3d1fc5a5-1bb6-e294-db37-79f72e71fc1c",
+				"a6d5f755-b26b-3005-313c-9cfef6af0462",
+				"77e13679-9ef9-73fa-5d28-171895f159e8",
 				"13455de5-fbb3-32be-06e3-15803ee5aa50",
 				"6607e43d-dc47-4f4c-1742-202d27bc83a2",
 				"0679f32d-cd1d-535c-31f6-d2a321c86de3",
 				"48fd8eef-d8c6-7066-6b77-d60eeb94ec7b",
-				"54285106-8bbb-42a4-a0e9-ec7337aec1d1"
-			],
-			"owner": "95125",
-			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55"
-		},
-		{
-			"id": "8291fa4b-3225-eec2-b127-0a71934bcf19",
-			"name": "People",
-			"description": "",
-			"order": [
-				"c62ae2e3-c60e-2c6f-a82f-2a6baa3f6cbd",
-				"4411fc67-b0fb-f34a-f67c-1436b704c147",
-				"315dc33f-2ca6-c90b-7102-522b2f912ce9",
-				"7feca484-ebe9-4160-9827-1cbe778060e8",
-				"573bb7e9-d41d-450e-ba5f-21d1e11437e5",
-				"6080a4df-ec5e-71bf-5b19-1a09beee256d"
-			],
-			"owner": "95125"
-		},
-		{
-			"id": "2920a426-f7a4-6da0-1ee1-e8d7dee0444e",
-			"name": "Settings",
-			"description": "",
-			"order": [
+				"54285106-8bbb-42a4-a0e9-ec7337aec1d1",
 				"48e37495-ea13-e63c-962d-14ad59a73572",
 				"b1229851-c989-38c5-7a18-15eea1db7422",
 				"af4a9ba3-a243-359b-973e-ff63f8250428",
 				"a85af9ec-19b8-a1d2-fb4f-c27617d73de2",
-				"9cd74634-8d7e-5374-bac5-359b9dfcd907"
-			],
-			"owner": "95125"
-		},
-		{
-			"id": "36299381-b654-78ac-1411-668156f3ea9d",
-			"name": "Stations",
-			"description": "",
-			"order": [
+				"9cd74634-8d7e-5374-bac5-359b9dfcd907",
 				"b75aa726-68c5-10a2-8e6f-9245ded525c3",
 				"32919653-5793-fc85-f73d-2fae54c9717c",
 				"47e7211e-82ac-3704-dfab-ec9c9090bef8",
@@ -116,14 +62,27 @@
 			"owner": "95125"
 		},
 		{
-			"id": "0d6edc05-ebd7-5ce9-e300-a38f9fe57f65",
-			"name": "Themes",
+			"id": "d9c3fea0-64a8-763d-97e7-8fc9e828d8be",
+			"name": "Matches API",
 			"description": "",
 			"order": [
-				"2ee77ef0-3807-1fee-dbae-018c2e9895bd",
-				"9140f6ed-0fcb-8f29-bdf6-0b16fbb735ae",
-				"b757d0b0-fe10-c449-9343-ceca3f4f06d6",
-				"0d355dbc-b26a-bf55-a59b-bf3d07c56943"
+				"16e87c82-1229-25df-44d1-c2391d6c61d7",
+				"a1453ab3-5748-4116-1377-f90ac3a6b9d7",
+				"040c2132-f099-40df-1c03-ed237ebeaae1"
+			],
+			"owner": "95125",
+			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55"
+		},
+		{
+			"id": "8291fa4b-3225-eec2-b127-0a71934bcf19",
+			"name": "People API",
+			"description": "",
+			"order": [
+				"c62ae2e3-c60e-2c6f-a82f-2a6baa3f6cbd",
+				"4411fc67-b0fb-f34a-f67c-1436b704c147",
+				"315dc33f-2ca6-c90b-7102-522b2f912ce9",
+				"573bb7e9-d41d-450e-ba5f-21d1e11437e5",
+				"6080a4df-ec5e-71bf-5b19-1a09beee256d"
 			],
 			"owner": "95125",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55"
@@ -134,6 +93,25 @@
 	"remoteLink": "",
 	"public": false,
 	"requests": [
+		{
+			"id": "040c2132-f099-40df-1c03-ed237ebeaae1",
+			"headers": "x-access-token: {{cc_access_token}}\nx-client-id: {{cc_client_id}}\n",
+			"url": "{{cc_base_uri}}/ext/match/v1/shuffle/teamwork",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1452642440080,
+			"name": "Shuffled Persons (List)",
+			"description": "",
+			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
+			"responses": []
+		},
 		{
 			"id": "0679f32d-cd1d-535c-31f6-d2a321c86de3",
 			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
@@ -151,12 +129,13 @@
 			"name": "Network (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "0d355dbc-b26a-bf55-a59b-bf3d07c56943",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/admin/v1/themes/clean",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\n",
+			"url": "{{cc_base_uri}}/admin/v1/themes/clean",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -166,16 +145,17 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1451320457751,
-			"name": "Clean Themes",
+			"time": 1452640097878,
+			"name": "Themes (Clean)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b"
 		},
 		{
 			"id": "13455de5-fbb3-32be-06e3-15803ee5aa50",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/core/v1/networks",
+			"headers": "x-access-token: {{cc_access_token}}\nx-client-id: {{cc_client_id}}\n",
+			"url": "{{cc_base_uri}}/core/v1/networks",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -185,7 +165,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1451325463574,
+			"time": 1452641306840,
 			"name": "Network (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
@@ -193,8 +173,8 @@
 		},
 		{
 			"id": "16e87c82-1229-25df-44d1-c2391d6c61d7",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\nContent-Type: application/json\n",
-			"url": "{{base_uri}}/ext/match/v1/actions/teamwork?email=rbaboni@ciandt.com&action=like",
+			"headers": "x-access-token: {{sc_access_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{sc_issuer}}\nContent-Type: application/json\n",
+			"url": "{{cc_base_uri}}/ext/match/v1/actions/teamwork?email=rbaboni@ciandt.com&action=like",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "PUT",
@@ -204,7 +184,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452367228458,
+			"time": 1452642376900,
 			"name": "Match Action (Put)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
@@ -213,8 +193,8 @@
 		},
 		{
 			"id": "262de49c-ed88-7f54-ef71-eb9539e5bf36",
-			"headers": "x-firebase-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjowLCJkIjp7InVpZCI6Imdvb2dsZToxMTgyMzkxODM3ODIyMDQ0MjQxNzciLCJwcm92aWRlciI6Imdvb2dsZSJ9LCJpYXQiOjE0NTIyODY5NjF9.RBCeydRdoNC69lRWlXNFGqop2E_Y7iMhoBR4szxKC88\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/auth/v1",
+			"headers": "x-firebase-token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjowLCJkIjp7InVpZCI6Imdvb2dsZToxMTgyMzkxODM3ODIyMDQ0MjQxNzciLCJwcm92aWRlciI6Imdvb2dsZSJ9LCJpYXQiOjE0NTIyODY5NjF9.RBCeydRdoNC69lRWlXNFGqop2E_Y7iMhoBR4szxKC88\nx-client-id: {{cc_client_id}}\n",
+			"url": "{{cc_base_uri}}/auth/v1",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -224,7 +204,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452286990828,
+			"time": 1452641152478,
 			"name": "Auth",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
@@ -232,8 +212,8 @@
 		},
 		{
 			"id": "2ab09203-9b08-f59b-1540-e5125f94c89d",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/admin/v1/configurations/clean",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\n",
+			"url": "{{cc_base_uri}}/admin/v1/configurations/clean",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -243,16 +223,17 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1449529205744,
-			"name": "Clean Configurations",
+			"time": 1452640253062,
+			"name": "Configurations (Clean)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b"
 		},
 		{
 			"id": "2ee77ef0-3807-1fee-dbae-018c2e9895bd",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\nContent-Type: application/json\n",
-			"url": "{{base_uri}}/admin/v1/themes",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\nContent-Type: application/json\n",
+			"url": "{{cc_base_uri}}/admin/v1/themes",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -262,17 +243,18 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1451320388551,
-			"name": "Create Theme",
+			"time": 1452639997718,
+			"name": "Theme (Create)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
-			"rawModeData": "{\n    \"mnemonic\": \"blue_pink\",\n    \"primaryColor\": \"#2196f3\",\n    \"primaryFontColor\": \"#FFFFFF\",\n    \"secondaryColor\": \"#64b5f6\",\n    \"secondaryFontColor\": \"#000000\",\n    \"accentColor\": \"#FF4081\",\n    \"accentFontColor\": \"#FFFFFF\",\n    \"primaryFont\": \"Roboto\",\n    \"secondaryFont\": \"Roboto\"\n}"
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b",
+			"rawModeData": "{\n    \"mnemonic\": \"blue_pink2\",\n    \"primaryColor\": \"#2196f3\",\n    \"primaryFontColor\": \"#FFFFFF\",\n    \"secondaryColor\": \"#64b5f6\",\n    \"secondaryFontColor\": \"#000000\",\n    \"accentColor\": \"#FF4081\",\n    \"accentFontColor\": \"#FFFFFF\",\n    \"primaryFont\": \"Roboto\",\n    \"secondaryFont\": \"Roboto\"\n}"
 		},
 		{
 			"id": "315dc33f-2ca6-c90b-7102-522b2f912ce9",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/ext/people/v1/persons/teamwork",
+			"headers": "x-access-token: {{sc_access_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{sc_issuer}}\n",
+			"url": "{{cc_base_uri}}/ext/people/v1/persons/teamwork",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -282,7 +264,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452372961099,
+			"time": 1452642927251,
 			"name": "Person (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
@@ -306,6 +288,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"name\": \"Station 4\",\n    \"location\": \"Under the roof\",\n    \"theme\": \"blue_pink\"\n}"
 		},
 		{
@@ -326,12 +309,13 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"title\": \"Content 1\",\n    \"summary\": \"This is a sample content\",\n    \"tags\": [\"google\", \"engine\"],\n    \"type\": \"photo\",\n    \"authorId\": \"viveiros@ciandt.com\",\n    \"authorDisplayName\": \"Daniel Viveiros\",\n    \"authorImageURL\": \"http://myphoto.com.br\",\n    \"source\": \"test\",\n    \"sourceContentURL\": \"http://content.com.br\",\n    \"likeCounter\": 3\n}"
 		},
 		{
 			"id": "3fab4a45-d92a-e07a-0c2a-f3ce19dc879b",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\nContent-Type: application/json\n",
-			"url": "{{base_uri}}/admin/v1/configurations",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\nContent-Type: application/json\n",
+			"url": "{{cc_base_uri}}/admin/v1/configurations",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -341,17 +325,18 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1449530183629,
-			"name": "Create Configuration",
+			"time": 1452640155690,
+			"name": "Configuration (Create)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b",
 			"rawModeData": "{\n    \"name\": \"config4\",\n    \"value\": \"value1\",\n    \"description\": \"desc1\"\n}"
 		},
 		{
 			"id": "4411fc67-b0fb-f34a-f67c-1436b704c147",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/ext/people/v1/persons/network5/teste",
+			"headers": "x-access-token: {{cc_access_token}}\nx-client-id: {{cc_client_id}}\n",
+			"url": "{{cc_base_uri}}/ext/people/v1/persons/network5/marcosvc@ciandt-com",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -361,7 +346,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452112500354,
+			"time": 1452643030403,
 			"name": "Person (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
@@ -385,6 +370,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"title\": \"Channel 1\",\n    \"theme\": \"blue_pink\",\n    \"source\": \"smartcanvas\",\n    \"tags\": [\"google\",\"cloud\"],\n    \"maxAgeInHours\": 1200,\n    \"limitToFirst\": 4,\n    \"orderBy\": \"age\"\n}"
 		},
 		{
@@ -404,7 +390,8 @@
 			"name": "Station (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "48e37495-ea13-e63c-962d-14ad59a73572",
@@ -425,7 +412,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"folder": "2920a426-f7a4-6da0-1ee1-e8d7dee0444e"
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "48fd8eef-d8c6-7066-6b77-d60eeb94ec7b",
@@ -445,6 +432,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": ""
 		},
 		{
@@ -465,12 +453,13 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"name\": \"Teamwork 2016\",\n    \"mnemonic\": \"teamwork\",\n    \"theme\": \"blue_pink\",\n    \"active\": true\n}"
 		},
 		{
 			"id": "573bb7e9-d41d-450e-ba5f-21d1e11437e5",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\nContent-Type: application/json\n",
-			"url": "{{base_uri}}/ext/people/v1/persons/network5",
+			"headers": "x-access-token: {{sc_access_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{sc_issuer}}\nContent-Type: application/json\n",
+			"url": "{{cc_base_uri}}/ext/people/v1/persons/teamwork",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "PUT",
@@ -480,17 +469,17 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452372218726,
+			"time": 1452643068720,
 			"name": "Person (Update)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
-			"rawModeData": "{\n    \"displayName\": \"Daniel Viveiros\",\n    \"email\": \"viveiros@ciandt.com\",\n    \"imageURL\": \"http://www,image.url\",\n    \"backgroundImageURL\": \"http://wwww.bkgroundimage.url\"\n}"
+			"rawModeData": "{\n    \"displayName\": \"Daniel Viveiros\",\n    \"email\": \"viveiros@ciandt.com\",\n    \"imageURL\": \"http://www,image.url\",\n    \"backgroundImageURL\": \"http://wwww.bkgroundimage.url\",\n    \"deviceType\": \"ios\",\n    \"deviceIdentifier\": \"XXX\"\n}"
 		},
 		{
 			"id": "6080a4df-ec5e-71bf-5b19-1a09beee256d",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\nContent-Type: application/json\n",
-			"url": "{{base_uri}}/ext/people/v1/persons/network5/viveiros@ciandt-com",
+			"headers": "x-access-token: {{cc_access_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\nContent-Type: application/json\n",
+			"url": "{{cc_base_uri}}/ext/people/v1/persons/network5/marcosvc@ciandt-com",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "DELETE",
@@ -500,12 +489,12 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452358732844,
+			"time": 1452643295500,
 			"name": "Person (Delete)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
-			"rawModeData": "{\n    \"displayName\": \"Daniel Viveiros\",\n    \"email\": \"viveiros@ciandt.com\",\n    \"position\": \"Head of Technology\",\n    \"companyName\": \"CI&T\",\n    \"alias\": \"Viveiros\",\n    \"department\": \"D1\",\n    \"imageURL\": \"http://www,image.url\",\n    \"backgroundImageURL\": \"http://wwww.bkgroundimage.url\",\n    \"source\": \"connector\",\n    \"phoneNumber\": \"+55 11 5555-6666\",\n    \"tags\": [\"cloud\", \"Services & Sales Technology\"]\n}"
+			"rawModeData": ""
 		},
 		{
 			"id": "6607e43d-dc47-4f4c-1742-202d27bc83a2",
@@ -525,6 +514,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"name\": \"network 555\",\n    \"theme\": \"blue_pink\",\n    \"collaborators\": [\"google:105693994133194711831\", \"google:118239183782204424177\"]\n}"
 		},
 		{
@@ -545,6 +535,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"name\": \"Station 444\",\n    \"theme\": \"blue_pink\",\n    \"channels\": [ \"channel-1\" ]\n}"
 		},
 		{
@@ -564,31 +555,13 @@
 			"name": "Content (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
-		},
-		{
-			"id": "7feca484-ebe9-4160-9827-1cbe778060e8",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/ext/people/v1/persons/network5/shuffle",
-			"preRequestScript": "",
-			"pathVariables": {},
-			"method": "GET",
-			"data": [],
-			"dataMode": "params",
-			"version": 2,
-			"tests": "",
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1452116654209,
-			"name": "Person (Shuffle)",
-			"description": "",
-			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "9140f6ed-0fcb-8f29-bdf6-0b16fbb735ae",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/admin/v1/themes",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\n",
+			"url": "{{cc_base_uri}}/admin/v1/themes",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -598,11 +571,12 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1451320418612,
-			"name": "List Themes",
+			"time": 1452640020509,
+			"name": "Themes (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b"
 		},
 		{
 			"id": "982de243-b4a7-8801-e821-e9982f2c8d2c",
@@ -622,6 +596,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": ""
 		},
 		{
@@ -642,12 +617,13 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": ""
 		},
 		{
 			"id": "a1453ab3-5748-4116-1377-f90ac3a6b9d7",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/ext/match/v1/matches/teamwork",
+			"headers": "x-access-token: {{sc_access_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{sc_issuer}}\n",
+			"url": "{{cc_base_uri}}/ext/match/v1/matches/teamwork",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -657,7 +633,7 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452369724018,
+			"time": 1452642411020,
 			"name": "Matches (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
@@ -681,6 +657,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"title\": \"Content 1\",\n    \"summary\": \"This is a sample content\",\n    \"tags\": [\"google\", \"engine\"],\n    \"type\": \"photo\",\n    \"authorId\": \"viveiros@ciandt.com\",\n    \"authorDisplayName\": \"Daniel Viveiros\",\n    \"authorImageURL\": \"http://myphoto.com.br\",\n    \"source\": \"test\",\n    \"sourceContentURL\": \"http://content.com.br\",\n    \"likeCounter\": 3\n}"
 		},
 		{
@@ -701,6 +678,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"value\": \"Value 10\",\n    \"description\": \"Desc 1\"\n}"
 		},
 		{
@@ -720,7 +698,8 @@
 			"name": "Channel (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "af4a9ba3-a243-359b-973e-ff63f8250428",
@@ -739,7 +718,8 @@
 			"name": "Settings  (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "b1229851-c989-38c5-7a18-15eea1db7422",
@@ -759,12 +739,13 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"name\": \"settings-1\",\n    \"value\": \"Value 1\",\n    \"description\": \"Desc 1\"\n}"
 		},
 		{
 			"id": "b757d0b0-fe10-c449-9343-ceca3f4f06d6",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/admin/v1/themes/blue_pink",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\n",
+			"url": "{{cc_base_uri}}/admin/v1/themes/blue_pink",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -774,11 +755,12 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1451320438862,
-			"name": "Get Theme",
+			"time": 1452640058942,
+			"name": "Theme (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b"
 		},
 		{
 			"id": "b75aa726-68c5-10a2-8e6f-9245ded525c3",
@@ -797,7 +779,8 @@
 			"name": "Station (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "c4b10db0-37bd-a4fa-4ec1-ca512a784739",
@@ -816,12 +799,13 @@
 			"name": "Channel (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52"
 		},
 		{
 			"id": "c62ae2e3-c60e-2c6f-a82f-2a6baa3f6cbd",
-			"headers": "x-access-token: {{access_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\nContent-Type: application/json\n",
-			"url": "{{base_uri}}/ext/people/v1/persons/network5",
+			"headers": "x-access-token: {{cc_access_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\nContent-Type: application/json\n",
+			"url": "{{cc_base_uri}}/ext/people/v1/persons/network5",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -831,17 +815,17 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1452112476749,
+			"time": 1452642990600,
 			"name": "Person (Create)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
-			"rawModeData": "{\n    \"displayName\": \"Daniel Viveiros\",\n    \"email\": \"viveiros@ciandt.com\",\n    \"position\": \"Head of Technology\",\n    \"companyName\": \"CI&T\",\n    \"alias\": \"Viveiros\",\n    \"department\": \"D1\",\n    \"imageURL\": \"http://www,image.url\",\n    \"backgroundImageURL\": \"http://wwww.bkgroundimage.url\",\n    \"source\": \"test\",\n    \"phoneNumber\": \"+55 11 5555-6666\",\n    \"tags\": [\"cloud\", \"Services & Sales Technology\"]\n}"
+			"rawModeData": "{\n    \"displayName\": \"Marcos Vinicius\",\n    \"email\": \"marcosvc@ciandt.com\",\n    \"position\": \"Developer iOS\",\n    \"companyName\": \"CI&T\",\n    \"alias\": \"Marcos\",\n    \"department\": \"D1\",\n    \"imageURL\": \"http://www,image.url\",\n    \"backgroundImageURL\": \"http://wwww.bkgroundimage.url\",\n    \"source\": \"test\",\n    \"phoneNumber\": \"+55 11 5555-6666\",\n    \"tags\": [\"search\", \"Technology Partner\"]\n}"
 		},
 		{
 			"id": "cefd2ecc-1c9a-730c-bf06-d83af979837a",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/admin/v1/configurations/config1",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\n",
+			"url": "{{cc_base_uri}}/admin/v1/configurations/config4",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -851,16 +835,17 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1449529176045,
-			"name": "Get Configuration",
+			"time": 1452640228547,
+			"name": "Configuration (Get)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b"
 		},
 		{
 			"id": "da2647da-b7b0-2164-e381-109d500df828",
-			"headers": "x-root-token: {{root_token}}\nx-client-id: XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f\n",
-			"url": "{{base_uri}}/admin/v1/configurations",
+			"headers": "x-root-token: {{cc_root_token}}\nx-client-id: {{cc_client_id}}\nx-issuer: {{cc_issuer}}\n",
+			"url": "{{cc_base_uri}}/admin/v1/configurations",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -870,11 +855,12 @@
 			"tests": "",
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1449529163398,
-			"name": "List Configurations",
+			"time": 1452640184087,
+			"name": "Configurations (List)",
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
-			"responses": []
+			"responses": [],
+			"folder": "4c67056c-f16d-8c53-4015-6da132cf8d1b"
 		},
 		{
 			"id": "e0d65fcd-75f1-ade9-9090-adb81cd5d151",
@@ -894,6 +880,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": ""
 		},
 		{
@@ -914,6 +901,7 @@
 			"description": "",
 			"collectionId": "949b62e4-feda-38e0-f65d-599b26611c55",
 			"responses": [],
+			"folder": "d1527b63-5020-4fb2-0087-39ef3ed7da52",
 			"rawModeData": "{\n    \"title\": \"Channel 1\",\n    \"theme\": \"blue_pink\",\n    \"tags\": [\"google\", \"cloud\"],\n    \"maxAgeInHours\": 1200,\n    \"limitToFirst\": 4,\n    \"orderBy\": \"age\"\n}"
 		}
 	]

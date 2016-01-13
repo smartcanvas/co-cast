@@ -180,7 +180,7 @@ public class PersonResource {
     }
 
     /**
-     * Delete a station
+     * Delete a person
      */
     @DELETE
     @Path("/{networkMnemonic}/{id}")
