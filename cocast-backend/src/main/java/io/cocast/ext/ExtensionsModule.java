@@ -4,6 +4,7 @@ import com.google.inject.servlet.ServletModule;
 import io.cocast.ext.match.MatchActionRepository;
 import io.cocast.ext.match.MatchRepository;
 import io.cocast.ext.match.ShuffleServices;
+import io.cocast.ext.match.TeamworkShuffler;
 import io.cocast.ext.people.PersonRepository;
 import io.cocast.ext.people.PersonServices;
 
@@ -19,6 +20,7 @@ public class ExtensionsModule extends ServletModule {
         bind(MatchRepository.class);
         bind(PersonServices.class);
         bind(ShuffleServices.class);
+        bind(TeamworkShuffler.class);
 
     }
 }

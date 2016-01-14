@@ -113,10 +113,17 @@ public class MatchActionRepository {
     /**
      * Lists all match actions for a specific network and person
      */
-    public List<MatchAction> list(String networkMnemonic) throws Exception {
+    public List<MatchAction> list(String networkMnemonic, Person person) throws Exception {
 
         networkServices.validateWithIssuer(networkMnemonic);
-        String personId = Person.getIdFromEmail(SecurityContext.get().email());
+
+
+        String personId;
+        if (person != null) {
+            personId = person.getId();
+        } else {
+            personId = Person.getIdFromEmail(SecurityContext.get().email());
+        }
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list match actions");
         }

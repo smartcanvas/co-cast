@@ -44,4 +44,20 @@ public class MatchAction implements Serializable {
                 ", action='" + action + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MatchAction that = (MatchAction) o;
+
+        return personId != null ? personId.equals(that.personId) : that.personId == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return personId != null ? personId.hashCode() : 0;
+    }
 }

@@ -59,16 +59,16 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Firebase URL = " + completeURL);
-            logger.debug("Object to be created = " + obj);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Firebase URL = " + completeURL);
+//            logger.debug("Object to be created = " + obj);
+//        }
 
         Response response = client.target(completeURL).request().put(Entity.json(obj));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Response = " + response);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Response = " + response);
+//        }
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
@@ -85,16 +85,16 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient();
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Firebase URL = " + completeURL);
-            logger.debug("String to be saved = " + strValue);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Firebase URL = " + completeURL);
+//            logger.debug("String to be saved = " + strValue);
+//        }
 
         Response response = client.target(completeURL).request().accept(MediaType.TEXT_PLAIN).put(Entity.text("\"" + strValue + "\""));
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Response = " + response);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Response = " + response);
+//        }
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
@@ -141,15 +141,15 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Firebase URL = " + completeURL);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Firebase URL = " + completeURL);
+//        }
 
         String strFirebaseResult = client.target(completeURL).request().get(String.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Return from Firebase = " + strFirebaseResult);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Return from Firebase = " + strFirebaseResult);
+//        }
 
         return getListFromResult(strFirebaseResult, cls);
     }
@@ -162,15 +162,15 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURLAsRoot(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Firebase URL = " + completeURL);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Firebase URL = " + completeURL);
+//        }
 
         String strFirebaseResult = client.target(completeURL).request().get(String.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Return from Firebase = " + strFirebaseResult);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Return from Firebase = " + strFirebaseResult);
+//        }
 
         return getListFromResult(strFirebaseResult, cls);
     }
@@ -182,15 +182,15 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Firebase URL = " + completeURL);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Firebase URL = " + completeURL);
+//        }
 
         String strFirebaseResult = client.target(completeURL).request().get(String.class);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Return from Firebase = " + strFirebaseResult);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Return from Firebase = " + strFirebaseResult);
+//        }
 
         return objectMapper.readTree(strFirebaseResult);
     }
@@ -201,17 +201,19 @@ public class FirebaseUtils {
     public <T> T getAsRoot(String uri, Class<T> cls) throws IOException {
         String completeURL = getFirebaseURLAsRoot(uri);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Firebase URL = " + completeURL);
-        }
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("Firebase URL = " + completeURL);
+//        }
 
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
         Response response = client.target(completeURL).request().get();
 
+        /*
         if (logger.isDebugEnabled()) {
             logger.debug("Return from Firebase: status =  " + response.getStatus() + ", response = " +
                     response);
         }
+        */
 
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
             throw new CoCastCallException(response.readEntity(String.class), response.getStatus());
