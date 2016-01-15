@@ -107,6 +107,14 @@ public class MatchRepository {
             cache.invalidate(cacheKey);
         }
 
+        //updates person info
+        for (Match match : matchList) {
+            Person person = personServices.get(networkMnemonic, match.getPerson().getEmail());
+            if (person != null) {
+                match.setPerson(person);
+            }
+        }
+
         return matchList;
     }
 
