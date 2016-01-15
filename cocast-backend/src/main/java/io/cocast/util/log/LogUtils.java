@@ -41,6 +41,23 @@ public class LogUtils {
     }
 
     /**
+     * Logs an external call
+     */
+    public static void logExternalCall(Logger logger, String message, String externalApp, Integer numberResults,
+                                       Integer status, Long executionTime) {
+
+        try {
+            if (logger.isInfoEnabled()) {
+                ExternalCall externalCall = new ExternalCall(message, externalApp, numberResults,
+                        status, executionTime);
+                logger.info(externalCall.toJson());
+            }
+        } catch (Exception exc) {
+            logger.error("Error writing External Call log", exc);
+        }
+    }
+
+    /**
      * Logs a fatal exception, that also sends an email to report the issue
      */
     public static void fatal(Logger logger, String message, Throwable t) {
@@ -70,10 +87,13 @@ public class LogUtils {
         sb.append("<b>Email</b>: " + SecurityContext.get().email() + "<br>");
         sb.append("<b>When</b>: " + DateUtils.now() + "<br>");
         sb.append("<b>Environment</b>: " + configurationServices.getString("environment") + "<br>");
-        sb.append("<hr>");
-        sb.append("<b>Stack trace</b>: <br><br><pre><code>");
-        sb.append(ExceptionUtils.getStackTrace(t));
-        sb.append("</code></pre>");
+
+        if (t != null) {
+            sb.append("<hr>");
+            sb.append("<b>Stack trace</b>: <br><br><pre><code>");
+            sb.append(ExceptionUtils.getStackTrace(t));
+            sb.append("</code></pre>");
+        }
 
         email.setHtml(sb.toString());
 

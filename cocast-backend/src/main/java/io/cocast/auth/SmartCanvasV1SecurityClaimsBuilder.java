@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.util.CacheUtils;
+import io.cocast.util.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.MalformedClaimException;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -74,7 +76,6 @@ public class SmartCanvasV1SecurityClaimsBuilder extends SecurityClaimsBuilder {
 
         @Override
         public SmartCanvasV1Person call() throws Exception {
-            logger.debug("Populating smart canvas v1 cache...");
 
             String clientId = configurationServices.getString(issuer + ".client.id");
             String apiKey = configurationServices.getString(issuer + ".api.key");
@@ -90,14 +91,25 @@ public class SmartCanvasV1SecurityClaimsBuilder extends SecurityClaimsBuilder {
             String completeURL = getSmartCanvasURL(environment);
             Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-            logger.debug("Calling smart canvas. URL = " + completeURL);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Calling smart canvas. URL = " + completeURL);
+            }
+
+            long initTime = System.currentTimeMillis();
 
             SmartCanvasV1Person person = client.target(completeURL).request()
                     .header("CLIENT_ID", clientId)
                     .header("API_KEY", apiKey)
                     .get(SmartCanvasV1Person.class);
 
-            logger.debug("Returning person = " + person);
+            long endTime = System.currentTimeMillis();
+
+            LogUtils.logExternalCall(logger, "Person retrived from Smart Canvas: " + person, "Smart Canvas V1",
+                    1, HttpServletResponse.SC_OK, endTime - initTime);
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("Returning person = " + person);
+            }
 
             return person;
         }

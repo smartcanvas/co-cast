@@ -7,6 +7,7 @@ import com.firebase.security.token.TokenGenerator;
 import com.google.inject.Singleton;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.auth.SecurityContext;
+import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -59,16 +60,11 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Firebase URL = " + completeURL);
-//            logger.debug("Object to be created = " + obj);
-//        }
-
+        long initTime = System.currentTimeMillis();
         Response response = client.target(completeURL).request().put(Entity.json(obj));
-
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Response = " + response);
-//        }
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "Object saved on Firebase", "Firebase", 0, response.getStatus(),
+                endTime - initTime);
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
@@ -85,16 +81,12 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient();
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Firebase URL = " + completeURL);
-//            logger.debug("String to be saved = " + strValue);
-//        }
-
-        Response response = client.target(completeURL).request().accept(MediaType.TEXT_PLAIN).put(Entity.text("\"" + strValue + "\""));
-
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Response = " + response);
-//        }
+        long initTime = System.currentTimeMillis();
+        Response response = client.target(completeURL).request().accept(MediaType.TEXT_PLAIN).
+                put(Entity.text("\"" + strValue + "\""));
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "String saved on Firebase", "Firebase", 0, response.getStatus(),
+                endTime - initTime);
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
@@ -110,7 +102,13 @@ public class FirebaseUtils {
 
         String completeURL = getFirebaseURLAsRoot(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+
+        long initTime = System.currentTimeMillis();
         Response response = client.target(completeURL).request().put(Entity.json(obj));
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "Object saved on Firebase", "Firebase", 0, response.getStatus(),
+                endTime - initTime);
+
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
             throw new CoCastCallException("Error creating entity " + obj + ". Status = " + response.getStatus(),
@@ -125,7 +123,13 @@ public class FirebaseUtils {
 
         String completeURL = getFirebaseURLAsRoot(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
+
+        long initTime = System.currentTimeMillis();
         Response response = client.target(completeURL).request().delete();
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "Object deleted from Firebase", "Firebase", 0, response.getStatus(),
+                endTime - initTime);
+
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_NO_CONTENT)) {
             throw new CoCastCallException("Error deleting entity with URI = " + uri + ". Status = " + response.getStatus(),
@@ -141,17 +145,16 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Firebase URL = " + completeURL);
-//        }
-
+        long initTime = System.currentTimeMillis();
         String strFirebaseResult = client.target(completeURL).request().get(String.class);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Return from Firebase = " + strFirebaseResult);
-//        }
+        List<T> result = getListFromResult(strFirebaseResult, cls);
 
-        return getListFromResult(strFirebaseResult, cls);
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "List fetched from Firebase", "Firebase", result.size(),
+                HttpServletResponse.SC_OK, endTime - initTime);
+
+        return result;
     }
 
     /**
@@ -162,17 +165,16 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURLAsRoot(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Firebase URL = " + completeURL);
-//        }
-
+        long initTime = System.currentTimeMillis();
         String strFirebaseResult = client.target(completeURL).request().get(String.class);
+        List<T> result = getListFromResult(strFirebaseResult, cls);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Return from Firebase = " + strFirebaseResult);
-//        }
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "List fetched from Firebase", "Firebase", result.size(),
+                HttpServletResponse.SC_OK, endTime - initTime);
 
-        return getListFromResult(strFirebaseResult, cls);
+
+        return result;
     }
 
     /**
@@ -182,17 +184,17 @@ public class FirebaseUtils {
         String completeURL = getFirebaseURL(uri);
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Firebase URL = " + completeURL);
-//        }
 
+        long initTime = System.currentTimeMillis();
         String strFirebaseResult = client.target(completeURL).request().get(String.class);
+        JsonNode node = objectMapper.readTree(strFirebaseResult);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Return from Firebase = " + strFirebaseResult);
-//        }
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "List fetched as nodes from Firebase", "Firebase", node.size(),
+                HttpServletResponse.SC_OK, endTime - initTime);
 
-        return objectMapper.readTree(strFirebaseResult);
+
+        return node;
     }
 
     /**
@@ -201,25 +203,21 @@ public class FirebaseUtils {
     public <T> T getAsRoot(String uri, Class<T> cls) throws IOException {
         String completeURL = getFirebaseURLAsRoot(uri);
 
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("Firebase URL = " + completeURL);
-//        }
 
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
-        Response response = client.target(completeURL).request().get();
 
-        /*
-        if (logger.isDebugEnabled()) {
-            logger.debug("Return from Firebase: status =  " + response.getStatus() + ", response = " +
-                    response);
-        }
-        */
+        long initTime = System.currentTimeMillis();
+        Response response = client.target(completeURL).request().get();
+        T result = response.readEntity(cls);
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "Object fetched from Firebase", "Firebase", 1,
+                HttpServletResponse.SC_OK, endTime - initTime);
 
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
             throw new CoCastCallException(response.readEntity(String.class), response.getStatus());
         }
 
-        return response.readEntity(cls);
+        return result;
     }
 
     /**

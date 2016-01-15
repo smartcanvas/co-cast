@@ -70,7 +70,6 @@ class TokenServices {
      * Validates the token
      */
     public boolean isValid(String token, String clientSecret, String issuer) {
-        logger.debug("Starting token validation {}" + token);
         try {
             SecurityClaims claims = processToClaims(token, clientSecret, issuer);
             return (claims != null);

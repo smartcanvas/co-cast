@@ -27,12 +27,8 @@ public class CoCastSecurityClaimsBuilder extends SecurityClaimsBuilder {
         claims.setProvider(jwtClaims.getStringClaimValue(AuthConstants.JWT_FIELD_PROVIDER));
         claims.setName(jwtClaims.getStringClaimValue(AuthConstants.JWT_FIELD_NAME));
 
-        if (jwtClaims.getExpirationTime() != null)
+        if (jwtClaims.getExpirationTime() != null) {
             claims.setExpirationTime(new Date(jwtClaims.getExpirationTime().getValueInMillis()));
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Security claims readed: " + claims);
-            logger.debug("jwtClaims = " + jwtClaims);
         }
 
         return claims;

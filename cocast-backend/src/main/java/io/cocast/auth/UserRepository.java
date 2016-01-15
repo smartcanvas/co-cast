@@ -28,7 +28,6 @@ class UserRepository {
      * Returns a user based on its uid
      */
     public User findUser(String uid) throws IOException, ExecutionException {
-
         //looks into the cache
         return cache.get(uid, new UserLoader(uid));
     }
@@ -43,7 +42,6 @@ class UserRepository {
 
         @Override
         public User call() throws Exception {
-            logger.debug("Populating user cache...");
             User user = firebaseUtils.getAsRoot("/users/" + uid + ".json", User.class);
             if (user != null) {
                 user.setUid(uid);

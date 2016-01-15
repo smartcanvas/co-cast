@@ -1,14 +1,14 @@
 package io.cocast.auth;
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.AbstractModule;
 
 /**
  * Guice module for auth resources
  */
-public class AuthModule extends ServletModule {
+public class AuthModule extends AbstractModule {
 
     @Override
-    protected void configureServlets() {
+    protected void configure() {
         bind(AuthServices.class);
         bind(TokenServices.class);
     }

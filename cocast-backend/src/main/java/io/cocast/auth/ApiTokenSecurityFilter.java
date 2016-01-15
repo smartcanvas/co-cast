@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.net.MediaType;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.util.APIResponse;
+import io.cocast.util.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -65,7 +66,6 @@ public class ApiTokenSecurityFilter implements Filter {
             String xSecret = req.getHeader(AuthConstants.X_ROOT_TOKEN);
             if (!StringUtils.isEmpty(xSecret)) {
                 if (xSecret.equals(secret)) {
-                    logger.debug("Defining security context for root access");
                     SecurityContext.set(new SecurityContext(SecurityClaims.root(), AuthConstants.DEFAULT_ISSUER));
 
                     //execute the action
@@ -81,9 +81,7 @@ public class ApiTokenSecurityFilter implements Filter {
                 String jwtSecret = getJWTSecret(issuer);
 
                 if (!Strings.isNullOrEmpty(authToken)) {
-                    logger.debug("Creating the security context.");
                     SecurityContext.set(new SecurityContext(tokenServices.processToClaims(authToken, jwtSecret, issuer), issuer));
-                    logger.debug("Provided access token is valid. Proceeding with filter chain.");
 
                     //execute the action
                     if (!StringUtils.isEmpty(SecurityContext.get().userIdentification())) {
@@ -91,7 +89,6 @@ public class ApiTokenSecurityFilter implements Filter {
                         SecurityContext.unset();
                     }
                 } else {
-                    logger.error("Auth token is missing");
                     unauthorized(resp, "Auth token is missing");
                 }
             }
@@ -100,13 +97,14 @@ public class ApiTokenSecurityFilter implements Filter {
             logger.error(logMessage, se);
             unauthorized(resp, logMessage);
         } catch (AuthenticationException ae) {
-            logger.error("Error authenticating: ", ae);
+            logger.error("Error authenticating");
             unauthorized(resp, ae.getMessage());
         } catch (Exception exc) {
-            logger.error("Generic error while authenticating", exc);
+            String message = "Generic error while authenticating";
+            LogUtils.fatal(logger, message, exc);
             response.setContentType(MediaType.JSON_UTF_8.toString());
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            APIResponse apiResponse = APIResponse.authFail("Generic error while authenticating");
+            APIResponse apiResponse = APIResponse.authFail(message);
             objectWriter.writeValue(response.getWriter(), apiResponse);
         }
     }

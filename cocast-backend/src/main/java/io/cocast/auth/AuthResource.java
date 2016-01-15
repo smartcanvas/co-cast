@@ -1,13 +1,18 @@
 package io.cocast.auth;
 
 import com.google.inject.Singleton;
+import io.cocast.util.AbstractResource;
+import io.cocast.util.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 /**
@@ -17,7 +22,7 @@ import javax.ws.rs.core.Response;
 @Consumes("application/json")
 @Path(AuthConstants.AUTH_PATH)
 @Singleton
-public class AuthResource {
+public class AuthResource extends AbstractResource {
 
     private static final Logger logger = LogManager.getLogger(AuthResource.class.toString());
 
@@ -25,25 +30,46 @@ public class AuthResource {
     private AuthServices authServices;
 
     @POST
-    public Response auth(@NotBlank @HeaderParam(AuthConstants.FIREBASE_TOKEN) final String firebaseToken) {
+    public Response auth(@Context HttpServletRequest request,
+                         @NotBlank @HeaderParam(AuthConstants.FIREBASE_TOKEN) final String firebaseToken) {
+        long initTime = System.currentTimeMillis();
 
         //validate the parameters
         if (StringUtils.isEmpty(firebaseToken)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            logResult("", request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
+            return Response.status(HttpServletResponse.SC_BAD_REQUEST).build();
         }
 
         try {
             String token = authServices.performAuthAndGenerateToken(firebaseToken);
+            logResult("OK", request, "post", 0, HttpServletResponse.SC_OK, initTime);
             return Response.ok(new AuthResponse().success(token)).build();
         } catch (AuthenticationException e) {
-            logger.warn("Authentication failed: " + e.getMessage() + " [" + e.getStatus() + "]");
+            String message = "Authentication failed: " + e.getMessage() + " [" + e.getStatus() + "]";
+            logResult(message, request, "post", 0, e.getStatus(), initTime);
             return Response.status(e.getStatus()).entity(new AuthResponse().fail(e)).build();
         } catch (Exception e) {
-            logger.error("Error creating security token", e);
+            String message = "Error creating security token";
+            LogUtils.fatal(logger, message, e);
+            logResult(message, request, "post", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return Response.serverError().entity(new AuthResponse().serverError(e)).build();
         }
     }
 
+    @Override
+    protected String getModuleName() {
+        return "auth";
+    }
+
+    @Override
+    protected String getResourceName() {
+        return "/";
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
 
     private class AuthResponse {
 

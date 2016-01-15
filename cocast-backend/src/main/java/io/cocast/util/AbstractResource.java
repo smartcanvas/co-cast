@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class AbstractResource {
 
-
     /**
      * Logs the result of the API
      */

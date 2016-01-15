@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.config.BasicBackendModule;
+import io.cocast.util.log.LogUtils;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
 import org.apache.log4j.LogManager;
@@ -44,7 +45,7 @@ public class CacheUtils {
         try {
             memcachedClient = new MemcachedClient(AddrUtil.getAddresses(strAddresses));
         } catch (IOException e) {
-            logger.error("Error creating memcachedClient: " + e.getMessage(), e);
+            LogUtils.fatal(logger, "Error creating memcachedClient: " + e.getMessage(), e);
         }
 
         this.clientName = "default";
@@ -78,13 +79,13 @@ public class CacheUtils {
         try {
             Object storedValue = memcachedClient.set(generateKey(key), timeout, value).get();
             if (storedValue == null) {
-                logger.error("Memcached returned a null object after trying to store object " + value
-                        + " under key = " + key);
+                LogUtils.fatal(logger, "Memcached returned a null object after trying to store object " + value
+                        + " under key = " + key, null);
             }
         } catch (InterruptedException e) {
-            logger.error("Error putting object " + value + " into memcached under key = " + key);
+            LogUtils.fatal(logger, "Error putting object " + value + " into memcached under key = " + key, e);
         } catch (ExecutionException e) {
-            logger.error("Error putting object " + value + " into memcached under key = " + key);
+            LogUtils.fatal(logger, "Error putting object " + value + " into memcached under key = " + key, e);
         }
     }
 

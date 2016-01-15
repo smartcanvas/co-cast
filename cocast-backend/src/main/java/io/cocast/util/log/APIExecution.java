@@ -18,7 +18,7 @@ class APIExecution extends LoggableObject {
      * Constructor
      */
     public APIExecution(String message, String module, String resource, String method,
-                        Integer numberResults, String isAddress,
+                        Integer numberResults, String ipAddress,
                         Integer status, Long execTime) {
         super(message);
 
@@ -26,9 +26,9 @@ class APIExecution extends LoggableObject {
         this.resource = resource;
         this.method = method;
         this.numberResults = numberResults;
-        this.ipAddress = isAddress;
         this.status = status;
         this.executionTime = execTime;
+        this.ipAddress = ipAddress;
     }
 
     @Override
