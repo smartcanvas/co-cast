@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class PersonRaffle {
 
-    public static final Integer HIGH_ODDS = 6;
-    public static final Integer MID_ODDS = 2;
+    public static final Integer HIGH_ODDS = 8;
+    public static final Integer MID_ODDS = 3;
     public static final Integer LOW_ODDS = 1;
 
     private List<Person> personList;

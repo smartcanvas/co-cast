@@ -128,6 +128,8 @@ public class Theme implements Serializable {
                 ", primaryColor='" + primaryColor + '\'' +
                 ", secondaryColor='" + secondaryColor + '\'' +
                 ", accentColor='" + accentColor + '\'' +
+                ", primaryFont='" + primaryFont + '\'' +
+                ", secondaryFont='" + secondaryFont + '\'' +
                 ", primaryFontColor='" + primaryFontColor + '\'' +
                 ", secondaryFontColor='" + secondaryFontColor + '\'' +
                 ", accentFontColor='" + accentFontColor + '\'' +

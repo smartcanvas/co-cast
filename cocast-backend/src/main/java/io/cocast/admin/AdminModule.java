@@ -1,14 +1,14 @@
 package io.cocast.admin;
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.AbstractModule;
 
 /**
  * Guice module for admin resources
  */
-public class AdminModule extends ServletModule {
+public class AdminModule extends AbstractModule {
 
     @Override
-    protected void configureServlets() {
+    protected void configure() {
         bind(ThemeRepository.class);
         bind(ThemeServices.class);
     }

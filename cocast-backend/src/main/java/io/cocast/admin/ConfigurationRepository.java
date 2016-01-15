@@ -1,9 +1,7 @@
 package io.cocast.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Singleton;
 import io.cocast.util.CacheUtils;
-import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -30,10 +28,9 @@ class ConfigurationRepository {
      */
     public List<Configuration> list() throws Exception {
         //looks into the cache
-        return cache.get("cacheList", new Callable<List<Configuration>>() {
+        return cache.get("configurationList_cache", new Callable<List<Configuration>>() {
             @Override
             public List<Configuration> call() throws Exception {
-                logger.debug("Populating configuration cache...");
                 return firebaseUtils.list("/configurations.json", Configuration.class);
             }
         });
@@ -56,7 +53,7 @@ class ConfigurationRepository {
     /**
      * Creates a new configuration
      */
-    public void create(Configuration configuration) throws JsonProcessingException, CoCastCallException {
+    public void create(Configuration configuration) throws Exception {
         firebaseUtils.save(configuration, "/configurations/" + configuration.getName() + ".json");
         this.cleanUpCache();
     }
@@ -64,9 +61,7 @@ class ConfigurationRepository {
     /**
      * Reloads the cache
      */
-    public void cleanUpCache() {
-        logger.debug("Cleaning up cache");
-        cache.invalidateAll();
+    public void cleanUpCache() throws Exception {
+        cache.invalidate("configurationList_cache");
     }
-
 }

@@ -67,6 +67,12 @@ public class ApiTokenSecurityFilter implements Filter {
                 if (xSecret.equals(secret)) {
                     logger.debug("Defining security context for root access");
                     SecurityContext.set(new SecurityContext(SecurityClaims.root(), AuthConstants.DEFAULT_ISSUER));
+
+                    //execute the action
+                    if (!StringUtils.isEmpty(SecurityContext.get().userIdentification())) {
+                        filterChain.doFilter(request, response);
+                        SecurityContext.unset();
+                    }
                 }
             } else {
                 //if the root token is not present, the auth token must be

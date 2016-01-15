@@ -5,6 +5,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import io.cocast.config.BasicBackendModule;
+import io.cocast.util.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -107,7 +108,7 @@ public class ConfigurationServices {
             try {
                 configuration = configurationRepository.get(key);
             } catch (Exception e2) {
-                logger.error("Error getting configuration with key = " + key, e2);
+                LogUtils.fatal(logger, "Error getting configuration with key = " + key, e2);
             }
             if (configuration != null) {
                 value = configuration.getValue();

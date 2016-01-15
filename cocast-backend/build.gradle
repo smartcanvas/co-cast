@@ -40,6 +40,7 @@ dependencies {
 
     //Java Libraries
     providedCompile "javax.servlet:servlet-api:$servletVersion"
+    compile "javax.mail:mail:1.4.7"
 
     //Apache Commons
     compile "org.apache.commons:commons-lang3:$commonsLang3"
@@ -68,6 +69,9 @@ dependencies {
 
     //Memcached
     compile "net.spy:spymemcached:$spymemcachedVersion"
+
+    //Sendgrid
+    compile "com.sendgrid:sendgrid-java:$sendgridVersion"
 }
 
 jettyRun {

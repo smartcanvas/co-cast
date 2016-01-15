@@ -1,9 +1,7 @@
 package io.cocast.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Singleton;
 import io.cocast.util.CacheUtils;
-import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -30,10 +28,9 @@ class ThemeRepository {
      */
     public List<Theme> list() throws Exception {
         //looks into the cache
-        return cache.get("cacheList", new Callable<List<Theme>>() {
+        return cache.get("themeList_cache", new Callable<List<Theme>>() {
             @Override
             public List<Theme> call() throws Exception {
-                logger.debug("Populating theme cache...");
                 return firebaseUtils.list("/themes.json", Theme.class);
             }
         });
@@ -56,7 +53,7 @@ class ThemeRepository {
     /**
      * Creates a new configuration
      */
-    public void create(Theme theme) throws JsonProcessingException, CoCastCallException {
+    public void create(Theme theme) throws Exception {
 
         //adds a hash to the beginning of each color
         if (!theme.getPrimaryColor().startsWith("#")) {
@@ -85,8 +82,7 @@ class ThemeRepository {
     /**
      * Reloads the cache
      */
-    public void cleanUpCache() {
-        logger.debug("Cleaning up cache");
-        cache.invalidateAll();
+    public void cleanUpCache() throws Exception {
+        cache.invalidate("themeList_cache");
     }
 }

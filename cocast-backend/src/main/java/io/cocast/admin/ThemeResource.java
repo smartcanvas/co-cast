@@ -1,12 +1,16 @@
 package io.cocast.admin;
 
-import com.google.inject.Singleton;
 import io.cocast.util.APIResponse;
+import io.cocast.util.AbstractResource;
+import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -16,8 +20,7 @@ import java.util.List;
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/api/admin/v1/themes")
-@Singleton
-public class ThemeResource {
+public class ThemeResource extends AbstractResource {
 
     private static Logger logger = LogManager.getLogger(ThemeResource.class.getName());
 
@@ -25,7 +28,9 @@ public class ThemeResource {
     private ThemeRepository colorPaletteRepository;
 
     @POST
-    public Response create(Theme theme) {
+    public Response create(@Context HttpServletRequest request, Theme theme) {
+
+        long initTime = System.currentTimeMillis();
 
         //validate the parameter
         if ((theme == null) ||
@@ -45,57 +50,92 @@ public class ThemeResource {
             //calls the creation service
             colorPaletteRepository.create(theme);
         } catch (Exception exc) {
-            logger.error("Error creating theme", exc);
+            String message = "Error creating theme";
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "post", 0, HttpServletResponse.SC_CREATED, initTime);
         return APIResponse.created("Theme create. Mnemonic = " + theme.getMnemonic()).getResponse();
     }
 
     @GET
-    public Response list() {
+    public Response list(@Context HttpServletRequest request) {
+        long initTime = System.currentTimeMillis();
         List<Theme> result;
 
         try {
             //calls the service
             result = colorPaletteRepository.list();
         } catch (Exception exc) {
-            logger.error("Error listing colors", exc);
+            String message = "Error listing themes";
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "get", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "get", result.size(), HttpServletResponse.SC_OK, initTime);
         return Response.ok(result).build();
     }
 
     @GET
     @Path("/{mnemonic}")
-    public Response get(@PathParam("mnemonic") String mnemonic) {
+    public Response get(@Context HttpServletRequest request, @PathParam("mnemonic") String mnemonic) {
+
+        long initTime = System.currentTimeMillis();
+
         Theme result;
 
         try {
             //calls the service
             result = colorPaletteRepository.get(mnemonic);
         } catch (Exception exc) {
-            logger.error("Error getting theme with menomonic = " + mnemonic, exc);
+            String message = "Error getting theme with menomonic = " + mnemonic;
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "get", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "get", 1, HttpServletResponse.SC_OK, initTime);
         return Response.ok(result).build();
     }
 
     @POST
     @Path("/clean")
-    public Response cleanUpCache() {
+    public Response cleanUpCache(@Context HttpServletRequest request) {
+        long initTime = System.currentTimeMillis();
 
         try {
             //calls the clean service
             colorPaletteRepository.cleanUpCache();
         } catch (Exception exc) {
-            logger.error("Error cleaning up configuration cache", exc);
+            String message = "Error cleaning up themes cache";
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "post", 0, HttpServletResponse.SC_OK, initTime);
         return Response.ok().build();
     }
 
+    @Override
+    protected String getModuleName() {
+        return "admin";
+    }
+
+    @Override
+    protected String getResourceName() {
+        return "themes";
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
 }

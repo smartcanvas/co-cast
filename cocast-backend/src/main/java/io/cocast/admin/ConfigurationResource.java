@@ -1,12 +1,16 @@
 package io.cocast.admin;
 
-import com.google.inject.Singleton;
 import io.cocast.util.APIResponse;
+import io.cocast.util.AbstractResource;
+import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -16,8 +20,7 @@ import java.util.List;
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/api/admin/v1/configurations")
-@Singleton
-public class ConfigurationResource {
+public class ConfigurationResource extends AbstractResource {
 
     private static Logger logger = LogManager.getLogger(ConfigurationResource.class.getName());
 
@@ -25,7 +28,8 @@ public class ConfigurationResource {
     private ConfigurationRepository configurationRepository;
 
     @POST
-    public Response create(Configuration configuration) {
+    public Response create(@Context HttpServletRequest request, Configuration configuration) {
+        long initTime = System.currentTimeMillis();
 
         //validate the parameter
         if ((configuration == null) ||
@@ -38,58 +42,90 @@ public class ConfigurationResource {
             //calls the creation service
             configurationRepository.create(configuration);
         } catch (Exception exc) {
-            logger.error("Error creating configuration", exc);
+            String message = "Error creating configuration " + configuration.getName();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "post", 0, HttpServletResponse.SC_CREATED, initTime);
         return APIResponse.created(configuration.getName() + " = " + configuration.getValue()).getResponse();
     }
 
     @GET
-    public Response list() {
+    public Response list(@Context HttpServletRequest request) {
+        long initTime = System.currentTimeMillis();
         List<Configuration> result;
 
         try {
             //calls the service
             result = configurationRepository.list();
         } catch (Exception exc) {
-            logger.error("Error listing configuration", exc);
+            String message = "Error listing configuration";
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "get", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "get", result.size(), HttpServletResponse.SC_OK, initTime);
         return Response.ok(result).build();
     }
 
     @GET
     @Path("/{configKey}")
-    public Response get(@PathParam("configKey") String configKey) {
+    public Response get(@Context HttpServletRequest request, @PathParam("configKey") String configKey) {
+        long initTime = System.currentTimeMillis();
         Configuration result;
 
         try {
             //calls the service
             result = configurationRepository.get(configKey);
         } catch (Exception exc) {
-            logger.error("Error getting configuration with config key = " + configKey, exc);
+            String message = "Error getting configuration with config key = " + configKey;
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "get", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "get", 1, HttpServletResponse.SC_OK, initTime);
         return Response.ok(result).build();
     }
 
     @POST
     @Path("/clean")
-    public Response cleanUpCache() {
+    public Response cleanUpCache(@Context HttpServletRequest request) {
+        long initTime = System.currentTimeMillis();
 
         try {
             //calls the clean service
             configurationRepository.cleanUpCache();
         } catch (Exception exc) {
-            logger.error("Error cleaning up configuration cache", exc);
+            String message = "Error cleaning up configuration cache";
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "post", 0, HttpServletResponse.SC_OK, initTime);
         return Response.ok().build();
     }
 
+    @Override
+    protected String getModuleName() {
+        return "admin";
+    }
 
+    @Override
+    protected String getResourceName() {
+        return "configurations";
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
 }
