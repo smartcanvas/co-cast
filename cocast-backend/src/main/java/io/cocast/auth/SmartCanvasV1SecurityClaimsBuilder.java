@@ -105,7 +105,7 @@ public class SmartCanvasV1SecurityClaimsBuilder extends SecurityClaimsBuilder {
             long endTime = System.currentTimeMillis();
 
             LogUtils.logExternalCall(logger, "Person retrived from Smart Canvas: " + person, "Smart Canvas V1",
-                    1, HttpServletResponse.SC_OK, endTime - initTime);
+                    "get", completeURL, 1, HttpServletResponse.SC_OK, endTime - initTime);
 
             if (logger.isDebugEnabled()) {
                 logger.debug("Returning person = " + person);

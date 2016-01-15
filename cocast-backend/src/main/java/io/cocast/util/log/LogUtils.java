@@ -43,12 +43,12 @@ public class LogUtils {
     /**
      * Logs an external call
      */
-    public static void logExternalCall(Logger logger, String message, String externalApp, Integer numberResults,
-                                       Integer status, Long executionTime) {
+    public static void logExternalCall(Logger logger, String message, String externalApp, String operation, String source,
+                                       Integer numberResults, Integer status, Long executionTime) {
 
         try {
             if (logger.isInfoEnabled()) {
-                ExternalCall externalCall = new ExternalCall(message, externalApp, numberResults,
+                ExternalCall externalCall = new ExternalCall(message, externalApp, operation, source, numberResults,
                         status, executionTime);
                 logger.info(externalCall.toJson());
             }

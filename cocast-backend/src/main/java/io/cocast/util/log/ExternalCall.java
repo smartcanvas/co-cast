@@ -6,14 +6,19 @@ package io.cocast.util.log;
 class ExternalCall extends LoggableObject {
 
     private String externalApp;
+    private String operation;
+    private String source;
     private Integer numberResults;
     private Integer status;
     private Long executionTime;
 
 
-    public ExternalCall(String message, String externalApp, Integer numberResults, Integer status, Long executionTime) {
+    public ExternalCall(String message, String externalApp, String operation, String source,
+                        Integer numberResults, Integer status, Long executionTime) {
         super(message);
         this.externalApp = externalApp;
+        this.operation = operation;
+        this.source = source;
         this.numberResults = numberResults;
         this.status = status;
         this.executionTime = executionTime;
@@ -49,6 +54,22 @@ class ExternalCall extends LoggableObject {
 
     public void setExecutionTime(Long executionTime) {
         this.executionTime = executionTime;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     @Override

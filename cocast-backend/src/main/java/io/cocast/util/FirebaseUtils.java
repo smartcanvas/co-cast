@@ -63,8 +63,8 @@ public class FirebaseUtils {
         long initTime = System.currentTimeMillis();
         Response response = client.target(completeURL).request().put(Entity.json(obj));
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "Object saved on Firebase", "Firebase", 0, response.getStatus(),
-                endTime - initTime);
+        LogUtils.logExternalCall(logger, "Object saved on Firebase", "Firebase", "save", uri, 0,
+                response.getStatus(), endTime - initTime);
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
                 !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
@@ -85,7 +85,7 @@ public class FirebaseUtils {
         Response response = client.target(completeURL).request().accept(MediaType.TEXT_PLAIN).
                 put(Entity.text("\"" + strValue + "\""));
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "String saved on Firebase", "Firebase", 0, response.getStatus(),
+        LogUtils.logExternalCall(logger, "String saved on Firebase", "Firebase", "save", uri, 0, response.getStatus(),
                 endTime - initTime);
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
@@ -106,7 +106,7 @@ public class FirebaseUtils {
         long initTime = System.currentTimeMillis();
         Response response = client.target(completeURL).request().put(Entity.json(obj));
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "Object saved on Firebase", "Firebase", 0, response.getStatus(),
+        LogUtils.logExternalCall(logger, "Object saved on Firebase", "Firebase", "save", uri, 0, response.getStatus(),
                 endTime - initTime);
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
@@ -127,7 +127,7 @@ public class FirebaseUtils {
         long initTime = System.currentTimeMillis();
         Response response = client.target(completeURL).request().delete();
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "Object deleted from Firebase", "Firebase", 0, response.getStatus(),
+        LogUtils.logExternalCall(logger, "Object deleted from Firebase", "Firebase", "delete", uri, 0, response.getStatus(),
                 endTime - initTime);
 
         if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
@@ -151,7 +151,7 @@ public class FirebaseUtils {
         List<T> result = getListFromResult(strFirebaseResult, cls);
 
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "List fetched from Firebase", "Firebase", result.size(),
+        LogUtils.logExternalCall(logger, "List fetched from Firebase", "Firebase", "get", uri, result.size(),
                 HttpServletResponse.SC_OK, endTime - initTime);
 
         return result;
@@ -170,7 +170,7 @@ public class FirebaseUtils {
         List<T> result = getListFromResult(strFirebaseResult, cls);
 
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "List fetched from Firebase", "Firebase", result.size(),
+        LogUtils.logExternalCall(logger, "List fetched from Firebase", "Firebase", "get", uri, result.size(),
                 HttpServletResponse.SC_OK, endTime - initTime);
 
 
@@ -190,7 +190,7 @@ public class FirebaseUtils {
         JsonNode node = objectMapper.readTree(strFirebaseResult);
 
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "List fetched as nodes from Firebase", "Firebase", node.size(),
+        LogUtils.logExternalCall(logger, "List fetched as nodes from Firebase", "Firebase", "get", uri, node.size(),
                 HttpServletResponse.SC_OK, endTime - initTime);
 
 
@@ -210,7 +210,7 @@ public class FirebaseUtils {
         Response response = client.target(completeURL).request().get();
         T result = response.readEntity(cls);
         long endTime = System.currentTimeMillis();
-        LogUtils.logExternalCall(logger, "Object fetched from Firebase", "Firebase", 1,
+        LogUtils.logExternalCall(logger, "Object fetched from Firebase", "Firebase", "get", uri, 1,
                 HttpServletResponse.SC_OK, endTime - initTime);
 
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
