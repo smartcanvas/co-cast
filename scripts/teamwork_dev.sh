@@ -5,9 +5,9 @@ export COCAST_CLIENT_ID=XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f
 export SMART_CANVAS_API_KEY=52ba6f68c9bcecfcd7d6e3f4520beff9a514ea33fbbea2a11d7b23b93c68e1e9
 export SMART_CANVAS_CLIENT_ID=1
 export SMART_CANVAS_TENANT=teamwork
-export SEARCH_TERMS=discussion:photos
+export SEARCH_TERMS=discussion:photos:schedule:recommendedapps:information
 export LOCALE=zz-zz
-export IS_DEV=true
+export ENV=local
 export COCAST_NETWORK=teamwork
 
 

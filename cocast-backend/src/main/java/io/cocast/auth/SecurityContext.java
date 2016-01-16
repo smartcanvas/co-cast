@@ -36,6 +36,10 @@ public class SecurityContext {
         this.validate(claims, issuer);
     }
 
+    public boolean isRoot() {
+        return (claims != null) && (claims.isRoot());
+    }
+
     public String userIdentification() {
         return claims.getSubject();
     }

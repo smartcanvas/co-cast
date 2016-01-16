@@ -1,6 +1,8 @@
 package io.cocast.connector.sc1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ public class Content implements Serializable {
 
     /* Counters */
     private Integer likeCounter = 0;
+
+    /* Json Extended Data */
+    private String jsonExtendedData;
 
     /**
      * Constructor
@@ -176,6 +181,19 @@ public class Content implements Serializable {
 
     public void setLikeCounter(Integer likeCounter) {
         this.likeCounter = likeCounter;
+    }
+
+    @JsonRawValue
+    public String getJsonExtendedData() {
+        return jsonExtendedData;
+    }
+
+    public void setJsonExtendedData(final JsonNode jsonExtendedDataNode) {
+        jsonExtendedData = jsonExtendedDataNode == null ? null : jsonExtendedDataNode.toString();
+    }
+
+    public void setJsonExtendedDataRaw(final String jsonExtendedData) {
+        this.jsonExtendedData = jsonExtendedData;
     }
 
     @Override

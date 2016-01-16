@@ -30,6 +30,12 @@ class ContentRepository {
      */
     public void save(Content content) throws Exception {
 
+        if (logger.isDebugEnabled()) {
+            if (content.getJsonExtendedData() != null) {
+                logger.debug("Saving json extended data = " + content.getJsonExtendedData());
+            }
+        }
+
         networkServices.validate(content.getNetworkMnemonic());
 
         //validate the content

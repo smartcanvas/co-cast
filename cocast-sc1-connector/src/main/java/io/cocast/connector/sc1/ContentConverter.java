@@ -57,6 +57,9 @@ public class ContentConverter {
         //image
         populateImage(content, articleBlock, photoBlock);
 
+        //Json Extended Data
+        content.setJsonExtendedDataRaw(card.getJsonExtendedData());
+
         return content;
     }
 
@@ -109,7 +112,10 @@ public class ContentConverter {
 
         content.setAuthorId(authorBlock.getAuthorId());
         content.setAuthorDisplayName(authorBlock.getAuthorDisplayName());
-        content.setAuthorImageURL(authorBlock.getAuthorImageURL());
+        if (authorBlock.getAuthorImageURL() != null) {
+            String authorImageURL = authorBlock.getAuthorImageURL().replace("sz=50", "sz=200");
+            content.setAuthorImageURL(authorImageURL);
+        }
         content.setDate(authorBlock.getPublishDate());
     }
 

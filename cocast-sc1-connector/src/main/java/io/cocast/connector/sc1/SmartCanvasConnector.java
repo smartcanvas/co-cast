@@ -37,6 +37,7 @@ public class SmartCanvasConnector {
     public static final String X_D1_PROVIDER_USER_ID = "111766501721342558332";
 
     //Co-cast APIs base URL
+    private static final String COCAST_BASE_URI_LOCAL = "http://localhost:8080/api";
     private static final String COCAST_BASE_URI_DEV = "https://api-dev.cocast.io";
     private static final String COCAST_BASE_URI_PRD = "https://api.cocast.io";
 
@@ -52,7 +53,7 @@ public class SmartCanvasConnector {
     private static String SEARCH_TERMS;
     private static String LOCALE;
     private static Long POLLING_INTERVAL;
-    private static String IS_DEV;
+    private static String ENV;
     private static String COCAST_BASE_URI;
 
     /**
@@ -198,14 +199,19 @@ public class SmartCanvasConnector {
         } else {
             POLLING_INTERVAL = DEFAULT_POLLING_INTERVAL;
         }
-        IS_DEV = cfg.getString("IS_DEV");
-        if (StringUtils.isEmpty(IS_DEV)) {
-            IS_DEV = "false";
+        ENV = cfg.getString("ENV");
+        if (StringUtils.isEmpty(ENV)) {
+            ENV = "local";
         }
-        if ("true".equals(IS_DEV)) {
+        if ("local".equals(ENV)) {
+            COCAST_BASE_URI = COCAST_BASE_URI_LOCAL;
+        } else if ("dev".equals(ENV)) {
             COCAST_BASE_URI = COCAST_BASE_URI_DEV;
-        } else {
+        } else if ("prd".equals(ENV)) {
             COCAST_BASE_URI = COCAST_BASE_URI_PRD;
+        } else {
+            logger.error("Invalid environment: " + ENV);
+            System.exit(-1);
         }
 
         //DEBUG

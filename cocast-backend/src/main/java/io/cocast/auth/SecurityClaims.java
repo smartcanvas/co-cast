@@ -19,6 +19,7 @@ public class SecurityClaims {
     private String issuer;
     private Date expirationTime;
     private Date issuedAt;
+    private boolean isRoot = false;
 
     public String getSubject() {
         return subject;
@@ -84,6 +85,10 @@ public class SecurityClaims {
         return email;
     }
 
+    public boolean isRoot() {
+        return isRoot;
+    }
+
     public SecurityClaims setEmail(String email) {
         this.email = email;
         return this;
@@ -102,6 +107,7 @@ public class SecurityClaims {
             rootClaims.setName("Root");
             rootClaims.setIssuedAt(DateUtils.now());
             rootClaims.setExpirationTime(DateUtils.eternity());
+            rootClaims.isRoot = true;
         }
 
         return rootClaims;

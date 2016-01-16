@@ -1,6 +1,8 @@
 package io.cocast.connector.sc1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,11 +110,16 @@ public class Card {
         this.categoryNames = categoryNames;
     }
 
+    @JsonRawValue
     public String getJsonExtendedData() {
         return jsonExtendedData;
     }
 
-    public void setJsonExtendedData(String jsonExtendedData) {
+    public void setJsonExtendedData(final JsonNode jsonExtendedDataNode) {
+        jsonExtendedData = jsonExtendedDataNode == null ? null : jsonExtendedDataNode.toString();
+    }
+
+    public void setJsonExtendedDataRaw(final String jsonExtendedData) {
         this.jsonExtendedData = jsonExtendedData;
     }
 
@@ -150,4 +157,5 @@ public class Card {
                 ", recommendationRequestId=" + recommendationRequestId +
                 '}';
     }
+
 }

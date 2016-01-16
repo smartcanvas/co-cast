@@ -23,6 +23,11 @@ public class NetworkServices {
      * Validates if a network exists or not. If not, throws a ValidateException
      */
     public void validate(String networkMnemonic) throws Exception {
+
+        if (SecurityContext.get().isRoot()) {
+            return;
+        }
+
         if (networkMnemonic == null) {
             throw new ValidationException("Network mnemonic cannot be null");
         }
@@ -38,6 +43,10 @@ public class NetworkServices {
      * Validates also considering the authentication process
      */
     public void validateWithIssuer(String networkMnemonic) throws Exception {
+        if (SecurityContext.get().isRoot()) {
+            return;
+        }
+
         if (networkMnemonic == null) {
             throw new ValidationException("Network mnemonic cannot be null");
         }

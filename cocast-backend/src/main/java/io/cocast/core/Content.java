@@ -1,6 +1,8 @@
 package io.cocast.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
@@ -46,6 +48,9 @@ public class Content implements Serializable {
 
     /* Counters */
     private Integer likeCounter = 0;
+
+    /* Json Extended Data */
+    private String jsonExtendedData;
 
     /**
      * Constructor
@@ -218,10 +223,27 @@ public class Content implements Serializable {
         isActive = active;
     }
 
+    @JsonRawValue
+    public String getJsonExtendedData() {
+        return jsonExtendedData;
+    }
+
+    public void setJsonExtendedData(final JsonNode jsonExtendedDataNode) {
+        jsonExtendedData = jsonExtendedDataNode == null ? null : jsonExtendedDataNode.toString();
+    }
+
+    public void setJsonExtendedDataRaw(final String jsonExtendedData) {
+        this.jsonExtendedData = jsonExtendedData;
+    }
+
     @Override
     public String toString() {
         return "Content{" +
                 "id='" + id + '\'' +
+                ", networkMnemonic='" + networkMnemonic + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastUpdated=" + lastUpdated +
+                ", isActive=" + isActive +
                 ", date=" + date +
                 ", title='" + title + '\'' +
                 ", summary='" + summary + '\'' +
@@ -236,6 +258,7 @@ public class Content implements Serializable {
                 ", source='" + source + '\'' +
                 ", sourceContentURL='" + sourceContentURL + '\'' +
                 ", likeCounter=" + likeCounter +
+                ", jsonExtendedData='" + jsonExtendedData + '\'' +
                 '}';
     }
 }
