@@ -30,16 +30,20 @@ class ContentRepository {
      */
     public void save(Content content) throws Exception {
 
-        if (logger.isDebugEnabled()) {
-            if (content.getJsonExtendedData() != null) {
-                logger.debug("Saving json extended data = " + content.getJsonExtendedData());
-            }
-        }
-
         networkServices.validate(content.getNetworkMnemonic());
 
         //validate the content
         this.validate(content);
+
+        //checks if the content already exists
+        Content existingContent = this.get(content.getNetworkMnemonic(), content.getId());
+        if ((existingContent != null) && (existingContent.equals(content))) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Content hasn't changed and is alread in Co-cast... discarding: " + content);
+            }
+            return;
+        }
+
 
         //insert
         firebaseUtils.saveAsRoot(content, "/contents/" + content.getNetworkMnemonic() + "/" + content.getId() + ".json");
@@ -75,7 +79,7 @@ class ContentRepository {
      * Generates the key for content cache
      */
     private String generateCacheKey(String networkMnemonic, String id) {
-        return networkMnemonic + "_" + id;
+        return "content_" + networkMnemonic + "_" + id;
     }
 
     /**

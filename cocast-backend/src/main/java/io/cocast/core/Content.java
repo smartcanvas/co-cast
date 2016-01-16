@@ -237,6 +237,25 @@ public class Content implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Content content = (Content) o;
+
+        if ((content.getId() != null) && (content.getDate() != null)) {
+            return this.id.equals(content.getId()) && this.date.equals(content.getDate());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "Content{" +
                 "id='" + id + '\'' +
