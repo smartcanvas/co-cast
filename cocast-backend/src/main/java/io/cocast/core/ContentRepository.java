@@ -88,10 +88,6 @@ class ContentRepository {
         @Override
         public Content call() throws Exception {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Populating content cache for ID = " + id + ", and network = " + networkMnemonic);
-            }
-
             //a list of contents
             String uri = "/contents/" + networkMnemonic + "/" + id + ".json";
             Content content = firebaseUtils.getAsRoot(uri, Content.class);

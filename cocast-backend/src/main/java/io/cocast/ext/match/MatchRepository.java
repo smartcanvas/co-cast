@@ -9,6 +9,7 @@ import io.cocast.util.CacheUtils;
 import io.cocast.util.CoCastCallException;
 import io.cocast.util.DateUtils;
 import io.cocast.util.FirebaseUtils;
+import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -134,11 +135,6 @@ public class MatchRepository {
         @Override
         public List<Match> call() throws Exception {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Populating match cache for person ID = " + personId
-                        + ", and network = " + networkMnemonic);
-            }
-
             //a list of match actions
             String uri = "/matches/" + networkMnemonic + "/" + personId + ".json";
             List<Match> matches = firebaseUtils.listAsRoot(uri, Match.class);
@@ -180,7 +176,7 @@ public class MatchRepository {
                 updatesCache(networkMnemonic, match1.getPerson().getId(), match2);
                 updatesCache(networkMnemonic, match2.getPerson().getId(), match1);
             } catch (Exception exc) {
-                logger.error("Error saving match between " + person1.getEmail() + " and " +
+                LogUtils.fatal(logger, "Error saving match between " + person1.getEmail() + " and " +
                         person2.getEmail(), exc);
             }
         }

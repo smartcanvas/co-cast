@@ -3,14 +3,19 @@ package io.cocast.core;
 import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.APIResponse;
+import io.cocast.util.AbstractResource;
 import io.cocast.util.CoCastCallException;
+import io.cocast.util.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -21,7 +26,7 @@ import java.util.List;
 @Consumes("application/json")
 @Path("/api/core/v1/networks")
 @Singleton
-public class NetworkResource {
+public class NetworkResource extends AbstractResource {
 
     /**
      * Logger
@@ -35,7 +40,8 @@ public class NetworkResource {
      * Creates a network
      */
     @POST
-    public Response create(Network network) {
+    public Response create(@Context HttpServletRequest request, Network network) {
+        long initTime = System.currentTimeMillis();
 
         network.setCreatedBy(SecurityContext.get().userIdentification());
 
@@ -43,16 +49,21 @@ public class NetworkResource {
             //calls the creation service
             networkRepository.create(network);
         } catch (ValidationException exc) {
-            logger.error(exc.getMessage());
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (CoCastCallException exc) {
-            logger.error("Error creating network", exc);
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, exc.getStatus(), initTime);
             return APIResponse.fromException(exc).getResponse();
         } catch (Exception exc) {
-            logger.error("Error creating network", exc);
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "post", 0, HttpServletResponse.SC_CREATED, initTime);
         return APIResponse.created("Network created successfully with mnemonic: " + network.getMnemonic()).getResponse();
     }
 
@@ -60,23 +71,28 @@ public class NetworkResource {
      * Get a list of networks
      */
     @GET
-    public Response list() {
+    public Response list(@Context HttpServletRequest request) {
+        long initTime = System.currentTimeMillis();
 
         List<Network> networkList;
 
         try {
             networkList = networkRepository.list();
         } catch (CoCastCallException exc) {
-            logger.error("Error listing network", exc);
+            String message = exc.getMessage();
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error(exc.getMessage());
+            String message = exc.getMessage();
+            logResult(message, request, "get", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error listing networks", exc);
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "get", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "get", networkList.size(), HttpServletResponse.SC_OK, initTime);
         return Response.ok(networkList).build();
     }
 
@@ -85,23 +101,30 @@ public class NetworkResource {
      */
     @GET
     @Path("/{mnemonic}")
-    public Response get(@PathParam("mnemonic") String mnemonic) {
+    public Response get(@Context HttpServletRequest request,
+                        @PathParam("mnemonic") String mnemonic) {
+        long initTime = System.currentTimeMillis();
 
         Network network;
 
         try {
             network = networkRepository.get(mnemonic);
         } catch (CoCastCallException exc) {
-            logger.error("Error getting network", exc);
+            String message = exc.getMessage();
+            logResult(message, request, "get", 0, exc.getStatus(), initTime);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error(exc.getMessage());
+            String message = exc.getMessage();
+            logResult(message, request, "get", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error getting network", exc);
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "get", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "get", 1, HttpServletResponse.SC_OK, initTime);
         return Response.ok(network).build();
     }
 
@@ -110,11 +133,15 @@ public class NetworkResource {
      */
     @PUT
     @Path("/{mnemonic}")
-    public Response update(Network network, @PathParam("mnemonic") String mnemonic) {
+    public Response update(@Context HttpServletRequest request,
+                           Network network, @PathParam("mnemonic") String mnemonic) {
+        long initTime = System.currentTimeMillis();
 
         Network response;
 
         if (StringUtils.isEmpty(mnemonic)) {
+            logResult("Network mnemonic is required as a path param", request, "put", 0,
+                    HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest("Network mnemonic is required as a path param").getResponse();
         } else {
             network.setMnemonic(mnemonic);
@@ -123,16 +150,21 @@ public class NetworkResource {
         try {
             response = networkRepository.update(network);
         } catch (CoCastCallException exc) {
-            logger.error("Error updating network", exc);
+            String message = exc.getMessage();
+            logResult(message, request, "put", 0, exc.getStatus(), initTime);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error(exc.getMessage());
+            String message = exc.getMessage();
+            logResult(message, request, "put", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error updating network", exc);
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "put", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "put", 0, HttpServletResponse.SC_OK, initTime);
         return APIResponse.updated("Network updated. Mnemonic: " + response.getMnemonic()).getResponse();
     }
 
@@ -141,22 +173,43 @@ public class NetworkResource {
      */
     @DELETE
     @Path("/{mnemonic}")
-    public Response delete(@PathParam("mnemonic") String mnemonic) {
+    public Response delete(@Context HttpServletRequest request,
+                           @PathParam("mnemonic") String mnemonic) {
+        long initTime = System.currentTimeMillis();
 
         try {
             networkRepository.delete(mnemonic);
         } catch (CoCastCallException exc) {
-            logger.error("Error deleting network", exc);
+            String message = exc.getMessage();
+            logResult(message, request, "delete", 0, exc.getStatus(), initTime);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
-            logger.error(exc.getMessage());
+            String message = exc.getMessage();
+            logResult(message, request, "delete", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
-            logger.error("Error deleting network", exc);
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "delete", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
             return APIResponse.serverError(exc.getMessage()).getResponse();
         }
 
+        logResult("OK", request, "delete", 0, HttpServletResponse.SC_NO_CONTENT, initTime);
         return APIResponse.deleted("Network deleted. Mnemonic: " + mnemonic).getResponse();
     }
 
+    @Override
+    protected String getModuleName() {
+        return "core";
+    }
+
+    @Override
+    protected String getResourceName() {
+        return "networks";
+    }
+
+    @Override
+    protected Logger getLogger() {
+        return logger;
+    }
 }

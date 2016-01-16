@@ -3,6 +3,7 @@ package io.cocast.config;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.net.MediaType;
 import io.cocast.util.APIResponse;
+import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -39,12 +40,10 @@ public class GenericErrorHandlingFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
 
         try {
-
             filterChain.doFilter(servletRequest, servletResponse);
-
         } catch (Throwable e) {
 
-            logger.error("[GENERIC ERROR] - " + e.getMessage(), e);
+            LogUtils.fatal(logger, "[GENERIC ERROR] - " + e.getMessage(), e);
             HttpServletRequest request = (HttpServletRequest) servletRequest;
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             response.setContentType(MediaType.JSON_UTF_8.toString());

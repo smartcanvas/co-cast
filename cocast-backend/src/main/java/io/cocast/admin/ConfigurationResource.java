@@ -42,7 +42,7 @@ public class ConfigurationResource extends AbstractResource {
             //calls the creation service
             configurationRepository.create(configuration);
         } catch (Exception exc) {
-            String message = "Error creating configuration " + configuration.getName();
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "post", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
@@ -62,7 +62,7 @@ public class ConfigurationResource extends AbstractResource {
             //calls the service
             result = configurationRepository.list();
         } catch (Exception exc) {
-            String message = "Error listing configuration";
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "get", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
@@ -83,7 +83,7 @@ public class ConfigurationResource extends AbstractResource {
             //calls the service
             result = configurationRepository.get(configKey);
         } catch (Exception exc) {
-            String message = "Error getting configuration with config key = " + configKey;
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "get", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
@@ -103,7 +103,7 @@ public class ConfigurationResource extends AbstractResource {
             //calls the clean service
             configurationRepository.cleanUpCache();
         } catch (Exception exc) {
-            String message = "Error cleaning up configuration cache";
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "post", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);

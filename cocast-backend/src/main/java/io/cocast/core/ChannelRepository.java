@@ -50,7 +50,6 @@ class ChannelRepository {
 
         //checks if exists
         Channel existingChannel = this.get(channel.getNetworkMnemonic(), channel.getMnemonic());
-        logger.debug("existingChannel = " + existingChannel);
         if (existingChannel != null) {
             throw new ValidationException("Channel with mnemonic = " + channel.getMnemonic() + " already exists");
         }
@@ -201,7 +200,6 @@ class ChannelRepository {
         @Override
         public List<Channel> call() throws Exception {
 
-            logger.debug("Populating channel cache...");
             List<Channel> resultList = new ArrayList<Channel>();
 
             //a list of channels
@@ -210,9 +208,6 @@ class ChannelRepository {
             for (Channel channel : allChannels) {
                 if ((channel != null) && (channel.isActive())) {
                     resultList.add(channel);
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Adding channel to cache " + channel);
-                    }
                 }
             }
 

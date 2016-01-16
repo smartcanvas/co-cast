@@ -1,14 +1,14 @@
 package io.cocast.core;
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.AbstractModule;
 
 /**
  * Guice module for core resources
  */
-public class CoreModule extends ServletModule {
+public class CoreModule extends AbstractModule {
 
     @Override
-    protected void configureServlets() {
+    protected void configure() {
 
         //Repositories
         bind(NetworkRepository.class);

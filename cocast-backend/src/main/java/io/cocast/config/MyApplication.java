@@ -18,8 +18,6 @@ public class MyApplication extends ResourceConfig {
     @Inject
     public MyApplication(ServiceLocator serviceLocator) {
 
-        System.out.println("Registering injectables...");
-
         //Resource packages
         packages(true, "io.cocast");
 

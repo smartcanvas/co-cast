@@ -44,15 +44,15 @@ public class AuthResource extends AbstractResource {
             String token = authServices.performAuthAndGenerateToken(firebaseToken);
             logResult("OK", request, "post", 0, HttpServletResponse.SC_OK, initTime);
             return Response.ok(new AuthResponse().success(token)).build();
-        } catch (AuthenticationException e) {
-            String message = "Authentication failed: " + e.getMessage() + " [" + e.getStatus() + "]";
-            logResult(message, request, "post", 0, e.getStatus(), initTime);
-            return Response.status(e.getStatus()).entity(new AuthResponse().fail(e)).build();
-        } catch (Exception e) {
-            String message = "Error creating security token";
-            LogUtils.fatal(logger, message, e);
+        } catch (AuthenticationException exc) {
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, exc.getStatus(), initTime);
+            return Response.status(exc.getStatus()).entity(new AuthResponse().fail(exc)).build();
+        } catch (Exception exc) {
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
             logResult(message, request, "post", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
-            return Response.serverError().entity(new AuthResponse().serverError(e)).build();
+            return Response.serverError().entity(new AuthResponse().serverError(exc)).build();
         }
     }
 

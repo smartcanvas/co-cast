@@ -1,6 +1,6 @@
 package io.cocast.ext;
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.AbstractModule;
 import io.cocast.ext.match.MatchActionRepository;
 import io.cocast.ext.match.MatchRepository;
 import io.cocast.ext.match.ShuffleServices;
@@ -11,10 +11,10 @@ import io.cocast.ext.people.PersonServices;
 /**
  * Guice module for admin resources
  */
-public class ExtensionsModule extends ServletModule {
+public class ExtensionsModule extends AbstractModule {
 
     @Override
-    protected void configureServlets() {
+    protected void configure() {
         bind(PersonRepository.class);
         bind(MatchActionRepository.class);
         bind(MatchRepository.class);

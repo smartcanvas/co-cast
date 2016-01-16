@@ -69,16 +69,11 @@ public class ShuffleServices {
 
         //gets the company of the user based on its email domain
         if ((requester.getEmail() == null) || (!Email.isValid(requester.getEmail()))) {
-            logger.debug("Requester email is null or invalid (" + requester.getEmail()
-                    + "). Odd situation. Returning w/o doing anything");
             throw new ValidationException("Requester email is null or invalid (" + requester.getEmail()
                     + "). Odd situation. Returning w/o doing anything");
         }
         int atPosition = requester.getEmail().indexOf("@");
         String companyDomain = requester.getEmail().substring(atPosition + 1);
-        if (logger.isDebugEnabled()) {
-            logger.debug("Company domain = " + companyDomain);
-        }
 
         int count = 0;
         for (int pos = offset; pos < listPerson.size(); pos++) {
@@ -173,10 +168,6 @@ public class ShuffleServices {
 
         @Override
         public List<Person> call() throws Exception {
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Populating cache of shuffled persons for network = " + networkMnemonic);
-            }
 
             List<Person> resultList = new ArrayList<Person>();
 

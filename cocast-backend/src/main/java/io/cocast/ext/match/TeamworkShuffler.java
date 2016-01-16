@@ -20,7 +20,6 @@ public class TeamworkShuffler extends Shuffler {
         long timestamp = System.currentTimeMillis();
 
         if (personList == null) {
-            logger.debug("Trying to shuffle null list, returning");
             return personList;
         }
 
@@ -30,18 +29,15 @@ public class TeamworkShuffler extends Shuffler {
 
         //preferred track: Ex = cloud, devices, apps, maps or search
         String preferredTrack = this.getPreferredTrack(requester);
-        logger.debug("Preferred track = " + preferredTrack);
 
         //is the requester is a technology or services partner
         boolean isTechnologyPartner = this.isTechnologyPartner(requester);
         boolean isServicePartner = this.isServicePartner(requester);
-        if (logger.isDebugEnabled()) {
-            logger.debug("isTechnologyPartner = " + isTechnologyPartner + ", isServicePartner = " + isServicePartner);
-        }
 
         List<Person> result = this.createShuffledList(personList, preferredTrack, isTechnologyPartner, isServicePartner);
 
         long timestampFinal = System.currentTimeMillis();
+
         if (logger.isDebugEnabled()) {
             logger.debug("Raffle executed in " + (timestampFinal - timestamp) + " milliseconds");
         }
@@ -62,16 +58,12 @@ public class TeamworkShuffler extends Shuffler {
             //services partners want to meet technology partners
             if ((isServicePartner) && (this.isTechnologyPartner(person))) {
                 if (preferredTrack.equals(getPreferredTrack(person))) {
-                    logger.debug("Same track, services meeting technology -> HIGH ODDS");
                     personRaffle.add(person, PersonRaffle.HIGH_ODDS);
                 } else {
-                    logger.debug("Different tracks, services meeting technology -> MID ODDS");
                     personRaffle.add(person, PersonRaffle.MID_ODDS);
                 }
             } else if (preferredTrack.equalsIgnoreCase("devices") &&
                     "apps".equalsIgnoreCase(this.getPreferredTrack(person))) {
-
-                logger.debug("Devices meeting apps -> MID ODDS");
 
                 //people from devices have bigger odds to find someone from apps
                 personRaffle.add(person, PersonRaffle.MID_ODDS);

@@ -46,7 +46,6 @@ public class SettingsRepository {
 
         //checks if exists
         Settings existingSettings = this.get(settings.getNetworkMnemonic(), settings.getName());
-        logger.debug("existingSettings = " + existingSettings);
         if (existingSettings != null) {
             throw new ValidationException("Settings with name = " + settings.getName() + " already exists");
         }
@@ -145,7 +144,6 @@ public class SettingsRepository {
 
         @Override
         public List<Settings> call() throws Exception {
-            logger.debug("Populating settings cache...");
             String uri = "/settings/" + networkMnemonic + ".json";
             return firebaseUtils.listAsRoot(uri, Settings.class);
         }

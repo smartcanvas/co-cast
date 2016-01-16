@@ -42,7 +42,6 @@ public class PersonRepository {
 
         //checks if exists
         Person existingPerson = this.get(person.getNetworkMnemonic(), person.getId());
-        logger.debug("existingPerson = " + existingPerson);
         if (existingPerson != null) {
             throw new ValidationException("Person with ID = " + person.getId() + " already exists. Name = "
                     + existingPerson.getDisplayName());
@@ -86,7 +85,6 @@ public class PersonRepository {
 
         //checks if exists
         Person existingPerson = this.get(person.getNetworkMnemonic(), person.getId());
-        logger.debug("existingPerson = " + existingPerson);
         if (existingPerson == null) {
             throw new CoCastCallException("Person with ID = " + person.getId()
                     + " doens't exist. Use POST to create persons", 404);
@@ -291,10 +289,6 @@ public class PersonRepository {
         @Override
         public Person call() throws Exception {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Populating person cache for ID = " + id + ", and network = " + networkMnemonic);
-            }
-
             //a list of persons
             String uri = "/persons/" + networkMnemonic + "/" + id + ".json";
             Person person = firebaseUtils.getAsRoot(uri, Person.class);
@@ -322,10 +316,6 @@ public class PersonRepository {
         @Override
         public List<Person> call() throws Exception {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Populating list person cache for network = " + networkMnemonic);
-            }
-
             List<Person> resultList = new ArrayList<Person>();
 
             //a list of persons
@@ -335,10 +325,6 @@ public class PersonRepository {
             } else {
                 uri = "/persons/" + networkMnemonic + ".json?orderBy=" + URLEncoder.encode("\"email\"", "UTF-8")
                         + "&equalTo=" + URLEncoder.encode("\"" + this.email + "\"", "UTF-8");
-            }
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("URI = " + uri);
             }
 
             List<Person> allPersons = firebaseUtils.listAsRoot(uri, Person.class);

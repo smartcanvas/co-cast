@@ -46,7 +46,6 @@ class StationRepository {
 
         //checks if exists
         Station existingStation = this.get(station.getNetworkMnemonic(), station.getMnemonic());
-        logger.debug("existingStation = " + existingStation);
         if (existingStation != null) {
             throw new ValidationException("Station with mnemonic = " + station.getMnemonic() + " already exists");
         }
@@ -183,7 +182,6 @@ class StationRepository {
         @Override
         public List<Station> call() throws Exception {
 
-            logger.debug("Populating station cache...");
             List<Station> resultList = new ArrayList<Station>();
 
             //a list of stations
@@ -192,9 +190,6 @@ class StationRepository {
             for (Station station : allStations) {
                 if ((station != null) && (station.isActive())) {
                     resultList.add(station);
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Adding station to cache " + station);
-                    }
                 }
             }
 

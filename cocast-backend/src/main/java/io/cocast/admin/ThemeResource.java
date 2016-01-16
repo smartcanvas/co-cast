@@ -50,7 +50,7 @@ public class ThemeResource extends AbstractResource {
             //calls the creation service
             colorPaletteRepository.create(theme);
         } catch (Exception exc) {
-            String message = "Error creating theme";
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "post", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
@@ -70,7 +70,7 @@ public class ThemeResource extends AbstractResource {
             //calls the service
             result = colorPaletteRepository.list();
         } catch (Exception exc) {
-            String message = "Error listing themes";
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "get", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
@@ -93,7 +93,7 @@ public class ThemeResource extends AbstractResource {
             //calls the service
             result = colorPaletteRepository.get(mnemonic);
         } catch (Exception exc) {
-            String message = "Error getting theme with menomonic = " + mnemonic;
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "get", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
@@ -113,7 +113,7 @@ public class ThemeResource extends AbstractResource {
             //calls the clean service
             colorPaletteRepository.cleanUpCache();
         } catch (Exception exc) {
-            String message = "Error cleaning up themes cache";
+            String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "post", 0,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);

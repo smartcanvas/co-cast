@@ -43,7 +43,6 @@ public class NetworkServices {
         }
 
         if (networkMnemonic.equals(SecurityContext.get().issuer())) {
-            logger.debug("Network validated because of the issuer: " + SecurityContext.get().issuer());
             return;
         }
 

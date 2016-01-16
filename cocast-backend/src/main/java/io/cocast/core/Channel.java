@@ -152,6 +152,7 @@ public class Channel implements Serializable {
                 ", title='" + title + '\'' +
                 ", theme='" + theme + '\'' +
                 ", tags=" + tags +
+                ", source='" + source + '\'' +
                 ", maxAgeInHours=" + maxAgeInHours +
                 ", limitToFirst=" + limitToFirst +
                 ", orderBy='" + orderBy + '\'' +

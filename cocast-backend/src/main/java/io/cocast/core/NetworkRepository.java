@@ -50,7 +50,6 @@ class NetworkRepository {
 
         //checks if exists
         Network existingNetwork = this.getAsRoot(network.getMnemonic());
-        logger.debug("existingNetwork = " + existingNetwork);
         if (existingNetwork != null) {
             throw new ValidationException("Network with mnemonic = " + network.getMnemonic() + " already exists");
         }
@@ -82,17 +81,11 @@ class NetworkRepository {
 
         for (NetworkMembership membership : membershipList) {
             Network network = this.getAsRoot(membership.getNetworkMnemonic());
-            if (logger.isDebugEnabled()) {
-                logger.debug("Found network to list: " + network);
-            }
             if (network != null) {
                 result.add(network);
             }
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Network.list: returning " + result.size() + " entries: " + result);
-        }
         return result;
     }
 
@@ -138,7 +131,6 @@ class NetworkRepository {
         } else {
             //remove collaborators
             List<String> listCollaborators = existingNetwork.getCollaborators();
-            logger.debug("Collaborators to be removed = " + listCollaborators);
             for (String strCollaborator : listCollaborators) {
                 firebaseUtils.saveString("removed", "/members/" + strCollaborator + "/" + network.getMnemonic() + ".json");
             }
@@ -180,7 +172,6 @@ class NetworkRepository {
 
         //remove collaborators
         List<String> listCollaborators = existingNetwork.getCollaborators();
-        logger.debug("Collaborators to be removed = " + listCollaborators);
         for (String strCollaborator : listCollaborators) {
             firebaseUtils.saveString("removed", "/members/" + strCollaborator + "/" + mnemonic + ".json");
         }
@@ -236,7 +227,6 @@ class NetworkRepository {
 
         @Override
         public List<Network> call() throws Exception {
-            logger.debug("Populating network cache...");
             Network network = firebaseUtils.getAsRoot("/networks/" + mnemonic + ".json", Network.class);
             List<Network> resultList = new ArrayList<Network>();
             if ((network != null) && (network.isActive())) {
@@ -257,7 +247,6 @@ class NetworkRepository {
         @Override
         public List<NetworkMembership> call() throws Exception {
 
-            logger.debug("Getting memberships for " + uid);
             JsonNode jsonNode;
             try {
                 jsonNode = firebaseUtils.listAsJsonNode("/members/" + uid + ".json");
@@ -276,8 +265,6 @@ class NetworkRepository {
                     membershipList.add(networkMembership);
                 }
             }
-
-            logger.debug("Returning membership = " + membershipList);
 
             return membershipList;
         }

@@ -8,6 +8,7 @@ import io.cocast.ext.people.PersonServices;
 import io.cocast.util.CacheUtils;
 import io.cocast.util.CoCastCallException;
 import io.cocast.util.FirebaseUtils;
+import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -164,11 +165,6 @@ public class MatchActionRepository {
         @Override
         public List<MatchAction> call() throws Exception {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Populating match actions cache for person ID = " + personId
-                        + ", and network = " + networkMnemonic);
-            }
-
             //a list of match actions
             String uri = "/matchActions/" + networkMnemonic + "/" + personId + ".json";
             List<MatchAction> matchActions = firebaseUtils.listAsRoot(uri, MatchAction.class);
@@ -220,7 +216,7 @@ public class MatchActionRepository {
                 firebaseUtils.saveAsRoot(matchAction, "/matchActions/" + networkMnemonic + "/" + personId + "/" +
                         Person.getIdFromEmail(email) + ".json");
             } catch (Exception exc) {
-                logger.error("Error saving match action in background: " + matchAction, exc);
+                LogUtils.fatal(logger, "Error saving match action in background: " + matchAction, exc);
             }
         }
     }

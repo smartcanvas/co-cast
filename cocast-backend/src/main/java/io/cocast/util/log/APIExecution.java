@@ -1,5 +1,7 @@
 package io.cocast.util.log;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * API execution log
  */
@@ -12,6 +14,7 @@ class APIExecution extends LoggableObject {
     private String ipAddress;
     private Integer status;
     private Long executionTime;
+    private boolean success;
 
 
     /**
@@ -29,6 +32,9 @@ class APIExecution extends LoggableObject {
         this.status = status;
         this.executionTime = execTime;
         this.ipAddress = ipAddress;
+        this.success = (status == HttpServletResponse.SC_OK) ||
+                (status == HttpServletResponse.SC_CREATED) ||
+                (status == HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Override
@@ -90,5 +96,13 @@ class APIExecution extends LoggableObject {
 
     public void setExecutionTime(Long executionTime) {
         this.executionTime = executionTime;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }
