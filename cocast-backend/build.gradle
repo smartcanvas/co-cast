@@ -7,6 +7,7 @@ buildscript {
     }
 }
 
+
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'jetty'
@@ -22,6 +23,19 @@ war.baseName = "$backendApp"
 repositories {
     mavenLocal()
     mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+        }
+    }
 }
 
 dependencies {

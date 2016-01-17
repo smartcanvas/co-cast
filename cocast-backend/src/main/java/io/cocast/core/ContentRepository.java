@@ -38,9 +38,6 @@ class ContentRepository {
         //checks if the content already exists
         Content existingContent = this.get(content.getNetworkMnemonic(), content.getId());
         if ((existingContent != null) && (existingContent.equals(content))) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Content hasn't changed and is alread in Co-cast... discarding: " + content);
-            }
             return;
         }
 

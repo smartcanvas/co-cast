@@ -8,6 +8,7 @@ import io.cocast.admin.ConfigurationServices;
 import io.cocast.auth.SecurityContext;
 import io.cocast.config.BasicBackendModule;
 import io.cocast.util.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 
@@ -65,6 +66,11 @@ public class LogUtils {
         //logs the error
         logger.fatal(message, t);
 
+        String environment = configurationServices.getString("environment");
+        if (StringUtils.isEmpty(environment) || "local".equals(environment)) {
+            return;
+        }
+
         //sends an email
         String apiKey = configurationServices.getString("sendgrid.key");
         SendGrid sendgrid = new SendGrid(apiKey);
@@ -86,7 +92,7 @@ public class LogUtils {
         sb.append("<b>User ID</b>: " + SecurityContext.get().userIdentification() + "<br>");
         sb.append("<b>Email</b>: " + SecurityContext.get().email() + "<br>");
         sb.append("<b>When</b>: " + DateUtils.now() + "<br>");
-        sb.append("<b>Environment</b>: " + configurationServices.getString("environment") + "<br>");
+        sb.append("<b>Environment</b>: " + environment + "<br>");
 
         if (t != null) {
             sb.append("<hr>");

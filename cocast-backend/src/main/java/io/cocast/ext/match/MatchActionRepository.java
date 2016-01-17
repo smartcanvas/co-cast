@@ -37,7 +37,8 @@ public class MatchActionRepository {
     private PersonServices personServices;
 
     @Inject
-    MatchRepository matchRepository;
+    private MatchServices matchServices;
+
 
     private static CacheUtils cache = CacheUtils.getInstance(MatchAction.class);
 
@@ -67,16 +68,10 @@ public class MatchActionRepository {
 
         //evaluates a match
         if (MatchAction.LIKE.equals(action)) {
-            List<MatchAction> likes = this.listActions(networkMnemonic, email, MatchAction.LIKE);
-            for (MatchAction likeAction : likes) {
-                if (likeAction.getPersonId().equals(personId)) {
-                    matchRepository.save(networkMnemonic, SecurityContext.get().email(), email);
-                    return true;
-                }
-            }
+            return matchServices.evaluatesMatch(networkMnemonic, personId, email);
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     /**

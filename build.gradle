@@ -12,6 +12,12 @@ task config {
         }
         into "$projectDir/cocast-backend/src/main/resources"
     }
+    copy {
+        from("$projectDir/env") {
+            include "*.properties"
+        }
+        into "$projectDir/cocast-backend/src/test/resources"
+    }
 }
 
 /**
