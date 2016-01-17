@@ -5,6 +5,7 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.ext.people.Person;
 import io.cocast.ext.people.PersonServices;
 import io.cocast.util.GCMUtils;
+import io.cocast.util.ParseUtils;
 import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -34,6 +35,9 @@ public class MatchServices {
 
     @Inject
     private GCMUtils gcmUtils;
+
+    @Inject
+    private ParseUtils parseUtils;
 
     /**
      * Evaluates if a match has happened or not
@@ -138,7 +142,13 @@ public class MatchServices {
     /**
      * Send a parse message
      */
-    private void sendParseMessage(String deviceId, Person person) {
+    private void sendParseMessage(String deviceId, Person person) throws IOException {
 
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("type", "match");
+        data.put("person", person);
+
+        ParseUtils.ParseMessage message = new ParseUtils.ParseMessage(data);
+        parseUtils.send(message);
     }
 }
