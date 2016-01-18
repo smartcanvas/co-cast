@@ -50,6 +50,8 @@ public class PersonRepository {
         //validate the person
         this.validate(person);
 
+        person.suppressDeviceRepetitions();
+
         //insert
         firebaseUtils.saveAsRoot(person, "/persons/" + person.getNetworkMnemonic() + "/" + person.getId() + ".json");
 
@@ -96,6 +98,8 @@ public class PersonRepository {
 
         //validate the person
         this.validate(person);
+
+        person.suppressDeviceRepetitions();
 
         //insert
         firebaseUtils.saveAsRoot(person, "/persons/" + person.getNetworkMnemonic() + "/" + person.getId() + ".json");

@@ -16,8 +16,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,13 +29,9 @@ public class ParseUtils {
 
     private static final String PARSE_PUSH_NOTIFICATION_ENDPOINT = "https://api.parse.com/1/push";
 
-    private static final String CONF_KEY_PARSE_APPLICATION_ID = "parse.application_id";
-    private static final String CONF_KEY_PARSE_API_KEY = "parse.api_key";
-
     protected static final String PARSE_HEADER_APPLICATION_ID = "X-Parse-Application-Id";
     protected static final String PARSE_HEADER_API_KEY = "X-Parse-REST-API-Key";
 
-    private List<String> channels;
     private String parseApiKey;
     private String parseApplicationId;
 
@@ -48,20 +43,11 @@ public class ParseUtils {
     @Inject
     public ParseUtils(ConfigurationServices configurationServices, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-
-        String strChannels = configurationServices.getString("parse.channels");
-        if (strChannels == null) {
-            LogUtils.fatal(logger, "No channels defined for Parse", null);
-        }
-
-        this.channels = Arrays.asList(strChannels.split(","));
         this.parseApiKey = configurationServices.getString("parse.api_key");
         this.parseApplicationId = configurationServices.getString("parse.application_id");
     }
 
     public void send(ParseMessage message) throws IOException {
-
-        message.setChannels(channels);
 
         logger.debug(String.format("Sending message to Parse: %s", message));
         long initTime = System.currentTimeMillis();
@@ -79,10 +65,10 @@ public class ParseUtils {
         Integer code = response.getStatus();
 
         if ((code != 200) || (!success)) {
-            LogUtils.fatal(logger, "Parse error sending to " + channels, null);
+            LogUtils.fatal(logger, "Parse error sending to " + message, null);
         }
 
-        LogUtils.logExternalCall(logger, strResponse, "Parse", "send", channels.toString(),
+        LogUtils.logExternalCall(logger, strResponse, "Parse", "send", message.toString(),
                 0, response.getStatus(), endTime - initTime);
     }
 
@@ -91,38 +77,58 @@ public class ParseUtils {
      */
     public static class ParseMessage {
 
-        private List<String> channels;
-        private Map<String, Object> data;
+        private Map<String, Object> where;
+        private ParseData data;
+        private String title;
 
         /**
          * Constructor
          */
-        public ParseMessage(Map<String, Object> data) {
-            this.data = data;
+        public ParseMessage(String deviceType, String deviceToken, String title, String body,
+                            Map<String, Object> payload) {
+            this.title = title;
+            this.data = new ParseData(title, body, payload);
+            this.where = new HashMap<>();
+            where.put("deviceType", deviceType);
+            where.put("deviceToken", deviceToken);
         }
 
-        public List<String> getChannels() {
-            return channels;
-        }
-
-        private void setChannels(List<String> channels) {
-            this.channels = channels;
-        }
-
-        public Map<String, Object> getData() {
+        public ParseData getData() {
             return data;
         }
 
-        public void setData(Map<String, Object> data) {
-            this.data = data;
+        public Map<String, Object> getWhere() {
+            return where;
         }
 
         @Override
         public String toString() {
-            return "ParseMessage{" +
-                    "channels=" + channels +
-                    ", data=" + data +
-                    '}';
+            return "parseMessage: deviceToken = " + where.get("deviceToken") + ", title = " + this.title;
+        }
+    }
+
+    /**
+     * Parse payload
+     */
+    private static class ParseData {
+        private Map<String, Object> payload;
+        private Map<String, Object> alert;
+
+        public ParseData(String title, String body, Map<String, Object> payload) {
+            alert = new HashMap<>();
+            alert.put("title", title);
+            alert.put("body", body);
+
+            this.payload = payload;
+        }
+
+        public Map<String, Object> getPayload() {
+            return payload;
+        }
+
+
+        public Map<String, Object> getAlert() {
+            return alert;
         }
     }
 }

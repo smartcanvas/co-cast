@@ -2,6 +2,7 @@ package io.cocast.ext.match;
 
 import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
+import io.cocast.core.SettingsServices;
 import io.cocast.ext.people.Person;
 import io.cocast.ext.people.PersonServices;
 import io.cocast.util.GCMUtils;
@@ -39,6 +40,9 @@ public class MatchServices {
     @Inject
     private ParseUtils parseUtils;
 
+    @Inject
+    private SettingsServices settingsServices;
+
     /**
      * Evaluates if a match has happened or not
      *
@@ -58,10 +62,10 @@ public class MatchServices {
                 Person person2 = personServices.get(networkMnemonic, email);
 
                 //send a notification
-                NotifyMatchesThread thread1 = new NotifyMatchesThread(SecurityContext.get(), person1, person2);
+                NotifyMatchesThread thread1 = new NotifyMatchesThread(networkMnemonic, SecurityContext.get(), person1, person2);
                 thread1.start();
 
-                NotifyMatchesThread thread2 = new NotifyMatchesThread(SecurityContext.get(), person2, person1);
+                NotifyMatchesThread thread2 = new NotifyMatchesThread(networkMnemonic, SecurityContext.get(), person2, person1);
                 thread2.start();
 
                 return true;
@@ -79,11 +83,13 @@ public class MatchServices {
         private Person person1;
         private Person person2;
         private SecurityContext securityContext;
+        private String networkMnemonic;
 
-        public NotifyMatchesThread(SecurityContext securityContext, Person person1, Person person2) {
+        public NotifyMatchesThread(String networkMnemonic, SecurityContext securityContext, Person person1, Person person2) {
             this.securityContext = securityContext;
             this.person1 = person1;
             this.person2 = person2;
+            this.networkMnemonic = networkMnemonic;
         }
 
         @Override
@@ -112,7 +118,7 @@ public class MatchServices {
                         if ("android".equals(deviceType)) {
                             sendGCMMessage(deviceId, person2);
                         } else if ("ios".equals(deviceType)) {
-                            sendParseMessage(deviceId, person2);
+                            sendParseMessage(networkMnemonic, deviceId, person2);
                         } else {
                             LogUtils.fatal(logger, "Unsupported device type: " + deviceType + ". No notification for: "
                                     + person1, null);
@@ -142,13 +148,18 @@ public class MatchServices {
     /**
      * Send a parse message
      */
-    private void sendParseMessage(String deviceId, Person person) throws IOException {
+    private void sendParseMessage(String networkMnemonic, String deviceId, Person person) throws Exception {
 
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("type", "match");
         data.put("person", person);
 
-        ParseUtils.ParseMessage message = new ParseUtils.ParseMessage(data);
+        String title = settingsServices.getString(networkMnemonic, "match-notification-title");
+        String body = settingsServices.getString(networkMnemonic, "match-notification-body");
+        title = title.replace(":displayName", person.getDisplayName());
+        body = body.replace(":displayName", person.getDisplayName());
+
+        ParseUtils.ParseMessage message = new ParseUtils.ParseMessage("ios", deviceId, title, body, data);
         parseUtils.send(message);
     }
 }

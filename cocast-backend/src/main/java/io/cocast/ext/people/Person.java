@@ -3,17 +3,20 @@ package io.cocast.ext.people;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
+import javax.validation.ValidationException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Person in CoCast
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person implements Serializable {
+
+    private static Logger logger = LogManager.getLogger(Person.class.getName());
 
     private String id;
     private String networkMnemonic;
@@ -182,7 +185,9 @@ public class Person implements Serializable {
 
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
-        addDeviceType(deviceType);
+        if (deviceType != null) {
+            addDeviceType(deviceType);
+        }
     }
 
     public String getDeviceIdentifier() {
@@ -191,7 +196,9 @@ public class Person implements Serializable {
 
     public void setDeviceIdentifier(String deviceIdentifier) {
         this.deviceIdentifier = deviceIdentifier;
-        addDeviceIdentifier(deviceIdentifier);
+        if (deviceIdentifier != null) {
+            addDeviceIdentifier(deviceIdentifier);
+        }
     }
 
     public List<String> getDeviceTypeList() {
@@ -260,15 +267,18 @@ public class Person implements Serializable {
         }
         if (anotherPerson.getDeviceTypeList() != null) {
             for (String strDeviceType : anotherPerson.getDeviceTypeList()) {
-                this.addDeviceType(strDeviceType);
+                if (strDeviceType != null) {
+                    this.addDeviceType(strDeviceType);
+                }
             }
         }
         if (anotherPerson.getDeviceIdentifierList() != null) {
             for (String strDeviceIdentifier : anotherPerson.getDeviceIdentifierList()) {
-                this.addDeviceIdentifier(strDeviceIdentifier);
+                if (strDeviceIdentifier != null) {
+                    this.addDeviceIdentifier(strDeviceIdentifier);
+                }
             }
         }
-
     }
 
     @Override
@@ -314,24 +324,61 @@ public class Person implements Serializable {
     }
 
     private void addDeviceType(String deviceType) {
-        if (this.deviceTypeList != null) {
-            if (!deviceTypeList.contains(deviceType)) {
-                deviceTypeList.add(deviceType);
-            }
-        } else {
-            deviceTypeList = new ArrayList<String>();
-            deviceTypeList.add(deviceType);
+
+        if (deviceType == null) {
+            throw new ValidationException("Device type cannot be null");
         }
+        if ((!"android".equals(deviceType)) && (!"ios".equals(deviceType))) {
+            throw new ValidationException("Supported device types are 'android' and 'ios'");
+        }
+
+        if (this.deviceTypeList == null) {
+            deviceTypeList = new ArrayList<String>();
+        }
+
+        deviceTypeList.add(deviceType);
     }
 
     private void addDeviceIdentifier(String deviceIdentifier) {
-        if (this.deviceIdentifierList != null) {
-            if (!deviceIdentifierList.contains(deviceIdentifier)) {
-                deviceIdentifierList.add(deviceIdentifier);
-            }
-        } else {
-            deviceIdentifierList = new ArrayList<String>();
-            deviceIdentifierList.add(deviceIdentifier);
+        if (deviceIdentifier == null) {
+            throw new ValidationException("Device identifier cannot be null");
         }
+
+        if (this.deviceIdentifierList == null) {
+            deviceIdentifierList = new ArrayList<String>();
+        }
+
+        deviceIdentifierList.add(deviceIdentifier);
+    }
+
+    public void suppressDeviceRepetitions() {
+
+        if ((this.getDeviceIdentifierList() == null) || (this.getDeviceTypeList() == null)) {
+            return;
+        }
+
+        logger.debug("Id list = " + this.getDeviceIdentifierList());
+        logger.debug("Type list = " + this.getDeviceTypeList());
+
+        Set<String> processedIds = new HashSet<>();
+        List<String> newDeviceTypeList = new ArrayList<>();
+        List<String> newDeviceIdList = new ArrayList<>();
+        int count = 0;
+        for (String deviceId : this.getDeviceIdentifierList()) {
+            logger.debug("Processing: " + deviceId);
+            if (!processedIds.contains(deviceId)) {
+                logger.debug("New device! Keeping");
+                newDeviceIdList.add(deviceId);
+                newDeviceTypeList.add(this.getDeviceTypeList().get(count));
+                processedIds.add(deviceId);
+            } else {
+                logger.debug("Already there, discarding");
+            }
+
+            count++;
+        }
+
+        this.setDeviceTypeList(newDeviceTypeList);
+        this.setDeviceIdentifierList(newDeviceIdList);
     }
 }

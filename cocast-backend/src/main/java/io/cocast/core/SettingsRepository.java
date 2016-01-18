@@ -60,7 +60,7 @@ public class SettingsRepository {
      */
     public List<Settings> list(String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
 
         //looks into the cache
         List<Settings> listSettings = cache.get(networkMnemonic, new SettingsLoader(networkMnemonic));
@@ -76,7 +76,7 @@ public class SettingsRepository {
      * Get a specific settings
      */
     public Settings get(String networkMnemonic, String name) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
 
         List<Settings> allSettings = this.list(networkMnemonic);
         for (Settings settings : allSettings) {
