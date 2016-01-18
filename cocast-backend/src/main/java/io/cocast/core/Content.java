@@ -19,6 +19,11 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Content implements Serializable {
 
+    public static final String TYPE_DISCARD = "discard";
+    public static final String TYPE_QUOTE = "quote";
+    public static final String TYPE_ANNOUNCEMENT = "announcement";
+    public static final String TYPE_PHOTO = "photo";
+
     /* Basic Info */
     private String id;
     private String networkMnemonic;
@@ -61,6 +66,8 @@ public class Content implements Serializable {
             this.setCreatedBy(SecurityContext.get().userIdentification());
         }
         this.isActive = true;
+        this.imageHeight = 0;
+        this.imageWidth = 0;
     }
 
     public String getId() {

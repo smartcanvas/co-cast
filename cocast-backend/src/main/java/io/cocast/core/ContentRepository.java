@@ -27,8 +27,10 @@ class ContentRepository {
 
     /**
      * Create or update a new content
+     *
+     * @return If the content was changed or not
      */
-    public void save(Content content) throws Exception {
+    public boolean save(Content content) throws Exception {
 
         networkServices.validate(content.getNetworkMnemonic());
 
@@ -38,13 +40,15 @@ class ContentRepository {
         //checks if the content already exists
         Content existingContent = this.get(content.getNetworkMnemonic(), content.getId());
         if ((existingContent != null) && (existingContent.equals(content))) {
-            return;
+            return false;
         }
 
 
         //insert
         firebaseUtils.saveAsRoot(content, "/contents/" + content.getNetworkMnemonic() + "/" + content.getId() + ".json");
         cache.set(generateCacheKey(content.getNetworkMnemonic(), content.getId()), content);
+
+        return true;
     }
 
 

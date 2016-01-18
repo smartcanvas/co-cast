@@ -35,6 +35,9 @@ public class ContentResource extends AbstractResource {
     @Inject
     private ContentRepository contentRepository;
 
+    @Inject
+    private ContentServices contentServices;
+
     /**
      * Creates a content
      */
@@ -116,7 +119,7 @@ public class ContentResource extends AbstractResource {
         }
 
         try {
-            contentRepository.save(content);
+            contentServices.save(content);
         } catch (ValidationException exc) {
             String message = exc.getMessage();
             logResult(message, request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);

@@ -7,6 +7,7 @@ import com.sendgrid.SendGridException;
 import io.cocast.admin.ConfigurationServices;
 import io.cocast.auth.SecurityContext;
 import io.cocast.config.BasicBackendModule;
+import io.cocast.util.AbstractRunnable;
 import io.cocast.util.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -55,6 +56,21 @@ public class LogUtils {
             }
         } catch (Exception exc) {
             logger.error("Error writing External Call log", exc);
+        }
+    }
+
+    /**
+     * Logs an asynchronous execution
+     */
+    public static void logAsyncExecution(Logger logger, AbstractRunnable runnable, String message, Long executionTime,
+                                         boolean success, Integer retries) {
+        try {
+            if (logger.isInfoEnabled()) {
+                AsyncExecution asyncExecution = new AsyncExecution(runnable, message, executionTime, success, retries);
+                logger.info(asyncExecution.toJson());
+            }
+        } catch (Exception exc) {
+            logger.error("Error writing Async Call log", exc);
         }
     }
 

@@ -5,11 +5,7 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.core.NetworkServices;
 import io.cocast.ext.people.Person;
 import io.cocast.ext.people.PersonServices;
-import io.cocast.util.CacheUtils;
-import io.cocast.util.CoCastCallException;
-import io.cocast.util.DateUtils;
-import io.cocast.util.FirebaseUtils;
-import io.cocast.util.log.LogUtils;
+import io.cocast.util.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -63,7 +59,7 @@ public class MatchRepository {
         }
 
         SaveMatchThread saveMatchThread = new SaveMatchThread(networkMnemonic, person1, person2);
-        saveMatchThread.start();
+        ExecutorUtils.execute(saveMatchThread);
     }
 
     /**
@@ -146,20 +142,19 @@ public class MatchRepository {
     /**
      * Thread to save a match
      */
-    public class SaveMatchThread extends Thread {
+    public class SaveMatchThread extends AbstractRunnable {
 
-        private String networkMnemonic;
         private Person person1;
         private Person person2;
 
         public SaveMatchThread(String networkMnemonic, Person person1, Person person2) {
-            this.networkMnemonic = networkMnemonic;
+            super(networkMnemonic);
             this.person1 = person1;
             this.person2 = person2;
         }
 
         @Override
-        public void run() {
+        public void execute() throws Exception {
 
             try {
                 Date timestamp = DateUtils.now();
@@ -168,17 +163,22 @@ public class MatchRepository {
                 Match match1 = new Match(person1, timestamp);
                 Match match2 = new Match(person2, timestamp);
 
-                firebaseUtils.saveAsRoot(match1, "/matches/" + networkMnemonic + "/" + person2.getId() + "/" +
+                firebaseUtils.saveAsRoot(match1, "/matches/" + getNetworkMnemonic() + "/" + person2.getId() + "/" +
                         match1.getPerson().getId() + ".json");
-                firebaseUtils.saveAsRoot(match2, "/matches/" + networkMnemonic + "/" + person1.getId() + "/" +
+                firebaseUtils.saveAsRoot(match2, "/matches/" + getNetworkMnemonic() + "/" + person1.getId() + "/" +
                         match2.getPerson().getId() + ".json");
 
-                updatesCache(networkMnemonic, match1.getPerson().getId(), match2);
-                updatesCache(networkMnemonic, match2.getPerson().getId(), match1);
+                updatesCache(getNetworkMnemonic(), match1.getPerson().getId(), match2);
+                updatesCache(getNetworkMnemonic(), match2.getPerson().getId(), match1);
             } catch (Exception exc) {
-                LogUtils.fatal(logger, "Error saving match between " + person1.getEmail() + " and " +
+                throw new Exception("Error saving match between " + person1.getEmail() + " and " +
                         person2.getEmail(), exc);
             }
+        }
+
+        @Override
+        public String getJobName() {
+            return "Save Match Job";
         }
     }
 }

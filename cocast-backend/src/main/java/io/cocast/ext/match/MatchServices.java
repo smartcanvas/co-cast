@@ -5,6 +5,8 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.core.SettingsServices;
 import io.cocast.ext.people.Person;
 import io.cocast.ext.people.PersonServices;
+import io.cocast.util.AbstractRunnable;
+import io.cocast.util.ExecutorUtils;
 import io.cocast.util.GCMUtils;
 import io.cocast.util.ParseUtils;
 import io.cocast.util.log.LogUtils;
@@ -62,11 +64,11 @@ public class MatchServices {
                 Person person2 = personServices.get(networkMnemonic, email);
 
                 //send a notification
-                NotifyMatchesThread thread1 = new NotifyMatchesThread(networkMnemonic, SecurityContext.get(), person1, person2);
-                thread1.start();
+                NotifyMatchesThread thread1 = new NotifyMatchesThread(networkMnemonic, person1, person2);
+                ExecutorUtils.execute(thread1);
 
-                NotifyMatchesThread thread2 = new NotifyMatchesThread(networkMnemonic, SecurityContext.get(), person2, person1);
-                thread2.start();
+                NotifyMatchesThread thread2 = new NotifyMatchesThread(networkMnemonic, person2, person1);
+                ExecutorUtils.execute(thread2);
 
                 return true;
             }
@@ -78,24 +80,19 @@ public class MatchServices {
     /**
      * Thread to notify matches in background
      */
-    private class NotifyMatchesThread extends Thread {
+    private class NotifyMatchesThread extends AbstractRunnable {
 
         private Person person1;
         private Person person2;
-        private SecurityContext securityContext;
-        private String networkMnemonic;
 
-        public NotifyMatchesThread(String networkMnemonic, SecurityContext securityContext, Person person1, Person person2) {
-            this.securityContext = securityContext;
+        public NotifyMatchesThread(String networkMnemonic, Person person1, Person person2) {
+            super(networkMnemonic);
             this.person1 = person1;
             this.person2 = person2;
-            this.networkMnemonic = networkMnemonic;
         }
 
         @Override
-        public void run() {
-
-            SecurityContext.set(securityContext);
+        public void execute() throws Exception {
 
             try {
                 List<String> deviceList = person1.getDeviceTypeList();
@@ -118,19 +115,25 @@ public class MatchServices {
                         if ("android".equals(deviceType)) {
                             sendGCMMessage(deviceId, person2);
                         } else if ("ios".equals(deviceType)) {
-                            sendParseMessage(networkMnemonic, deviceId, person2);
+                            sendParseMessage(getNetworkMnemonic(), deviceId, person2);
                         } else {
                             LogUtils.fatal(logger, "Unsupported device type: " + deviceType + ". No notification for: "
                                     + person1, null);
+                            return;
                         }
 
                         count++;
                     }
                 }
             } catch (Exception exc) {
-                LogUtils.fatal(logger, "Error notifying match in background between " + person1.getEmail()
+                throw new Exception("Error notifying match in background between " + person1.getEmail()
                         + " and " + person2.getEmail(), exc);
             }
+        }
+
+        @Override
+        public String getJobName() {
+            return "Notify Matches Job";
         }
     }
 

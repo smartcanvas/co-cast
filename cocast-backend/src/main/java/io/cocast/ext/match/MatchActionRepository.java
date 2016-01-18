@@ -5,10 +5,7 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.core.NetworkServices;
 import io.cocast.ext.people.Person;
 import io.cocast.ext.people.PersonServices;
-import io.cocast.util.CacheUtils;
-import io.cocast.util.CoCastCallException;
-import io.cocast.util.FirebaseUtils;
-import io.cocast.util.log.LogUtils;
+import io.cocast.util.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -64,7 +61,7 @@ public class MatchActionRepository {
 
         SaveMatchActionsThread saveMatchActionsThread = new SaveMatchActionsThread(networkMnemonic,
                 matchAction, personId, email);
-        saveMatchActionsThread.start();
+        ExecutorUtils.execute(saveMatchActionsThread);
 
         //evaluates a match
         if (MatchAction.LIKE.equals(action)) {
@@ -170,49 +167,49 @@ public class MatchActionRepository {
     /**
      * Thread to save actions in background
      */
-    private class SaveMatchActionsThread extends Thread {
+    private class SaveMatchActionsThread extends AbstractRunnable {
 
-        private String networkMnemonic;
         private MatchAction matchAction;
         private String personId;
         private String email;
 
         public SaveMatchActionsThread(String networkMnemonic, MatchAction matchAction,
                                       String personId, String email) {
+            super(networkMnemonic);
             this.matchAction = matchAction;
-            this.networkMnemonic = networkMnemonic;
             this.personId = personId;
             this.email = email;
         }
 
         @Override
-        public void run() {
+        public void execute() throws Exception {
 
-            try {
-                String cacheKey = generateKey(networkMnemonic, personId);
+            String cacheKey = generateKey(getNetworkMnemonic(), personId);
 
-                //updates the cache
-                List<MatchAction> cachedMatchActionList = cache.get(cacheKey);
-                if (cachedMatchActionList != null) {
-                    int count = 0;
-                    for (MatchAction actionInCache : cachedMatchActionList) {
-                        if (actionInCache.getPersonId().equals(matchAction.getPersonId())) {
-                            cachedMatchActionList.remove(count);
-                            break;
-                        }
-                        count++;
+            //updates the cache
+            List<MatchAction> cachedMatchActionList = cache.get(cacheKey);
+            if (cachedMatchActionList != null) {
+                int count = 0;
+                for (MatchAction actionInCache : cachedMatchActionList) {
+                    if (actionInCache.getPersonId().equals(matchAction.getPersonId())) {
+                        cachedMatchActionList.remove(count);
+                        break;
                     }
-
-                    cachedMatchActionList.add(matchAction);
-                    cache.set(cacheKey, cachedMatchActionList);
+                    count++;
                 }
 
-                //insert
-                firebaseUtils.saveAsRoot(matchAction, "/matchActions/" + networkMnemonic + "/" + personId + "/" +
-                        Person.getIdFromEmail(email) + ".json");
-            } catch (Exception exc) {
-                LogUtils.fatal(logger, "Error saving match action in background: " + matchAction, exc);
+                cachedMatchActionList.add(matchAction);
+                cache.set(cacheKey, cachedMatchActionList);
             }
+
+            //insert
+            firebaseUtils.saveAsRoot(matchAction, "/matchActions/" + getNetworkMnemonic() + "/" + personId + "/" +
+                    Person.getIdFromEmail(email) + ".json");
+        }
+
+        @Override
+        public String getJobName() {
+            return "Save Match Actions Job";
         }
     }
 
