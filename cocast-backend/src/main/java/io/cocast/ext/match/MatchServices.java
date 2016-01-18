@@ -14,7 +14,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +112,7 @@ public class MatchServices {
 
                         //Sends the message using the proper service
                         if ("android".equals(deviceType)) {
-                            sendGCMMessage(deviceId, person2);
+                            sendGCMMessage(getNetworkMnemonic(), deviceId, person2);
                         } else if ("ios".equals(deviceType)) {
                             sendParseMessage(getNetworkMnemonic(), deviceId, person2);
                         } else {
@@ -140,12 +139,12 @@ public class MatchServices {
     /**
      * Send a GCM message
      */
-    private void sendGCMMessage(String deviceId, Person person) throws IOException {
+    private void sendGCMMessage(String networkMnemonic, String deviceId, Person person) throws Exception {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("type", "match");
         data.put("person", person);
         GCMUtils.GCMMessage message = new GCMUtils.GCMMessage(deviceId, data);
-        gcmUtils.send(message);
+        gcmUtils.send(networkMnemonic, message);
     }
 
     /**
@@ -163,6 +162,6 @@ public class MatchServices {
         body = body.replace(":displayName", person.getDisplayName());
 
         ParseUtils.ParseMessage message = new ParseUtils.ParseMessage("ios", deviceId, title, body, data);
-        parseUtils.send(message);
+        parseUtils.send(networkMnemonic, message);
     }
 }

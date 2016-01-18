@@ -53,32 +53,36 @@ public abstract class AbstractRunnable implements Runnable {
         long initTime = System.currentTimeMillis();
         logger.info("Executing asynchronous job " + getJobName());
 
-        int tentative = 1;
+        int tentative = 0;
         while (tentative <= retry) {
             try {
                 this.execute();
                 long endTime = System.currentTimeMillis();
-                LogUtils.logAsyncExecution(logger, this, "OK", endTime - initTime, true, tentative - 1);
+                LogUtils.logAsyncExecution(logger, this, "OK", endTime - initTime, true, tentative);
                 break;
             } catch (ValidationException exc) {
                 //nothing can be done
                 long endTime = System.currentTimeMillis();
-                LogUtils.logAsyncExecution(logger, this, exc.getMessage(), endTime - initTime, false, tentative - 1);
+                LogUtils.logAsyncExecution(logger, this, exc.getMessage(), endTime - initTime, false, tentative);
                 break;
             } catch (CoCastCallException exc) {
                 //nothing can be done
                 long endTime = System.currentTimeMillis();
-                LogUtils.logAsyncExecution(logger, this, exc.getMessage(), endTime - initTime, false, tentative - 1);
+                LogUtils.logAsyncExecution(logger, this, exc.getMessage(), endTime - initTime, false, tentative);
                 break;
             } catch (Exception exc) {
                 tentative++;
                 if (tentative <= retry) {
                     try {
                         TimeUnit.SECONDS.sleep(DEFAULT_RETRY_INTERVAL * (tentative - 1));
+                        logger.warn("Execution of " + getJobName() + " has failed due to " + exc.getMessage()
+                                + ". Retrying #" + tentative);
                     } catch (InterruptedException e) {
                         logger.error("Error in the async mechanism", e);
                     }
                 } else {
+                    long endTime = System.currentTimeMillis();
+                    LogUtils.logAsyncExecution(logger, this, exc.getMessage(), endTime - initTime, false, tentative - 1);
                     LogUtils.fatal(logger, exc.getMessage(), exc);
                 }
             }

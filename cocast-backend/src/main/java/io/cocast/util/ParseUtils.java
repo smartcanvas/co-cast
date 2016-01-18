@@ -3,7 +3,7 @@ package io.cocast.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Singleton;
-import io.cocast.admin.ConfigurationServices;
+import io.cocast.core.SettingsServices;
 import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -15,7 +15,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,25 +31,26 @@ public class ParseUtils {
     protected static final String PARSE_HEADER_APPLICATION_ID = "X-Parse-Application-Id";
     protected static final String PARSE_HEADER_API_KEY = "X-Parse-REST-API-Key";
 
-    private String parseApiKey;
-    private String parseApplicationId;
-
     private ObjectMapper objectMapper;
+
+    @Inject
+    private SettingsServices settingsServices;
 
     /**
      * Constructor
      */
     @Inject
-    public ParseUtils(ConfigurationServices configurationServices, ObjectMapper objectMapper) {
+    public ParseUtils(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.parseApiKey = configurationServices.getString("parse.api_key");
-        this.parseApplicationId = configurationServices.getString("parse.application_id");
     }
 
-    public void send(ParseMessage message) throws IOException {
+    public void send(String networkMnemonic, ParseMessage message) throws Exception {
 
-        logger.debug(String.format("Sending message to Parse: %s", message));
         long initTime = System.currentTimeMillis();
+
+        String parseApiKey = settingsServices.getString(networkMnemonic, "parse-api-key");
+        String parseApplicationId = settingsServices.getString(networkMnemonic, "parse-application-id");
+
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
         Response response = client.target(PARSE_PUSH_NOTIFICATION_ENDPOINT).request()
                 .accept(MediaType.APPLICATION_JSON)

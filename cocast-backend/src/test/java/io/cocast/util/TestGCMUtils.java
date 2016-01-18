@@ -31,6 +31,6 @@ public class TestGCMUtils extends BaseTest {
         data.put("type", "match");
         data.put("person", person);
         GCMUtils.GCMMessage message = new GCMUtils.GCMMessage(strTo, data);
-        gcmUtils.send(message);
+        gcmUtils.send("teamwork", message);
     }
 }

@@ -6,7 +6,7 @@ import com.google.api.client.util.Key;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
-import io.cocast.admin.ConfigurationServices;
+import io.cocast.core.SettingsServices;
 import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -18,7 +18,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -30,13 +29,13 @@ public class GCMUtils {
     private static final Logger logger = LogManager.getLogger(GCMUtils.class.getName());
 
     private static final String GCM_ENDPOINT = "https://gcm-http.googleapis.com/gcm/send";
-    private static final String CONF_KEY_GCM_TOKEN = "gcm.service_token";
+    private static final String SETTINGS_KEY_GCM_TOKEN = "gcm-service-token";
     private static final String MISSING_CONFIGURATION_BASE_MESSAGE = "Make sure %s configuration is properly set.";
 
     private ObjectMapper objectMapper;
 
     @Inject
-    private ConfigurationServices configurationServices;
+    private SettingsServices settingsServices;
 
     public static class GCMMessage {
 
@@ -82,13 +81,12 @@ public class GCMUtils {
         this.objectMapper = objectMapper;
     }
 
-    public void send(GCMMessage message) throws IOException {
-        logger.debug(String.format("Sending message to GCM: %s", message));
+    public void send(String networkMnemonic, GCMMessage message) throws Exception {
         long initTime = System.currentTimeMillis();
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
         Response response = client.target(GCM_ENDPOINT).request()
                 .accept(MediaType.APPLICATION_JSON)
-                .header("Authorization", "key=" + gcmToken())
+                .header("Authorization", "key=" + gcmToken(networkMnemonic))
                 .post(Entity.json(message));
         long endTime = System.currentTimeMillis();
         String strResponse = response.readEntity(String.class);
@@ -105,10 +103,10 @@ public class GCMUtils {
     }
 
 
-    private String gcmToken() {
-        String token = configurationServices.getString(CONF_KEY_GCM_TOKEN);
+    private String gcmToken(String networkMnemonic) throws Exception {
+        String token = settingsServices.getString(networkMnemonic, SETTINGS_KEY_GCM_TOKEN);
         Preconditions.checkArgument(!Strings.isNullOrEmpty(token),
-                String.format(MISSING_CONFIGURATION_BASE_MESSAGE, CONF_KEY_GCM_TOKEN));
+                String.format(MISSING_CONFIGURATION_BASE_MESSAGE, SETTINGS_KEY_GCM_TOKEN));
 
         return token;
     }
