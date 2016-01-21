@@ -112,16 +112,13 @@ public class CacheUtils {
     /**
      * Retrieves an object from cache
      */
-    public <T> T get(String key, Callable<? extends T> valueLoader) {
+    public <T> T get(String key, Callable<? extends T> valueLoader) throws Exception {
 
-        Object value = memcachedClient.get(generateKey(key));
+        String genkey = generateKey(key);
+        Object value = memcachedClient.get(genkey);
         if (value == null) {
-            try {
-                value = valueLoader.call();
-                this.set(key, value);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            value = valueLoader.call();
+            this.set(key, value);
         }
 
         return (T) value;
@@ -145,7 +142,7 @@ public class CacheUtils {
      * Generate the cache key
      */
     private String generateKey(String key) {
-        return clientName + "_" + key;
+        return ExtraStringUtils.generateMnemonic(clientName + "_" + key);
     }
 
     /**
@@ -153,7 +150,7 @@ public class CacheUtils {
      */
     private void setType(Class clazz) {
         this.clazz = clazz;
-        this.clientName = clazz.getName();
+        this.clientName = clazz.getSimpleName();
     }
 
 }

@@ -10,7 +10,6 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.jose4j.jwt.JwtClaims;
-import org.jose4j.jwt.MalformedClaimException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ValidationException;
@@ -33,7 +32,7 @@ public class SmartCanvasV1SecurityClaimsBuilder extends SecurityClaimsBuilder {
     private ConfigurationServices configurationServices;
 
     @Override
-    public SecurityClaims createSecurityClaims(JwtClaims jwtClaims, String issuer) throws MalformedClaimException {
+    public SecurityClaims createSecurityClaims(JwtClaims jwtClaims, String issuer) throws Exception {
 
         SecurityClaims claims = new SecurityClaims(issuer);
         String personId = jwtClaims.getSubject();

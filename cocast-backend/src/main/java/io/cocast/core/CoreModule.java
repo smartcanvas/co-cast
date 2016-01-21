@@ -16,5 +16,9 @@ public class CoreModule extends AbstractModule {
         bind(SettingsRepository.class);
         bind(ChannelRepository.class);
         bind(ContentRepository.class);
+
+        //Services
+        bind(LiveStreamServices.class);
+        bind(ContentServices.class);
     }
 }

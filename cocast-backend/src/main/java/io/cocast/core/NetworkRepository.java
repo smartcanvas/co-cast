@@ -10,12 +10,10 @@ import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.validation.ValidationException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Persistence methods for networks
@@ -185,7 +183,7 @@ class NetworkRepository {
     /**
      * Get the networks the user has access
      */
-    List<NetworkMembership> listMemberships() throws IOException, ExecutionException {
+    List<NetworkMembership> listMemberships() throws Exception {
         //looks into the cache
         String uid = SecurityContext.get().userIdentification();
         return cacheMembership.get(uid, new NetworkMembershipLoader(uid));
@@ -204,7 +202,7 @@ class NetworkRepository {
     /**
      * Get by mnemonic as root
      */
-    private Network getAsRoot(String mnemonic) throws IOException, ExecutionException {
+    private Network getAsRoot(String mnemonic) throws Exception {
 
         //looks into the cache
         List<Network> listNetwork = cache.get(mnemonic, new NetworkLoader(mnemonic));

@@ -3,7 +3,6 @@ package io.cocast.admin;
 import com.google.inject.Singleton;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Services for themes
@@ -18,13 +17,13 @@ public class ThemeServices {
      * Checks if a specific theme exists or not
      */
     public boolean exists(String strTheme) throws Exception {
-        List<Theme> themeList = themeRepository.list();
-        for (Theme theme : themeList) {
-            if (strTheme.equals(theme.getMnemonic())) {
-                return true;
-            }
-        }
+        return this.get(strTheme) != null;
+    }
 
-        return false;
+    /**
+     * Returns a theme by its mnemonic
+     */
+    public Theme get(String themeMnemonic) throws Exception {
+        return themeRepository.get(themeMnemonic);
     }
 }

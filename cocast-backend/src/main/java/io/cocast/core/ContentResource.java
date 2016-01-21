@@ -1,12 +1,10 @@
 package io.cocast.core;
 
-import com.google.inject.Singleton;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.APIResponse;
 import io.cocast.util.AbstractResource;
 import io.cocast.util.CoCastCallException;
 import io.cocast.util.log.LogUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -17,6 +15,7 @@ import javax.validation.ValidationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Content resources (API)
@@ -24,7 +23,6 @@ import javax.ws.rs.core.Response;
 @Produces("application/json")
 @Consumes("application/json")
 @Path("/api/core/v1/contents")
-@Singleton
 public class ContentResource extends AbstractResource {
 
     /**
@@ -54,6 +52,24 @@ public class ContentResource extends AbstractResource {
     @Path("/{networkMnemonic}")
     public Response update(@Context HttpServletRequest request, Content content, @PathParam("networkMnemonic") String networkMnemonic) {
         return this.save(request, content, networkMnemonic);
+    }
+
+    /**
+     * Creates a content
+     */
+    @POST
+    @Path("/bulk/{networkMnemonic}")
+    public Response createBulk(@Context HttpServletRequest request, List<Content> contents, @PathParam("networkMnemonic") String networkMnemonic) {
+        return this.bulkSave(request, contents, networkMnemonic);
+    }
+
+    /**
+     * Updates the content
+     */
+    @PUT
+    @Path("/bulk/{networkMnemonic}")
+    public Response updateBulk(@Context HttpServletRequest request, List<Content> contents, @PathParam("networkMnemonic") String networkMnemonic) {
+        return this.bulkSave(request, contents, networkMnemonic);
     }
 
     /**
@@ -96,23 +112,8 @@ public class ContentResource extends AbstractResource {
     private Response save(HttpServletRequest request, Content content, String networkMnemonic) {
         long initTime = System.currentTimeMillis();
 
-        //validates the ID
-        if ((content == null) ||
-                (content.getId() == null)) {
-            logResult("Content ID is required", request, "post", 0, HttpServletResponse.SC_BAD_REQUEST,
-                    initTime);
-            return APIResponse.badRequest("Content ID is required").getResponse();
-        }
 
-        //validates the network mnemonic
-        if (StringUtils.isEmpty(networkMnemonic) && StringUtils.isEmpty(content.getNetworkMnemonic())) {
-            logResult("Network mnemonic is required", request, "post", 0, HttpServletResponse.SC_BAD_REQUEST,
-                    initTime);
-            return APIResponse.badRequest("Network mnemonic is required").getResponse();
-        }
-        if (!StringUtils.isEmpty(networkMnemonic)) {
-            content.setNetworkMnemonic(networkMnemonic);
-        }
+        content.setNetworkMnemonic(networkMnemonic);
 
         if ((SecurityContext.get() != null) && (SecurityContext.get().userIdentification() != null)) {
             content.setCreatedBy(SecurityContext.get().userIdentification());
@@ -138,6 +139,42 @@ public class ContentResource extends AbstractResource {
         logResult("OK", request, "post", 0, HttpServletResponse.SC_CREATED, initTime);
         return APIResponse.created("Content saved successfully with ID: " + content.getId()).getResponse();
     }
+
+    /**
+     * Bulk saves a content
+     */
+    private Response bulkSave(HttpServletRequest request, List<Content> contents, String networkMnemonic) {
+        long initTime = System.currentTimeMillis();
+
+
+        for (Content content : contents) {
+            content.setNetworkMnemonic(networkMnemonic);
+            if ((SecurityContext.get() != null) && (SecurityContext.get().userIdentification() != null)) {
+                content.setCreatedBy(SecurityContext.get().userIdentification());
+            }
+        }
+
+        try {
+            contentServices.bulkSave(networkMnemonic, contents);
+        } catch (ValidationException exc) {
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
+            return APIResponse.badRequest(exc.getMessage()).getResponse();
+        } catch (CoCastCallException exc) {
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, exc.getStatus(), initTime);
+            return APIResponse.fromException(exc).getResponse();
+        } catch (Exception exc) {
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+
+        logResult("OK", request, "post", contents.size(), HttpServletResponse.SC_CREATED, initTime);
+        return APIResponse.created(contents.size() + " contents saved successfully").getResponse();
+    }
+
 
     @Override
     protected String getModuleName() {

@@ -1,12 +1,16 @@
 package io.cocast.core;
 
 import com.google.inject.Singleton;
+import io.cocast.admin.ConfigurationServices;
 import io.cocast.util.CacheUtils;
 import io.cocast.util.FirebaseUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
+import javax.validation.ValidationException;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -23,7 +27,14 @@ class ContentRepository {
     @Inject
     private NetworkServices networkServices;
 
+    @Inject
+    private SettingsServices settingsServices;
+
+    @Inject
+    private ConfigurationServices configurationServices;
+
     private static CacheUtils cache = CacheUtils.getInstance(Content.class);
+    private static CacheUtils cacheList = CacheUtils.getInstance(List.class);
 
     /**
      * Create or update a new content
@@ -56,7 +67,7 @@ class ContentRepository {
      * Get a specific content
      */
     public Content get(String networkMnemonic, String id) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.validateWithIssuer(networkMnemonic);
         String cacheKey = generateCacheKey(networkMnemonic, id);
 
         //looks into the cache
@@ -70,10 +81,32 @@ class ContentRepository {
     }
 
     /**
+     * Get a list of contents elegible for go to TV
+     */
+    public List<Content> list(String networkMnemonic) throws Exception {
+        networkServices.validateWithIssuer(networkMnemonic);
+
+        String cacheKey = generateCacheListKey(networkMnemonic);
+
+        //looks into the cache
+        List<Content> contents = cacheList.get(cacheKey, new ContentListLoader(networkMnemonic,
+                settingsServices, configurationServices));
+        if (contents == null) {
+            //cannot cache null
+            cacheList.invalidate(cacheKey);
+        }
+
+        return contents;
+    }
+
+    /**
      * Validate if the content is ready to be created or updated
      */
     private void validate(Content content) {
-
+        if ((content == null) ||
+                (content.getId() == null)) {
+            throw new ValidationException("Content is null or w/o ID: " + content);
+        }
     }
 
     /**
@@ -81,6 +114,13 @@ class ContentRepository {
      */
     private String generateCacheKey(String networkMnemonic, String id) {
         return "content_" + networkMnemonic + "_" + id;
+    }
+
+    /**
+     * Generates the key for content cache (list)
+     */
+    private String generateCacheListKey(String networkMnemonic) {
+        return "contentList_" + networkMnemonic;
     }
 
     /**
@@ -107,6 +147,37 @@ class ContentRepository {
             } else {
                 return content;
             }
+        }
+    }
+
+    /**
+     * Loads the cache for list of contents
+     */
+    private class ContentListLoader implements Callable<List<Content>> {
+
+        private String networkMnemonic;
+        private SettingsServices settingsServices;
+        private ConfigurationServices configurationServices;
+
+        public ContentListLoader(String networkMnemonic, SettingsServices settingsServices,
+                                 ConfigurationServices configurationServices) {
+            this.networkMnemonic = networkMnemonic;
+            this.settingsServices = settingsServices;
+            this.configurationServices = configurationServices;
+        }
+
+        @Override
+        public List<Content> call() throws Exception {
+
+            String strLimit = settingsServices.getString(networkMnemonic, "limit-to-last-content");
+            if (strLimit == null) {
+                strLimit = configurationServices.getString("limit-to-last-content", "500");
+            }
+
+            //a list of contents
+            String uri = "/contents/" + networkMnemonic + ".json?orderBy=" + URLEncoder.encode("\"date\"", "UTF-8")
+                    + "&limitToLast=" + strLimit;
+            return firebaseUtils.listAsRoot(uri, Content.class);
         }
     }
 }

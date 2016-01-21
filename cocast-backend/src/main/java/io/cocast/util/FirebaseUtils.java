@@ -96,6 +96,28 @@ public class FirebaseUtils {
     }
 
     /**
+     * Saves an string to a Firebase property
+     */
+    public void saveStringAsRoot(String strValue, String uri) throws JsonProcessingException {
+
+        String completeURL = getFirebaseURLAsRoot(uri);
+        Client client = ClientBuilder.newClient();
+
+        long initTime = System.currentTimeMillis();
+        Response response = client.target(completeURL).request().accept(MediaType.TEXT_PLAIN).
+                put(Entity.text("\"" + strValue + "\""));
+        long endTime = System.currentTimeMillis();
+        LogUtils.logExternalCall(logger, "String saved on Firebase", "Firebase", "save", uri, 0, response.getStatus(),
+                endTime - initTime);
+
+        if (!(response.getStatus() == HttpServletResponse.SC_OK) &&
+                !(response.getStatus() == HttpServletResponse.SC_CREATED)) {
+            throw new CoCastCallException("Error saving string " + strValue + ". Status = " + response.getStatus(),
+                    response.getStatus());
+        }
+    }
+
+    /**
      * Saves an object inside Firebase
      */
     public void saveAsRoot(Object obj, String uri) throws JsonProcessingException, CoCastCallException {

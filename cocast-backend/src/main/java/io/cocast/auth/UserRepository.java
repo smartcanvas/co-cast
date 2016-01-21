@@ -7,9 +7,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Persistence methods for users
@@ -27,7 +25,7 @@ class UserRepository {
     /**
      * Returns a user based on its uid
      */
-    public User findUser(String uid) throws IOException, ExecutionException {
+    public User findUser(String uid) throws Exception {
         //looks into the cache
         return cache.get(uid, new UserLoader(uid));
     }

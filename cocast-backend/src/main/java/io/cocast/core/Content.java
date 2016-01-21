@@ -3,6 +3,7 @@ package io.cocast.core;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.cocast.admin.Theme;
 import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 import io.cocast.util.ExtraStringUtils;
@@ -23,6 +24,7 @@ public class Content implements Serializable {
     public static final String TYPE_QUOTE = "quote";
     public static final String TYPE_ANNOUNCEMENT = "announcement";
     public static final String TYPE_PHOTO = "photo";
+    public static final Integer DEFAULT_LIMIT = 3;
 
     /* Basic Info */
     private String id;
@@ -36,6 +38,9 @@ public class Content implements Serializable {
     private String summary;
     private List<String> tags;
     private String type;
+    private String themeMnemonic;
+    private Theme theme;
+    private String category;
 
     /* Author */
     private String authorId;
@@ -75,9 +80,9 @@ public class Content implements Serializable {
             return id;
         } else {
             if (this.getTitle() != null) {
-                return this.getSource() + "_" + ExtraStringUtils.generateMnemonic(this.getTitle());
+                return ExtraStringUtils.generateMnemonic(this.getSource() + "_" + this.getTitle());
             } else {
-                return getSource() + "_" + System.currentTimeMillis();
+                return ExtraStringUtils.generateMnemonic(getSource() + "_" + System.currentTimeMillis());
             }
         }
     }
@@ -132,6 +137,22 @@ public class Content implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
+
+    public String getThemeMnemonic() {
+        return themeMnemonic;
+    }
+
+    public void setThemeMnemonic(String themeMnemonic) {
+        this.themeMnemonic = themeMnemonic;
     }
 
     public String getAuthorId() {
@@ -196,6 +217,14 @@ public class Content implements Serializable {
 
     public void setSourceContentURL(String sourceContentURL) {
         this.sourceContentURL = sourceContentURL;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getLikeCounter() {
@@ -264,28 +293,7 @@ public class Content implements Serializable {
 
     @Override
     public String toString() {
-        return "Content{" +
-                "id='" + id + '\'' +
-                ", networkMnemonic='" + networkMnemonic + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", lastUpdated=" + lastUpdated +
-                ", isActive=" + isActive +
-                ", date=" + date +
-                ", title='" + title + '\'' +
-                ", summary='" + summary + '\'' +
-                ", tags=" + tags +
-                ", type='" + type + '\'' +
-                ", authorId='" + authorId + '\'' +
-                ", authorDisplayName='" + authorDisplayName + '\'' +
-                ", authorImageURL='" + authorImageURL + '\'' +
-                ", imageURL='" + imageURL + '\'' +
-                ", imageWidth=" + imageWidth +
-                ", imageHeight=" + imageHeight +
-                ", source='" + source + '\'' +
-                ", sourceContentURL='" + sourceContentURL + '\'' +
-                ", likeCounter=" + likeCounter +
-                ", jsonExtendedData='" + jsonExtendedData + '\'' +
-                '}';
+        return "{\"content\": { \"title\": \"" + this.getTitle() + "\", \"author\": \"" + this.getAuthorDisplayName() + "\"}}";
     }
 }
 

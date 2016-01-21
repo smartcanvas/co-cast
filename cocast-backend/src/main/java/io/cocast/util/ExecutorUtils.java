@@ -9,11 +9,13 @@ import java.util.concurrent.Executors;
 public class ExecutorUtils {
 
     private static ExecutorService executorService;
+    private static ExecutorService executorServiceSingleThread;
 
     private static final Integer THREAD_POOL_SIZE = 5;
 
     static {
         executorService = Executors.newFixedThreadPool(5);
+        executorServiceSingleThread = Executors.newSingleThreadExecutor();
     }
 
     /**
@@ -21,5 +23,12 @@ public class ExecutorUtils {
      */
     public static void execute(Runnable command) {
         executorService.execute(command);
+    }
+
+    /**
+     * Executes a service in a single thread
+     */
+    public static void executeSingleThread(Runnable command) {
+        executorServiceSingleThread.execute(command);
     }
 }

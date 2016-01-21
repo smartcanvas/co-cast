@@ -1,5 +1,8 @@
 package io.cocast.core;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import javax.inject.Inject;
 import javax.validation.ValidationException;
 
@@ -8,8 +11,11 @@ import javax.validation.ValidationException;
  */
 public class ChannelServices {
 
+    private static Logger logger = LogManager.getLogger(ChannelServices.class.getName());
+
     @Inject
     private ChannelRepository channelRepository;
+
 
     /**
      * Validates if the channel exists
@@ -28,4 +34,5 @@ public class ChannelServices {
                     + networkMnemonic);
         }
     }
+
 }

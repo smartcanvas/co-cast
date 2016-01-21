@@ -30,6 +30,7 @@ public class Channel implements Serializable {
     private String theme;
     private List<String> tags;
     private String source;
+    private String author;
     private Integer maxAgeInHours;
     private Integer limitToFirst;
     private String orderBy;
@@ -96,6 +97,14 @@ public class Channel implements Serializable {
         this.source = source;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public Integer getMaxAgeInHours() {
         return maxAgeInHours;
     }
@@ -142,6 +151,11 @@ public class Channel implements Serializable {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @Override
+    public int hashCode() {
+        return mnemonic.hashCode();
     }
 
     @Override

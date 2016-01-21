@@ -106,6 +106,30 @@ public class Station implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Station station = (Station) o;
+
+        if (active != station.active) return false;
+        if (name != null ? !name.equals(station.name) : station.name != null) return false;
+        if (!mnemonic.equals(station.mnemonic)) return false;
+        if (!networkMnemonic.equals(station.networkMnemonic)) return false;
+        if (location != null ? !location.equals(station.location) : station.location != null) return false;
+        if (theme != null ? !theme.equals(station.theme) : station.theme != null) return false;
+        return channels != null ? channels.equals(station.channels) : station.channels == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mnemonic.hashCode();
+        result = 31 * result + networkMnemonic.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Station{" +
                 "name='" + name + '\'' +

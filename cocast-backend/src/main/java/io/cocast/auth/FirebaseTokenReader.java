@@ -43,6 +43,8 @@ class FirebaseTokenReader {
             throw new AuthenticationException(403, "Invalid firebase token", e);
         } catch (ClassCastException e) {
             throw new IllegalStateException("Should have not been thrown");
+        } catch (Exception e) {
+            throw new AuthenticationException(500, "Generic error reading user data", e);
         }
     }
 
