@@ -82,6 +82,9 @@ public class GCMUtils {
     }
 
     public void send(String networkMnemonic, GCMMessage message) throws Exception {
+
+        logger.debug("Sending message to GCM: " + objectMapper.writeValueAsString(message));
+
         long initTime = System.currentTimeMillis();
         Client client = ClientBuilder.newClient().register(JacksonFeature.class);
         Response response = client.target(GCM_ENDPOINT).request()

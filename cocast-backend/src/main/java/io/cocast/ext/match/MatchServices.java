@@ -5,10 +5,7 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.core.SettingsServices;
 import io.cocast.ext.people.Person;
 import io.cocast.ext.people.PersonServices;
-import io.cocast.util.AbstractRunnable;
-import io.cocast.util.ExecutorUtils;
-import io.cocast.util.GCMUtils;
-import io.cocast.util.ParseUtils;
+import io.cocast.util.*;
 import io.cocast.util.log.LogUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -141,8 +138,11 @@ public class MatchServices {
      */
     private void sendGCMMessage(String networkMnemonic, String deviceId, Person person) throws Exception {
         Map<String, Object> data = new HashMap<String, Object>();
+        Match match = new Match();
+        match.setPerson(person);
+        match.setTimestamp(DateUtils.now());
         data.put("type", "match");
-        data.put("person", person);
+        data.put("match", match);
         GCMUtils.GCMMessage message = new GCMUtils.GCMMessage(deviceId, data);
         gcmUtils.send(networkMnemonic, message);
     }
