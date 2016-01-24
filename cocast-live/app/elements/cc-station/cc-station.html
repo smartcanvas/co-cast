@@ -1,0 +1,147 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="cc-station">
+    <template>
+        <style>
+            :host {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+            .content {
+                position: relative;
+                flex: 1;
+            }
+
+            .caption {
+                background-color: var(--caption-background-color, #000);
+                color: var(--caption-text-color, #FFF);
+                padding: 8px;
+                overflow: hidden;
+            }
+
+            .marquee {
+                display: inline-block;
+                padding-left: 100%;
+                white-space: nowrap;
+                font-size: var(--marquee-font-size, 30px);
+                animation: marquee 50s linear infinite;
+            }
+
+            .message:last-of-type .divider {
+                display: none;
+            }
+
+            @keyframes marquee {
+                0% {
+                    transform: translate(0, 0);
+                }
+                100% {
+                    transform: translate(-100%, 0);
+                }
+            }
+
+        </style>
+
+        <firebase-collection
+                location="https://brilliant-inferno-3469.firebaseio.com"
+                on-firebase-value="firebaseChanged"></firebase-collection>
+
+        <div class="content">
+            <template is="dom-repeat" items="{{channels}}">
+                <cc-channel class="channel" channel="{{item}}" hidden></cc-channel>
+            </template>
+        </div>
+        <template is="dom-if" if="{{caption.length}}">
+            <div class="caption">
+                <div class="marquee">
+                    <template is="dom-repeat" items="{{caption}}">
+                        <span class="message">{{item}} <span class="divider">- </span></span>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+
+    </template>
+    <script>
+        (function () {
+            'use strict';
+
+            Polymer({
+                is: 'cc-station',
+
+                properties: {
+                    channels: {
+                        type: Array,
+                        notify: true,
+                        value: []
+                    },
+                    styles: {
+                        type: Object,
+                        notify: true,
+                        value: {}
+                    },
+                    caption: {
+                        type: Array,
+                        notify: true,
+                        value: []
+                    }
+                },
+
+                observers: [
+                    'channelsChanged(channels)'
+                ],
+
+                firebaseChanged: function () {
+                    $(document).trigger('firebase-changed');
+                },
+
+                channelsChanged: function (channels) {
+                    var $this = this;
+                    var channelsLength = channels.length;
+
+                    if (this.styles) {
+                        this.applyNewStyles(this.styles);
+                    }
+
+                    if (channelsLength) {
+                        this.carousel = new CoCast.Carousel(channelsLength, function (atualPosition) {
+                            $this.set('channels.' + atualPosition + '.visibility', true);
+                        });
+                    }
+                },
+
+                ready: function () {
+                    this.addEventListener('channel.finished.rendering', function () {
+                        this.carousel.loadNext();
+                    });
+                },
+
+                applyNewStyles: function (styles) {
+                    this.customStyle['--caption-background-color'] = styles.primaryColor;
+                    this.customStyle['--caption-text-color'] = styles.primaryFontColor;
+                    this.customStyle['--marquee-font-size'] = '40px';
+
+                    this.updateStyles();
+                }
+            });
+
+        })();
+    </script>
+</dom-module>
