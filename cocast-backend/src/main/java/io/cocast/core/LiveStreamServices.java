@@ -53,7 +53,7 @@ public class LiveStreamServices {
      * Gets the stream for a station
      */
     public LiveStream getStream(String networkMnemonic, String stationMnemonic) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
         String cacheKey = generateCacheKey(networkMnemonic, stationMnemonic);
 
         //looks into the cache
@@ -357,6 +357,9 @@ public class LiveStreamServices {
 
             //get the network
             Network network = networkRepository.get(networkMnemonic);
+            if (network == null) {
+                throw new ValidationException("Network cannot be null: mnemonic = " + networkMnemonic);
+            }
 
             //get the station
             Station station = stationRepository.get(networkMnemonic, stationMnemonic);

@@ -52,7 +52,7 @@ public class ApiTokenSecurityFilter implements Filter {
 
         //Auth endpoint doesn't require authentication
         String contextPath = req.getRequestURI();
-        if (contextPath.equals(AuthConstants.AUTH_PATH)) {
+        if (contextPath.startsWith(AuthConstants.AUTH_PATH)) {
             //go ahead
             filterChain.doFilter(request, response);
             return;

@@ -38,7 +38,7 @@ class ChannelRepository {
 
         //validate the theme and network
         validateTheme(channel.getTheme());
-        networkServices.validate(channel.getNetworkMnemonic());
+        networkServices.canWrite(channel.getNetworkMnemonic());
 
         //checks if the mnemonic is defined
         if (channel.getMnemonic() == null) {
@@ -64,7 +64,7 @@ class ChannelRepository {
      */
     public List<Channel> list(String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         //looks into the cache
         List<Channel> listChannel = cache.get(networkMnemonic, new ChannelLoader(networkMnemonic));
@@ -80,7 +80,7 @@ class ChannelRepository {
      * Get a specific channel
      */
     public Channel get(String networkMnemonic, String mnemonic) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         List<Channel> allChannels = this.list(networkMnemonic);
         for (Channel channel : allChannels) {
@@ -97,7 +97,7 @@ class ChannelRepository {
      */
     public Channel update(Channel channel, String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.canWrite(networkMnemonic);
         validateTheme(channel.getTheme());
 
         Channel existingChannel = this.get(networkMnemonic, channel.getMnemonic());
@@ -144,7 +144,7 @@ class ChannelRepository {
      * Delete a channel
      */
     public void delete(String networkMnemonic, String mnemonic) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.canWrite(networkMnemonic);
 
         Channel existingChannel = this.get(networkMnemonic, mnemonic);
         if (existingChannel == null) {

@@ -107,3 +107,12 @@ task pushSC1ConnectorDockerImage(dependsOn: tagSC1ConnectorDockerImage, type: Ex
     //command to be executed
     commandLine 'gcloud', 'docker', 'push', "gcr.io/co-cast/$sc1ConnectorApp"
 }
+
+/**
+ * Redeploys the DEV environment
+ */
+task redeployDevSC1Connector(dependsOn: pushSC1ConnectorDockerImage, type: Exec) {
+    //command to be executed
+    workingDir "$projectDir/../scripts"
+    commandLine "$projectDir/../scripts/redeploy-dev-connector.sh"
+}

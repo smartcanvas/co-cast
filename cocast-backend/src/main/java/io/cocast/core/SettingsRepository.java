@@ -34,7 +34,7 @@ public class SettingsRepository {
      */
     public void create(Settings settings) throws Exception {
 
-        networkServices.validate(settings.getNetworkMnemonic());
+        networkServices.canWrite(settings.getNetworkMnemonic());
 
         //validate if all info are OK
         if (settings.getName() == null) {
@@ -60,7 +60,7 @@ public class SettingsRepository {
      */
     public List<Settings> list(String networkMnemonic) throws Exception {
 
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         //looks into the cache
         List<Settings> listSettings = cache.get(networkMnemonic, new SettingsLoader(networkMnemonic));
@@ -76,7 +76,7 @@ public class SettingsRepository {
      * Get a specific settings
      */
     public Settings get(String networkMnemonic, String name) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         List<Settings> allSettings = this.list(networkMnemonic);
         for (Settings settings : allSettings) {
@@ -93,7 +93,7 @@ public class SettingsRepository {
      */
     public Settings update(Settings settings, String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.canWrite(networkMnemonic);
 
         Settings existingSettings = this.get(networkMnemonic, settings.getName());
         if (existingSettings == null) {
@@ -122,7 +122,7 @@ public class SettingsRepository {
      * Delete a settings
      */
     public void delete(String networkMnemonic, String name) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.canWrite(networkMnemonic);
 
         Settings existingSettings = this.get(networkMnemonic, name);
         if (existingSettings == null) {

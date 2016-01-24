@@ -43,7 +43,7 @@ class ContentRepository {
      */
     public boolean save(Content content) throws Exception {
 
-        networkServices.validate(content.getNetworkMnemonic());
+        networkServices.canWrite(content.getNetworkMnemonic());
 
         //validate the content
         this.validate(content);
@@ -67,7 +67,7 @@ class ContentRepository {
      * Get a specific content
      */
     public Content get(String networkMnemonic, String id) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
         String cacheKey = generateCacheKey(networkMnemonic, id);
 
         //looks into the cache
@@ -84,7 +84,7 @@ class ContentRepository {
      * Get a list of contents elegible for go to TV
      */
     public List<Content> list(String networkMnemonic) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         String cacheKey = generateCacheListKey(networkMnemonic);
 

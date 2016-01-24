@@ -62,7 +62,7 @@ class StationRepository {
      */
     public List<Station> list(String networkMnemonic) throws Exception {
 
-        networkServices.validate(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         //looks into the cache
         List<Station> listStation = cache.get(networkMnemonic, new StationLoader(networkMnemonic));
@@ -78,7 +78,7 @@ class StationRepository {
      * Get a specific station
      */
     public Station get(String networkMnemonic, String mnemonic) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         List<Station> allStations = this.list(networkMnemonic);
         for (Station station : allStations) {
@@ -128,7 +128,7 @@ class StationRepository {
      * Delete a station
      */
     public void delete(String networkMnemonic, String mnemonic) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.canWrite(networkMnemonic);
 
         Station existingStation = this.get(networkMnemonic, mnemonic);
         if (existingStation == null) {
@@ -156,7 +156,7 @@ class StationRepository {
         validateTheme(station.getTheme());
 
         //validate the network
-        networkServices.validate(station.getNetworkMnemonic());
+        networkServices.canWrite(station.getNetworkMnemonic());
 
         //validate the name
         if (station.getName() == null) {

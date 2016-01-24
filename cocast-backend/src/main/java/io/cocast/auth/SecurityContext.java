@@ -40,6 +40,10 @@ public class SecurityContext {
         return (claims != null) && (claims.isRoot());
     }
 
+    public boolean isLiveToken() {
+        return (claims != null) && (claims.isLiveToken());
+    }
+
     public String userIdentification() {
         return claims.getSubject();
     }

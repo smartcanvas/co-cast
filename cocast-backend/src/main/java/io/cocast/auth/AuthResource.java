@@ -1,7 +1,9 @@
 package io.cocast.auth;
 
 import com.google.inject.Singleton;
+import io.cocast.util.APIResponse;
 import io.cocast.util.AbstractResource;
+import io.cocast.util.CoCastCallException;
 import io.cocast.util.log.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.LogManager;
@@ -11,6 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -36,7 +39,7 @@ public class AuthResource extends AbstractResource {
 
         //validate the parameters
         if (StringUtils.isEmpty(firebaseToken)) {
-            logResult("", request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
+            logResult("Firebase token is empty", request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return Response.status(HttpServletResponse.SC_BAD_REQUEST).build();
         }
 
@@ -48,11 +51,57 @@ public class AuthResource extends AbstractResource {
             String message = exc.getMessage();
             logResult(message, request, "post", 0, exc.getStatus(), initTime);
             return Response.status(exc.getStatus()).entity(new AuthResponse().fail(exc)).build();
+        } catch (ValidationException exc) {
+            logResult(exc.getMessage(), request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
+            return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(
+                    new AuthResponse().fail(exc.getMessage(), HttpServletResponse.SC_BAD_REQUEST)).build();
+        } catch (CoCastCallException exc) {
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, exc.getStatus(), initTime);
+            return Response.status(exc.getStatus()).entity(
+                    new AuthResponse().fail(exc.getMessage(), exc.getStatus())).build();
         } catch (Exception exc) {
             String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "post", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
-            return Response.serverError().entity(new AuthResponse().serverError(exc)).build();
+            return APIResponse.serverError(exc.getMessage()).getResponse();
+        }
+    }
+
+    @POST
+    @Path("/live")
+    public Response authLive(@Context HttpServletRequest request,
+                             @NotBlank @HeaderParam("x-live-token") final String liveToken) {
+        long initTime = System.currentTimeMillis();
+
+        //validate the parameters
+        if (StringUtils.isEmpty(liveToken)) {
+            logResult("Live token is empty", request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
+            return Response.status(HttpServletResponse.SC_BAD_REQUEST).build();
+        }
+
+        try {
+            String token = authServices.getAccessTokenFromLiveToken(liveToken);
+            logResult("OK", request, "post", 0, HttpServletResponse.SC_OK, initTime);
+            return Response.ok(new AuthResponse().success(token)).build();
+        } catch (AuthenticationException exc) {
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, exc.getStatus(), initTime);
+            return Response.status(exc.getStatus()).entity(new AuthResponse().fail(exc)).build();
+        } catch (ValidationException exc) {
+            logResult(exc.getMessage(), request, "post", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
+            return Response.status(HttpServletResponse.SC_BAD_REQUEST).entity(
+                    new AuthResponse().fail(exc.getMessage(), HttpServletResponse.SC_BAD_REQUEST)).build();
+        } catch (CoCastCallException exc) {
+            String message = exc.getMessage();
+            logResult(message, request, "post", 0, exc.getStatus(), initTime);
+            return Response.status(exc.getStatus()).entity(
+                    new AuthResponse().fail(exc.getMessage(), exc.getStatus())).build();
+        } catch (Exception exc) {
+            String message = exc.getMessage();
+            LogUtils.fatal(logger, message, exc);
+            logResult(message, request, "post", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);
+            return APIResponse.serverError(exc.getMessage()).getResponse();
         }
     }
 
@@ -103,7 +152,7 @@ public class AuthResource extends AbstractResource {
         public AuthResponse fail(String message, Integer status) {
             this.setStatus(status);
             this.setAccessToken(null);
-            this.setErrorMessage(errorMessage);
+            this.setErrorMessage(message);
             return this;
         }
 

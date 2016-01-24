@@ -46,7 +46,7 @@ public class MatchRepository {
      * Saves a match
      */
     public void save(String networkMnemonic, String personEmail1, String personEmail2) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         Person person1 = personServices.get(networkMnemonic, personEmail1);
         if (person1 == null) {
@@ -90,7 +90,7 @@ public class MatchRepository {
      */
     public List<Match> list(String networkMnemonic) throws Exception {
 
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
         String personId = Person.getIdFromEmail(SecurityContext.get().email());
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list matches");

@@ -45,7 +45,7 @@ public class MatchActionRepository {
      * @return If a match has occured or not
      */
     public boolean save(String networkMnemonic, String email, String action) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         String personId = Person.getIdFromEmail(SecurityContext.get().email());
         if (personId == null) {
@@ -76,7 +76,7 @@ public class MatchActionRepository {
      */
     public List<MatchAction> listActions(String networkMnemonic, String email, String action) throws Exception {
 
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
         String personId = Person.getIdFromEmail(email);
         if (personId == null) {
             throw new ValidationException("Person ID cannot be null to list likes");
@@ -108,7 +108,7 @@ public class MatchActionRepository {
      */
     public List<MatchAction> list(String networkMnemonic, Person person) throws Exception {
 
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
 
         String personId;

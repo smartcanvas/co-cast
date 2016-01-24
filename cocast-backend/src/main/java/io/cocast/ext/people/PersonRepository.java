@@ -38,7 +38,7 @@ public class PersonRepository {
      */
     public void create(Person person) throws Exception {
 
-        networkServices.validate(person.getNetworkMnemonic());
+        networkServices.canWrite(person.getNetworkMnemonic());
 
         //checks if exists
         Person existingPerson = this.get(person.getNetworkMnemonic(), person.getId());
@@ -73,10 +73,10 @@ public class PersonRepository {
     public void update(Person person) throws Exception {
 
         try {
-            networkServices.validate(person.getNetworkMnemonic());
+            networkServices.canWrite(person.getNetworkMnemonic());
         } catch (CoCastCallException exc) {
             //check if the person is valid with issuer
-            networkServices.validateWithIssuer(person.getNetworkMnemonic());
+            networkServices.canRead(person.getNetworkMnemonic());
 
             //check if the person is trying to update his own data
             if (!person.getEmail().equals(SecurityContext.get().email())) {
@@ -131,7 +131,7 @@ public class PersonRepository {
      * List persons
      */
     public PaginatedResponse list(String networkMnemonic, String email, Integer limit, Integer offset) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         String cacheKey = generateCacheListKey(networkMnemonic, Person.getIdFromEmail(email));
 
@@ -171,7 +171,7 @@ public class PersonRepository {
      * List all persons w/o pages
      */
     public List<Person> listAll(String networkMnemonic) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
 
         String cacheKey = generateCacheListKey(networkMnemonic, null);
 
@@ -190,7 +190,7 @@ public class PersonRepository {
      * Get a specific person
      */
     public Person get(String networkMnemonic, String id) throws Exception {
-        networkServices.validateWithIssuer(networkMnemonic);
+        networkServices.canRead(networkMnemonic);
         String cacheKey = generateCacheKey(networkMnemonic, id);
 
         //looks into the cache
@@ -207,7 +207,7 @@ public class PersonRepository {
      * Deletes a person
      */
     public void delete(String networkMnemonic, String personId) throws Exception {
-        networkServices.validate(networkMnemonic);
+        networkServices.canWrite(networkMnemonic);
 
         Person existingPerson = this.get(networkMnemonic, personId);
         if (existingPerson == null) {

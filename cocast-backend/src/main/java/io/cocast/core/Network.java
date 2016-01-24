@@ -5,6 +5,8 @@ import io.cocast.auth.SecurityContext;
 import io.cocast.util.DateUtils;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +20,7 @@ public class Network implements Serializable {
 
     private String name;
     private String mnemonic;
+    private String liveToken;
     private String createdBy;
     private Date lastUpdate;
     private String theme;
@@ -26,8 +29,12 @@ public class Network implements Serializable {
 
     public Network() {
         lastUpdate = DateUtils.now();
-        createdBy = SecurityContext.get().userIdentification();
+        if (SecurityContext.get() != null) {
+            createdBy = SecurityContext.get().userIdentification();
+        }
         collaborators = new ArrayList<String>();
+        SecureRandom random = new SecureRandom();
+        liveToken = new BigInteger(130, random).toString(32);
         active = true;
     }
 
@@ -87,6 +94,14 @@ public class Network implements Serializable {
         this.active = active;
     }
 
+    public String getLiveToken() {
+        return liveToken;
+    }
+
+    public void setLiveToken(String liveToken) {
+        this.liveToken = liveToken;
+    }
+
     @Override
     public String toString() {
         return "Network{" +
@@ -99,6 +114,4 @@ public class Network implements Serializable {
                 ", active=" + active +
                 '}';
     }
-
-
 }

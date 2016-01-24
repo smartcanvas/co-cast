@@ -32,7 +32,7 @@ public class LiveStreamResource extends AbstractResource {
     private LiveStreamServices liveStreamServices;
 
     /**
-     * Returns a specific content
+     * Returns a list content to be shown
      */
     @GET
     @Path("/{networkMnemonic}/{stationMnemonic}")
@@ -47,14 +47,17 @@ public class LiveStreamResource extends AbstractResource {
         try {
             liveStream = liveStreamServices.getStream(networkMnemonic, stationMnemonic);
         } catch (CoCastCallException exc) {
+            exc.printStackTrace();
             String message = exc.getMessage();
             logResult(message, request, "get", 0, exc.getStatus(), initTime);
             return APIResponse.fromException(exc).getResponse();
         } catch (ValidationException exc) {
+            exc.printStackTrace();
             String message = exc.getMessage();
             logResult(message, request, "get", 0, HttpServletResponse.SC_BAD_REQUEST, initTime);
             return APIResponse.badRequest(exc.getMessage()).getResponse();
         } catch (Exception exc) {
+            exc.printStackTrace();
             String message = exc.getMessage();
             LogUtils.fatal(logger, message, exc);
             logResult(message, request, "get", 0, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, initTime);

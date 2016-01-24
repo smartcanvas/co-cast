@@ -280,7 +280,7 @@ public class Content implements Serializable {
         Content content = (Content) o;
 
         if ((content.getId() != null) && (content.getDate() != null)) {
-            return this.id.equals(content.getId()) && this.date.equals(content.getDate());
+            return content.getId().equals(this.id) && content.getDate().equals(this.date);
         } else {
             return false;
         }

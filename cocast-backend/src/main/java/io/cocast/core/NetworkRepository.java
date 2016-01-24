@@ -29,6 +29,9 @@ class NetworkRepository {
     @Inject
     private ThemeServices themeServices;
 
+    @Inject
+    private NetworkServices networkServices;
+
     private CacheUtils cache = CacheUtils.getInstance(Network.class);
     private CacheUtils cacheMembership = CacheUtils.getInstance(NetworkMembership.class);
 
@@ -88,10 +91,19 @@ class NetworkRepository {
     }
 
     /**
+     * Lists all networks
+     */
+    public List<Network> rawList() throws Exception {
+        return cache.get("allCoCastNetworks", new NetworkListLoader());
+    }
+
+    /**
      * Get a specific network
      */
     public Network get(String mnemonic) throws Exception {
-        List<Network> allNetworks = this.list();
+        networkServices.canRead(mnemonic);
+
+        List<Network> allNetworks = this.rawList();
         for (Network network : allNetworks) {
             if (network.getMnemonic().equals(mnemonic)) {
                 return network;
@@ -205,17 +217,10 @@ class NetworkRepository {
     private Network getAsRoot(String mnemonic) throws Exception {
 
         //looks into the cache
-        List<Network> listNetwork = cache.get(mnemonic, new NetworkLoader(mnemonic));
-        if ((listNetwork != null) && (listNetwork.size() > 0)) {
-            return listNetwork.get(0);
-        } else {
-            //cannot cache null
-            cache.invalidate(mnemonic);
-            return null;
-        }
+        return cache.get(mnemonic, new NetworkLoader(mnemonic));
     }
 
-    private class NetworkLoader implements Callable<List<Network>> {
+    private class NetworkLoader implements Callable<Network> {
 
         private String mnemonic;
 
@@ -224,13 +229,21 @@ class NetworkRepository {
         }
 
         @Override
-        public List<Network> call() throws Exception {
+        public Network call() throws Exception {
             Network network = firebaseUtils.getAsRoot("/networks/" + mnemonic + ".json", Network.class);
-            List<Network> resultList = new ArrayList<Network>();
-            if ((network != null) && (network.isActive())) {
-                resultList.add(network);
-            }
-            return resultList;
+            return network;
+        }
+    }
+
+    private class NetworkListLoader implements Callable<List<Network>> {
+
+        public NetworkListLoader() {
+        }
+
+        @Override
+        public List<Network> call() throws Exception {
+            List<Network> networks = firebaseUtils.listAsRoot("/networks.json", Network.class);
+            return networks;
         }
     }
 

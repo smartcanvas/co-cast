@@ -92,6 +92,7 @@ class TokenServices {
         jwtClaims.setClaim(AuthConstants.JWT_FIELD_PROVIDER, claims.getProvider());
         jwtClaims.setClaim(AuthConstants.JWT_FIELD_NAME, claims.getName());
         claims.setIssuedAt(new Date(jwtClaims.getIssuedAt().getValueInMillis()));
+
         jwtClaims.setExpirationTimeMinutesInTheFuture(ttl);
 
         return jwtClaims;

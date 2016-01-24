@@ -57,7 +57,7 @@ task runWeb {
  */
 task deploySC1Connector {
     dependsOn config
-    dependsOn ":cocast-sc1-connector:pushSC1ConnectorDockerImage"
+    dependsOn ":cocast-sc1-connector:redeployDevSC1Connector"
 }
 
 /**

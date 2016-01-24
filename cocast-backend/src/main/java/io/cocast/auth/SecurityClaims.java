@@ -20,6 +20,7 @@ public class SecurityClaims {
     private Date expirationTime;
     private Date issuedAt;
     private boolean isRoot = false;
+    private boolean isLiveToken = false;
 
     public String getSubject() {
         return subject;
@@ -89,6 +90,14 @@ public class SecurityClaims {
         return isRoot;
     }
 
+    public boolean isLiveToken() {
+        return isLiveToken;
+    }
+
+    public void setIsLiveToken(boolean isLiveToken) {
+        this.isLiveToken = isLiveToken;
+    }
+
     public SecurityClaims setEmail(String email) {
         this.email = email;
         return this;
@@ -113,6 +122,18 @@ public class SecurityClaims {
         return rootClaims;
     }
 
+    public static SecurityClaims liveToken(String networkMnemonic) {
+        SecurityClaims liveTokenClaims = new SecurityClaims(AuthConstants.DEFAULT_ISSUER);
+        liveTokenClaims.setEmail(networkMnemonic + "@cocast.io");
+        liveTokenClaims.setSubject(networkMnemonic);
+        liveTokenClaims.setProvider("CoCast");
+        liveTokenClaims.setName(networkMnemonic);
+        liveTokenClaims.setIssuedAt(DateUtils.now());
+        liveTokenClaims.setExpirationTime(DateUtils.eternity());
+        liveTokenClaims.isLiveToken = true;
+
+        return liveTokenClaims;
+    }
 
     @Override
     public String toString() {
@@ -124,6 +145,8 @@ public class SecurityClaims {
                 ", issuer='" + issuer + '\'' +
                 ", expirationTime=" + expirationTime +
                 ", issuedAt=" + issuedAt +
+                ", isRoot=" + isRoot +
+                ", isLiveToken=" + isLiveToken +
                 '}';
     }
 }

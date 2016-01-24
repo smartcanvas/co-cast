@@ -12,3 +12,22 @@ spec:  # specification of the pod’s contents
         value: "Pa2tSk5D7w487uIZwZ55x0Ha39VP1Bdv"
       - name: CLIENT_ID
         value: "XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f"
+      - name: COCAST_API_KEY
+        value: "Pa2tSk5D7w487uIZwZ55x0Ha39VP1Bdv"
+      - name: COCAST_CLIENT_ID
+        value: "XsuWQtu62oms4uCVIzWG5wOUiyh8qi7f"
+      - name: SMART_CANVAS_API_KEY
+        value: "52ba6f68c9bcecfcd7d6e3f4520beff9a514ea33fbbea2a11d7b23b93c68e1e9"
+      - name: SMART_CANVAS_CLIENT_ID
+        value: "1"
+      - name: SMART_CANVAS_TENANT
+        value: "teamwork"
+      - name: SEARCH_TERMS
+        value: "discussion:photos:schedule:recommendedapps:information"
+      - name: LOCALE
+        value: "zz-zz"
+      - name: ENV
+        value: "dev"
+      - name: COCAST_NETWORK
+        value: "teamwork"
+

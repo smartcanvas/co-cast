@@ -17,6 +17,8 @@ hs_err_pid*
 
 **/bower_components
 **/node_modules
+**/dist
+**/.tmp
 
 # Property files with sensetive information
 **/resources/*.properties
