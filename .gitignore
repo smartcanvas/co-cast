@@ -4,9 +4,6 @@
 /node_modules
 /docs
 
-# Google Data store
-*.DS_Store
-
 #IntelliJ
 /.idea
 /.settings
