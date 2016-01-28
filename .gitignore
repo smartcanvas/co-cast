@@ -3,6 +3,7 @@
 /dist
 /node_modules
 /docs
+/.tmp
 
 #IntelliJ
 /.idea
