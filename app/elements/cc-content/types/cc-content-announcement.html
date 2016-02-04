@@ -1,0 +1,111 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+
+<dom-module id="cc-content-announcement">
+  <template>
+    <style>
+      :host {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        overflow: hidden;
+      }
+
+        cc-content-photo {
+          width: 35%;
+          right: auto !important;
+        }
+
+        .box{
+          position: absolute;
+          background-color: var(--box-background-color, #FFF);
+          color: var(--var-font-color, #000);
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 65%;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+        }
+
+          .text-container{
+            width: 90%;
+            margin: 0 auto;
+            font-size: 55px;
+            text-align: center;
+          }
+    </style>
+    
+    <div class="container">
+      <cc-content-photo content="{{content}}" styles="{{content.theme}}" no-attribution></cc-content-photo>
+
+      <div class="box">
+        <cc-content-quote content="{{content}}" styles="{{content.theme}}" left></cc-content-quote>
+        <!--div class="text-container">
+          <h3>{{content.category}}</h3>
+          <p hidden="{{!content.title}}">{{content.title}}</p>
+          <p hidden="{{content.title}}">{{content.summary}}</p>
+        </div-->
+      </div>
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'cc-content-announcement',
+
+      properties: {
+        content: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+        styles: {
+          type: Object,
+          notify: true,
+          value: {}
+        }
+      },
+
+      attached: function(){
+        if (this.content.theme) {
+          this.applyNewStyles(this.content.theme);
+        }
+      },
+
+      fitTextToBox: function() {
+        var quoteElement = this.$$("cc-content-quote");
+        quoteElement.fitTextToBox();
+      },
+
+      applyNewStyles: function(styles){
+        this.customStyle['--box-background-color'] = styles.accentColor;
+        this.customStyle['--var-font-color'] = styles.accentFontColor;
+        this.customStyle['--primary-font-color'] = styles.primaryFontColor;
+        
+        this.updateStyles();
+      }
+
+    });
+  })();
+  </script>
+</dom-module>
