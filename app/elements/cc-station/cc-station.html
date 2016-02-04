@@ -47,6 +47,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               display: none;
             }
 
+        .content-container{
+          position: absolute;
+          height: 100%;
+          width: 100%;
+        }
+
         @keyframes marquee {
           0%   { transform: translate(0, 0); }
           100% { transform: translate(-100%, 0); }
@@ -59,8 +65,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       on-firebase-value="firebaseChanged"></firebase-collection>
 
     <div class="content">
-      <template is="dom-repeat" items="{{channels}}">
-        <cc-channel class="channel" channel="{{item}}" hidden></cc-channel>
+      <template is="dom-repeat" items="{{contents}}">
+              <cc-content content="{{item}}" hidden></cc-content>
       </template>
     </div>
     <template is="dom-if" if="{{caption.length}}">
@@ -84,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'cc-station',
 
       properties: {
-        channels: {
+        contents: {
           type: Array,
           notify: true,
           value: []
@@ -102,30 +108,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       observers: [
-        'channelsChanged(channels)'
+        'contentsChanged(contents)',
+        'visibilityChanged(item, item.visibility)'
       ],
 
       firebaseChanged: function(){
         $(document).trigger('firebase-changed');
       },
 
-      channelsChanged: function(channels){
+      contentsChanged: function(contents){
         var $this = this;
-        var channelsLength = channels.length;
+        var contentsLength = contents.length;
         
         if(this.styles){
           this.applyNewStyles(this.styles);
         }
-        
-        if(channelsLength){
-          this.carousel = new CoCast.Carousel(channelsLength, function(atualPosition){
-            $this.set('channels.'+ atualPosition +'.visibility', true);
+
+        if(contentsLength){
+          var that = this;
+          this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition){
+            that.set('contents.'+ atualPosition +'.visibility', true);
           });
         }
       },
 
-      ready: function(){
-        this.addEventListener('channel.finished.rendering', function(){
+      visibilityChanged: function(item, visibility){
+        var $this = this;
+        var styles = item.theme;
+        
+        if(styles){
+          this.applyNewStyles(styles);  
+          item.applyNewStyles(styles);
+        }
+        
+        if(visibility){
+          this.removeAttribute('hidden');
+
+          this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition, restarting){
+            if(restarting){
+              item.hidden = true;
+              item.visibility = false;  
+              $this.fire('channel.finished.rendering');
+            }else{
+              item.visibility = true;
+            }
+          });
+        }
+      },
+
+      attached: function(){
+        this.addEventListener('content.finished.rendering', function(){
           this.carousel.loadNext();
         });
       },

@@ -25,17 +25,15 @@
       this.type = 'station';
     }
 
-    if(this.channels){
-      $.each(this.channels, function(i, raw){
-        self.channels[i] = new ns.Channel(raw);
+    if(this.contents){
+      $.each(this.contents, function(i, raw){
+        self.contents[i] = new ns.Content(raw);
       });
     }else{
       this.channels = [];
-      this.channels.push( new ns.Channel({
-        styles: {
-          backgroundColor: 'blue'
-        },
-        title: 'Title default model'
+      this.channels.push( new ns.Content({
+        type: "quote",
+        title: 'Co-Cast by Smart Canvas'
       }) );
     }
 
@@ -45,8 +43,8 @@
     return this.styles;
   };
 
-  Station.prototype.getChannels = function () {
-    return this.channels;
+  Station.prototype.getContents = function () {
+    return this.contents;
   };
 
   Station.prototype.getCaption = function () {

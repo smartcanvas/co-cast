@@ -1,0 +1,109 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+
+
+<dom-module id="cc-attribution">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        padding-top: 16px;
+        padding-bottom: 32px;
+        padding-right: 80px;
+        position: relative;
+      }
+
+        #author {
+          display: flex;
+          float: left;
+        }
+
+          #author .author-avatar {
+            width: 64px !important;
+            height: 64px !important;
+            min-width: 64px !important;
+            min-height: 64px !important;
+            max-width: 64px !important;
+            max-height: 64px !important;
+            margin: 8px 16px;
+            margin-left: 0px;
+            overflow: hidden;
+            box-shadow: 1px 1px 2px #666;
+            border-radius: 50%;
+            float: left;
+            position: relative;
+          }
+
+            #author .author-avatar img {
+              min-height: 100%;
+              min-width: 100%;
+              /* http://stackoverflow.com/a/19414020/1064325 */
+              margin: auto;
+              position: absolute;
+              top: -9999px;
+              bottom: -9999px;
+              right: -9999px;
+              left: -9999px;
+
+              max-height: 100%;
+              max-width: 100%;
+            }
+
+          #author .author-name {
+            overflow: hidden;
+
+            font-size: 30px;
+            line-height: 78px;
+            max-height: 78px;
+            float: left;
+            text-align: left;
+          }
+
+        #source {
+          display: block;
+          right: 0px;
+          position: absolute;
+        }
+    </style>
+
+
+    <div id="author">
+      <div class="author-avatar">
+        <img src="{{content.authorImageURL}}" />
+      </div>
+      <span class="author-name">{{content.authorDisplayName}}</span>
+    </div>
+    <div id="source">
+      <img id="qrCode" src="https://chart.googleapis.com/chart?cht=qr&amp;chs=80x80&amp;chl={{content.sourceContentURL}}" />
+    </div>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'cc-attribution',
+
+      properties: {
+        content: {
+          type: Array,
+          notify: true,
+          value: []
+        }
+      },
+
+      ready: function(){
+      }
+    });
+  })();
+  </script>
+</dom-module>
