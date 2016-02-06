@@ -21,7 +21,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: var(--body-background-color, #617C8B);
+        background-color: var(--var-content-background-color, #FFF);
+      }
+
+      :host[no-background-color] {
+        background-color: transparent !important;
       }
 
         #container {
@@ -29,7 +33,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flex-direction: column;
           flex: 1;
           position: relative;
+          overflow: hidden;
         }
+
     </style>
     
     <div id="container"></div>
@@ -47,6 +53,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           notify: true,
           value: []
+        },
+        noBackgroundColor: {
+          type: Boolean,
+          notify: true,
+          value: false,
+          reflectToAttribute: true
         }
       },
 
@@ -67,21 +79,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var $this = this;
 
         if(visibility){
+          this.customStyle['--var-content-background-color'] = this.content.theme.accentColor;
+          this.updateStyles();
+
           this.removeAttribute('hidden');
-          var contentElement = this.$$("cc-content-" + this.content.type);
+
+          var contentElement = this.$$('cc-content-' + this.content.type);
           contentElement.fitTextToBox();
 
+          if (this.content.speed) {
+            this.customStyle['--animation-duration'] = (parseInt(this.content.speed - 1000) / 1000) + 's';
+          }
+
+          // if (this.content.type == "announcement") {
+          //   this.style = "z-index: 1;";
+          // }
+          // if (this.content.type == "photo") {
+          //   this.style = "z-index: -1;";
+          // }
+          // if (this.content.type == "quote") {
+          //   this.style = "z-index: 2;";
+          // }
+          // if (this.content.type == "match") {
+          //   this.style = "z-index: 2;";
+          // }
+
           this.contentTimeout = setTimeout(function(){
-            $this.setAttribute('hidden', true);
-            $this.set('content.visibility', false);  
             $this.fire('content.finished.rendering');
             $this.contentTimeout = undefined;
-          }, this.content.speed);
+            $this.style = "z-index: 1;";
+            $this.noBackgroundColor = true;
+          }, this.content.speed - 1000);
+
+          this.animationTimeout = setTimeout(function(){
+            $this.setAttribute('hidden', true);
+            $this.set('content.visibility', false);
+            $this.animationTimeout = undefined;
+            $this.style = "z-index: auto;";
+          }, this.content.speed + 1000);
         }
       },
 
       contentChanged: function(content){
-        var elem = document.createElement("cc-content-" + content.type);
+        var elem = document.createElement('cc-content-' + content.type);
         elem.content = content;
         elem.styles = content.theme;
 
