@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <firebase-collection
-      location="https://brilliant-inferno-3469.firebaseio.com"
+      id="fbListener"
       on-firebase-value="firebaseChanged"></firebase-collection>
 
     <div class="content">
@@ -135,6 +135,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.addEventListener('content.finished.rendering', function(){
           this.carousel.loadNext();
         });
+        var network = window.Util.getParameterByName('network');
+        var station = window.Util.getParameterByName('station');
+        var env = window.Util.getParameterByName('env');
+        env = (env == 'dev' ? '-dev' : '');
+        this.$.fbListener.location = 'https://co-cast' + env + '.firebaseio.com/live/' + network + '/' + station + '/serverStatus/lastUpdated';
       },
 
       applyNewStyles: function(styles){

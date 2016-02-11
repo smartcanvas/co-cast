@@ -36,7 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             margin: 8px 16px;
             margin-left: 0px;
             overflow: hidden;
-            box-shadow: 1px 1px 2px #666;
+            /* box-shadow: 1px 1px 2px #666; */
             border-radius: 50%;
             float: left;
             position: relative;
@@ -59,14 +59,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               background-color: #ffffff;
             }
 
-          #author .author-name {
+          #author .attribution-description {
             overflow: hidden;
 
-            font-size: 30px;
-            line-height: 78px;
-            max-height: 78px;
             float: left;
+            font-size: 28px;
+            max-height: 72px;
             text-align: left;
+            padding: 4px 0px;
+          }
+
+          #author .author-name {
+            line-height: 36px;
+            min-height: 36px;
+            max-height: 36px;
+            height: 36px;
+
+            font-family: var(--author-name-font-family, 'Roboto, sans-serif');
+            color: var(--author-name-font-color, #000);
+
+            font-weight: 400;
+          }
+
+          :host[accent] #author .author-name {
+            color: var(--accent-font-color, #F9F9F9);
+          }
+
+          #author .publish-date {
+            line-height: 36px;
+            min-height: 36px;
+            max-height: 36px;
+            height: 36px;
+
+            font-family: var(--publish-date-font-family, 'Roboto, sans-serif');
+            color: var(--publish-date-font-color, #000);
+
+            font-weight: 300;
+          }
+
+          :host[accent] #author .publish-date {
+            color: var(--accent-font-color, #F9F9F9);
           }
 
         #source {
@@ -81,9 +113,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="author-avatar">
         <img src="{{content.authorImageURL}}" />
       </div>
-      <span class="author-name">{{content.authorDisplayName}}</span>
+      <div class="attribution-description">
+        <div class="author-name">{{content.authorDisplayName}}</div>
+        <div class="publish-date">{{displayPublishDate}}</div>
+      </div>
     </div>
-    <div id="source">
+    <div id="source" hidden>
       <img id="qrCode" src="https://chart.googleapis.com/chart?cht=qr&amp;chs=80x80&amp;chl={{content.sourceContentURL}}" />
     </div>
 
@@ -100,10 +135,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           notify: true,
           value: []
+        },
+        displayPublishDate: {
+          type: Date
+        },
+        accent: {
+          type: Boolean
         }
       },
 
-      ready: function(){
+      attached: function(){
+        if (this.content && this.content.date > 0) {
+          var publishDate = new Date(this.content.date);
+          console.log(publishDate);
+          this.displayPublishDate = '';
+          this.displayPublishDate += publishDate.getDate();
+          this.displayPublishDate += ' ';
+          this.displayPublishDate += ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][publishDate.getMonth()];
+          this.displayPublishDate += ' ';
+          this.displayPublishDate += publishDate.getFullYear();
+
+          this.customStyle['--author-name-font-family'] = this.content.theme.primaryFont;
+          this.customStyle['--author-name-font-color'] = this.content.theme.primaryFontColor;
+
+          this.customStyle['--publish-date-font-family'] = this.content.theme.secondaryFont;
+          this.customStyle['--publish-date-font-color'] = this.content.theme.secondaryFontColor;
+
+          this.customStyle['--accent-font-color'] = this.content.theme.accentFontColor;
+
+          this.updateStyles();
+        }
       }
     });
   })();
