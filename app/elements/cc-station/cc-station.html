@@ -112,22 +112,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       firebaseChanged: function(){
+        //$(document).trigger('pause');
         $(document).trigger('firebase-changed');
       },
 
       contentsChanged: function(contents){
         var $this = this;
         var contentsLength = contents.length;
-        
-        if(this.styles){
-          this.applyNewStyles(this.styles);
-        }
 
         if(contentsLength){
           var that = this;
-          this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition){
-            that.set('contents.'+ atualPosition +'.visibility', true);
-          });
+          if (!this.carousel) {
+            this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition){
+              that.set('contents.'+ atualPosition +'.visibility', true);
+            });
+          } else {
+            this.carousel.reset(contentsLength);
+          }
         }
       },
 
