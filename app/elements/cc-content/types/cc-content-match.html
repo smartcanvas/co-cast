@@ -71,6 +71,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           max-width: 250px;
           min-width: 250px;
           width: 250px;
+          opacity: 0;
+          /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
+          animation: co-cast-container-match-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
         }
 
         .footer {
@@ -80,6 +83,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           right: 0px;
           left: 0px;
           width: 100%;
+          opacity: 0;
+          /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
+          animation: co-cast-container-match-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
         }
 
         @keyframes co-cast-container-match-animation {
@@ -164,6 +170,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             padding: 10px 0;
             margin: 0px;
           }
+
+          .match-text {
+            width: 80%;
+            padding: 0 10% 15px 10%;
+          }
     </style>
     
     <img class="background" src="../../../images/match-teamwork/background.png" />
@@ -177,7 +188,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <img class="match-avatar" src="{{content.jsonExtendedData.person1.imageURL}}0" />
           <img class="match-avatar" src="{{content.jsonExtendedData.person2.imageURL}}0" />
         </div>
-        <center class="text"><strong>{{content.jsonExtendedData.person1.displayName}}</strong> and <strong>{{content.jsonExtendedData.person2.displayName}}</strong> lorem ipsum dolor match!</center>
+        <center class="text match-text"><strong>{{content.jsonExtendedData.person1.displayName}}</strong> and <strong>{{content.jsonExtendedData.person2.displayName}}</strong> lorem ipsum dolor match!</center>
       </section>
     </div>
 
