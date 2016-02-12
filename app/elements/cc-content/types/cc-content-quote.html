@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
           .content-text {
-            font-size: 500px;
+            /* font-size: 80px; */
             word-wrap: break-word;
             word-break: break-word;
           }
@@ -80,8 +80,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-size: 0.4em;
             font-family: var(--header-font-family, 'Roboto, sans-serif');
             color: var(--header-font-color, #000);
-            padding: 0.3em 0.6em;
-            border-radius: 0.25em;
+            padding: 0.125em 0.15em;
+            border-radius: 0.1em;
             font-weight: 400;
             background-color: var(--header-background-color, #FFF);
             /* box-shadow: 0 2px 4px 0 rgba(0,0,0,.25); */
@@ -122,10 +122,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     
     <div class="container">
-      <section class="content-text">
+      <section class="content-text responsive-font">
         <span class="channel">{{content.category}}</span>
-        <h1 hidden="{{!showTitleAsHeader(content.title, content.summary)}}" class="header">{{content.title}}</h1>
-        <h1 hidden="{{!showTitleAsQuote(content.title, content.summary)}}" class="text">{{content.title}}</h1>
+        <template is="dom-if" if="{{content.title}}">
+          <h1 hidden="{{!content.summary}}" class="header">{{content.title}}</h1>
+          <h1 hidden="{{content.summary}}" class="text">{{content.title}}</h1>
+        </template>
         <h2 hidden="{{!content.summary}}" class="text">{{content.summary}}</h2>
       </section>
       <cc-attribution content="{{content}}"></cc-attribution>
@@ -155,46 +157,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      showTitleAsHeader: function(title, summary) {
-        return title && summary;
+      getTitleClass: function(summary) {
+        if (summary) {
+          return "header";
+        } else {
+          return "quote";
+        }
       },
 
-      showTitleAsQuote: function(title, summary) {
-        return title && !summary;
-      },
-
+      isAttached: false,
       attached: function(){
+        this.isAttached = true;
         if (this.content.theme) {
           this.applyNewStyles(this.content.theme);
         }
       },
 
       fitTextToBox: function() {
+          if (!this.isAttached) {
+            var that = this;
+            setTimeout(function() {
+              that.fitTextToBox();
+            }, 10);
+            return;
+          }
+
           var innerContent = this.$$(".container");
           var thresholdBox = this;
           var responsiveText = this.$$(".content-text");
-          // console.log("fitTextToBox", innerContent.clientHeight, thresholdBox.clientHeight);
-          if (innerContent.clientHeight > thresholdBox.clientHeight) {
-            var calls = 0;
-            responsiveText.style.fontSize = "100px";
-            while (calls <= 10) {
-              calls++;
-              var cur = parseInt(responsiveText.style.fontSize);
-              var nex = parseInt(cur * (1 / (innerContent.clientHeight / thresholdBox.clientHeight)));
-              if (cur == nex) {
-                var calculatedNex = parseInt((nex - 1) * (1 / (innerContent.clientHeight / thresholdBox.clientHeight)));
-                var calculatedUltimateNexNex = parseInt((nex - 2) * (1 / (innerContent.clientHeight / thresholdBox.clientHeight)));
-                if (nex <= calculatedNex) {
-                  responsiveText.style.fontSize = calculatedUltimateNexNex + "px";
-                } else {
-                  responsiveText.style.fontSize = calculatedNex + "px";
-                }
-                break;
-              }
-              // console.log(cur);
-              responsiveText.style.fontSize = nex + "px";
+
+          console.log(responsiveText);
+          var max = 1000;
+          var min = 20;
+          var cur = parseInt((max + min) / 2);
+          //console.log("cur > min && cur < max", cur, min, max);
+          while (cur > min && cur < max) {
+            //console.log("cur > min && cur < max", cur, min, max);
+            responsiveText.style.fontSize = cur + "px";
+
+            if (innerContent.clientHeight >= thresholdBox.clientHeight) {
+              max = cur;
+            } else {
+              min = cur;
             }
+
+            cur = parseInt((max + min) / 2);
+            //console.log("cur", cur);
           }
+          //console.log("responsiveText.style.fontSize", responsiveText.style.fontSize);
       },
 
       applyNewStyles: function(styles){
