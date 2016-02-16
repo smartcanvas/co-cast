@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     /**
      * Calls the live stream to get data
      */
-    function getLiveStream(firebaseChangedMock) { //
+    function getLiveStream(firebaseChangedMock) {
       //Gets the live stream
       CoCastInitializer.getLiveStream(function (data) {
           console.log('Got data from Co-cast, showing it', data);
