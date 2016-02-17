@@ -20,9 +20,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-right: 80px;
         position: relative;
       }
+      :host[responsive-sizing] {
+        padding-top: 0.175em;
+        padding-bottom: 0.35em;
+      }
 
         #author {
           display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
           float: left;
         }
 
@@ -38,9 +45,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             overflow: hidden;
             /* box-shadow: 1px 1px 2px #666; */
             border-radius: 50%;
-            background-color: #ffffff;
+            /* background-color: #ffffff; */
             float: left;
             position: relative;
+          }
+
+          :host[responsive-sizing] #author .author-avatar {
+            width: 0.8em !important;
+            height: 0.8em !important;
+            min-width: 0.8em !important;
+            min-height: 0.8em !important;
+            max-width: 0.8em !important;
+            max-height: 0.8em !important;
+            margin: 6px 0.2em 6px 0;
           }
 
             #author .author-avatar img {
@@ -69,13 +86,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             max-height: 72px;
             text-align: left;
             padding: 4px 0px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+          }
+
+          :host[responsive-sizing] #author .attribution-description {
+            font-size: 0.3em;
           }
 
           #author .author-name {
-            line-height: 36px;
-            min-height: 36px;
-            max-height: 36px;
-            height: 36px;
+            margin-top: 3px;
 
             font-family: var(--author-name-font-family, 'Roboto, sans-serif');
             color: var(--author-name-font-color, #000);
@@ -88,10 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           #author .publish-date {
-            line-height: 36px;
-            min-height: 36px;
-            max-height: 36px;
-            height: 36px;
+            margin-top: 3px;
 
             font-family: var(--publish-date-font-family, 'Roboto, sans-serif');
             color: var(--publish-date-font-color, #000);
