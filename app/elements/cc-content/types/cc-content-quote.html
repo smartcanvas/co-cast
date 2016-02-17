@@ -112,36 +112,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-family: var(--var-content-quote-main-font, 'Roboto, sans-serif');
             color: var(--var-content-quote-main-font-color, #000);
           }
-
-          /*
-          .text.style-scope.cc-content-quote::before {
-              content: '“';
-              margin-right: 5px;
-              font-size: 1.4em;
-              font-weight: 200;
-              font-family: var(--var-content-quote-secondary-font, 'Roboto, sans-serif');
-              color: var(--var-content-quote-secondary-font-color, #000);
-              white-space: nowrap;
-          }
-          .text.style-scope.cc-content-quote::after {
-              content: '”';
-              margin-left: 5px;
-              font-size: 1.4em;
-              font-weight: 200;
-              font-family: var(--var-content-quote-secondary-font, 'Roboto, sans-serif');
-              color: var(--var-content-quote-secondary-font-color, #000);
-              white-space: nowrap;
-          }
-          */
     </style>
     
     <div class="container">
       <section class="content-text responsive-font">
         <span class="channel">{{content.category}}</span>
-        <template is="dom-if" if="{{content.title}}">
-          <h1 hidden="{{!content.summary}}" class="header">{{content.title}}</h1>
-          <h1 hidden="{{content.summary}}" class="text">{{content.title}}</h1>
-        </template>
+        <h1 hidden="{{!content.title}}"   class="header">{{content.title}}</h1>
         <h2 hidden="{{!content.summary}}" class="text">{{content.summary}}</h2>
       </section>
       <cc-attribution content="{{content}}"></cc-attribution>
