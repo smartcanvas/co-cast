@@ -234,10 +234,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return name;
         }
         var tokens = name.split(' ');
-        if (tokens.length == 1) {
+        if (tokens.length === 1) {
           return tokens[0];
         }
-        return tokens[0] + " " + tokens[tokens.length - 1];
+        return tokens[0] + ' ' + tokens[tokens.length - 1];
       },
 
       urlWithSz: function(avatarURL, sz) {
