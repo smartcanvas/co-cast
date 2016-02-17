@@ -196,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <img class="match-avatar" src="{{urlWithSz(content.jsonExtendedData.person1.imageURL, 300)}}" />
           <img class="match-avatar" src="{{urlWithSz(content.jsonExtendedData.person2.imageURL, 300)}}" />
         </div>
-        <center class="text match-text"><strong>{{content.jsonExtendedData.person1.displayName}}</strong> and <strong>{{content.jsonExtendedData.person2.displayName}}</strong> will meet each other!</center>
+        <center class="text match-text"><strong>{{firstAndLastName(content.jsonExtendedData.person1.displayName)}}</strong> and <strong>{{firstAndLastName(content.jsonExtendedData.person2.displayName)}}</strong> will meet each other!</center>
       </section>
     </div>
 
@@ -227,6 +227,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.content.theme) {
           this.applyNewStyles(this.content.theme);
         }
+      },
+
+      firstAndLastName: function(name) {
+        if (!name) {
+          return name;
+        }
+        var tokens = name.split(' ');
+        if (tokens.length == 1) {
+          return tokens[0];
+        }
+        return tokens[0] + " " + tokens[tokens.length - 1];
       },
 
       urlWithSz: function(avatarURL, sz) {
