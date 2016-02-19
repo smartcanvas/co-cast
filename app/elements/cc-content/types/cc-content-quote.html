@@ -52,6 +52,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           text-align: left;
           overflow: hidden;
 
+          padding: 20px 0px;
+
           /* http://stackoverflow.com/a/28456704/1064325 */
           /* http://stackoverflow.com/a/32333332/1064325 */
           top: 50%;
@@ -82,9 +84,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             /* font-size: 80px; */
             word-wrap: break-word;
             word-break: break-word;
+
+            clear: both;
+            float: left;
+          }
+
+          cc-attribution {
+            clear: both;
           }
 
           .channel {
+            clear: both;
+            float: left;
+
             font-size: 0.35em;
             font-family: var(--header-font-family, 'Roboto, sans-serif');
             color: var(--header-font-color, #000);
@@ -93,9 +105,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-weight: 400;
             background-color: var(--header-background-color, #FFF);
             /* box-shadow: 0 2px 4px 0 rgba(0,0,0,.25); */
+
+            display: block;
+            
+            /*
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            */
           }
 
           .text {
+            clear: both;
+            float: left;
+
             font-size: 0.5em;
             font-weight: 200;
             font-family: var(--var-content-quote-secondary-font, 'Roboto, sans-serif');
@@ -107,6 +131,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           .header {
+            clear: both;
+            float: left;
+
             font-size: 0.7em;
             font-weight: 600;
             font-family: var(--var-content-quote-main-font, 'Roboto, sans-serif');
@@ -185,7 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             //console.log("cur > min && cur < max", cur, min, max);
             responsiveText.style.fontSize = cur + 'px';
 
-            if (innerContent.clientHeight >= thresholdBox.clientHeight) {
+            if (innerContent.clientHeight >= thresholdBox.clientHeight - 50) {
               max = cur;
             } else {
               min = cur;
