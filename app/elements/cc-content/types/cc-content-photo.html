@@ -75,7 +75,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             width: 80%;
             padding: 0 10%;
             margin-bottom: -16px;
-            background-color: lightblue;
+            font-weight: 400;
+            background-color: var(--header-background-color, #FFF);
             opacity: 0;
             /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
             animation: co-cast-photo-attribution-footer-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
@@ -108,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     <img class="photo" src="{{content.imageURL}}">
     <div class="footer">
-      <cc-attribution content="{{content}}"></cc-attribution>
+      <cc-attribution content="{{content}}" accent></cc-attribution>
     </div>
 
   </template>
@@ -145,16 +146,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       applyNewStyles: function(styles){
-        this.customStyle['--var-content-quote-background-color'] = styles.accentColor;
-        this.customStyle['--var-content-quote-font-color'] = styles.accentFontColor;
+        this.customStyle['--header-background-color'] = styles.accentColor;
         
-        this.customStyle['--header-background-color'] = styles.secondaryColor;
-        this.customStyle['--body-background-color'] = styles.accentColor;
-        this.customStyle['--header-font-family'] = styles.primaryFont;
-        this.customStyle['--header-font-color'] = styles.secondaryFontColor;
-        this.customStyle['--header-font-size'] = '40px';
-        this.customStyle['--header-font-weight'] = '400';
-
         this.customStyle['--animation-duration'] = (parseInt(this.content.speed) / 1000) + 's';
 
         this.updateStyles();
