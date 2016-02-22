@@ -75,7 +75,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             5%   { right: -200%; opacity: 1; }
             10%  { right: -135%; opacity: 1; }
             90%  { right: -135%; opacity: 1; }
-            100% { right:  100%; opacity: 1; }
+            99%  { right:  100%; opacity: 1; }
+            100% { right:  100%; opacity: 0; }
           }
 
           :host[photo-only] .header,
@@ -86,14 +87,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           .header {
             top: -100%;
             position: absolute;
-            width: 100%;
+            width: 80%;
             padding: 32px 100% 0 10%;
             white-space: nowrap;
             text-overflow: ellipsis;
+            overflow: hidden;
             margin-top: -16px;
             height: 106px;
             font-weight: 600;
             font-size: 66px;
+            border-color: transparent !important;
             color: rgba(255,255,255,0.87);
             font-family: var(--var-content-photo-title-font, 'Roboto, sans-serif');
             background-image: linear-gradient(rgba(0,0,0,0.54), rgba(0,0,0,0.0));
@@ -112,12 +115,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         @keyframes co-cast-photo-title-header-text-animation {
-          0%   { text-indent:  100%; opacity: 1; }
-          3%   { text-indent:  100%; opacity: 1; }
-          7%   { text-indent:    0%; opacity: 1; }
-          93%  { text-indent:    0%; opacity: 1; }
-          97%  { text-indent: -100%; opacity: 1; }
-          100% { text-indent: -100%; opacity: 1; }
+          0%   { border-left:  100%; margin-left:    0%; opacity: 1; }
+          3%   { border-left:  100%; margin-left:    0%; opacity: 1; }
+          7%   { border-left:    0%; margin-left:    0%; opacity: 1; }
+          93%  { border-left:    0%; margin-left:    0%; opacity: 1; }
+          97%  { border-left:    0%; margin-left: -100%; opacity: 1; }
+          100% { border-left:    0%; margin-left: -100%; opacity: 1; }
         }
 
           .footer {
@@ -125,7 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             position: absolute;
             width: 80%;
             padding: 0 10%;
-            margin-bottom: -16px;
+            padding-bottom: 16px;
             font-weight: 400;
             background-color: var(--header-background-color, #FFF);
             opacity: 0;

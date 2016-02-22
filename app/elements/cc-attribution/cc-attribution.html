@@ -16,13 +16,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: flex;
         padding-top: 16px;
-        padding-bottom: 32px;
         padding-right: 80px;
         position: relative;
       }
       :host[responsive-sizing] {
         padding-top: 0.175em;
-        padding-bottom: 0.35em;
+      }
+      :host[disable-source-qr-code] {
+        padding-right: 0px;
       }
 
         #author {
@@ -31,6 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           justify-content: center;
           align-items: center;
           float: left;
+          max-width: 100%;
         }
 
           #author .author-avatar {
@@ -98,6 +100,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           #author .author-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            min-height: 0;
+            max-width: 100%;
+
             margin-top: 3px;
 
             font-family: var(--author-name-font-family, 'Roboto, sans-serif');
@@ -111,6 +120,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
 
           #author .publish-date {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            min-height: 0;
+            max-width: 100%;
+
             margin-top: 3px;
 
             font-family: var(--publish-date-font-family, 'Roboto, sans-serif');
@@ -140,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="publish-date">{{displayPublishDate}}</div>
       </div>
     </div>
-    <div id="source" hidden>
+    <div id="source" hidden="{{disableSourceQrCode}}">
       <img id="qrCode" src="https://chart.googleapis.com/chart?cht=qr&amp;chs=80x80&amp;chl={{content.sourceContentURL}}" />
     </div>
 
@@ -163,6 +179,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         accent: {
           type: Boolean
+        },
+        disableSourceQrCode: {
+          type: Boolean,
+          notify: true,
+          value: true,
+          reflectToAttribute: true
         }
       },
 
