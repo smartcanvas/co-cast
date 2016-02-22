@@ -683,7 +683,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
 
         getLiveStream: function (onSuccess, onError) {
-            CoCastInitializer.liveStream = APICaller.get('/core/v1/live/teamwork/everything', onSuccess, onError);
+            var uri = '/core/v1/live/' + Config.settings.networkMnemonic + '/' + Config.settings.stationMnemonic;
+            CoCastInitializer.liveStream = APICaller.get(uri, onSuccess, onError);
         }
     };
 
