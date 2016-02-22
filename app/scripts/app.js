@@ -10,13 +10,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 (function() {
     var loading, station, CoCastInitializer;
     var api = new CoCast.Api.Station();
+    var AUTHENTICATION_TIMEOUT = 500;
+    var AUTHENTICATION_RETRY_DELAY = 2500;
+    var AUTHENTICATION_RETRY_TIMEOUT = 5000;
+    var API_CALL_TIMEOUT = 1500;
+    var API_CALL_RETRY_DELAY = 7500;
+    var API_CALL_RETRY_TIMEOUT = 15000;
 
     /**
      * Calls the live stream to get data
      */
-    function getLiveStream(firebaseChangedMock) {
+    function getLiveStream(firebaseChangedMock, timeout) {
       //Gets the live stream
-      CoCastInitializer.getLiveStream(function (data) {
+      CoCastInitializer.getLiveStream(function onSuccess(data) {
           console.log('Got data from Co-cast, showing it', data);
           console.log('firebaseChanged', !firebaseChangedMock);
           /* mock
@@ -41,7 +47,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             loading.visibility = false;
           });
-      });
+      }, function onError() {
+          setTimeout(function() {
+            console.log('retrying api call');
+            getLiveStream(firebaseChangedMock, API_CALL_RETRY_TIMEOUT);
+          }, API_CALL_RETRY_DELAY);
+      }, timeout);
     }
 
     $(document).on('firebase-changed', function(){      
@@ -110,7 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     var APICaller = {
 
-        get: function (uri, onSuccess, onError) {
+        get: function (uri, onSuccess, onError, timeout) {
             var requestHeaders = {
                 'x-access-token': CoCastInitializer.accessToken,
                 'x-client-id': Config.settings.clientId
@@ -623,6 +634,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 method: 'GET',
                 cors: true,
                 dataType: 'json',
+                timeout: (timeout ? timeout : API_CALL_TIMEOUT),
                 success: function (data) {
                     if (onSuccess) {
                         onSuccess(data);
@@ -647,7 +659,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /**
          * Authenticates the user on Co-Cast exchanging the live token for the access token
          */
-        authenticate: function (authSuccess, authError) {
+        authenticate: function (authSuccess, authError, timeout) {
             var requestHeaders = {
                 'x-live-token': Config.settings.liveToken,
                 'x-client-id': Config.settings.clientId
@@ -665,6 +677,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 cors: true,
                 method: 'POST',
                 dataType: 'json',
+                timeout: (timeout ? timeout : AUTHENTICATION_TIMEOUT),
                 success: function (data) {
                     CoCastInitializer.accessToken = data.accessToken;
                     console.log('Authenticated successfully');
@@ -682,9 +695,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             /**/
         },
 
-        getLiveStream: function (onSuccess, onError) {
+        getLiveStream: function (onSuccess, onError, timeout) {
             var uri = '/core/v1/live/' + Config.settings.networkMnemonic + '/' + Config.settings.stationMnemonic;
-            CoCastInitializer.liveStream = APICaller.get(uri, onSuccess, onError);
+            CoCastInitializer.liveStream = APICaller.get(uri, onSuccess, onError, timeout);
         }
     };
 
@@ -692,6 +705,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * Co-Cast Live! Main execution
      */
     window.isWebComponentsReady = false;
+    function mediateAuthentication(authSuccess, timeout) {
+        CoCastInitializer.authenticate(authSuccess, function authError() {
+          setTimeout(function() {
+            console.log('retrying authentication');
+            mediateAuthentication(authSuccess, AUTHENTICATION_RETRY_TIMEOUT);
+          }, AUTHENTICATION_RETRY_DELAY);
+        }, timeout);
+    }
     window.addEventListener('WebComponentsReady', function() {
         window.isWebComponentsReady = true;
         console.log('Initializing Co-Cast...');
@@ -716,7 +737,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         //Authenticates on Co-Cast
-        CoCastInitializer.authenticate(getLiveStream);
+        mediateAuthentication(getLiveStream);
     });
 
 
