@@ -14,14 +14,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        color: #FFF;
+        background-color: var(--body-background-color, #617C8B);
       }
+
+        #container {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          position: relative;
+        }
     </style>
     
     <div id="container"></div>
@@ -46,12 +54,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         'contentChanged(content)',
         'visibilityChanged(content.visibility)'
       ],
-
+      isAttached: false,
       visibilityChanged: function(visibility){
+        if (!this.isAttached) {
+          var that = this;
+          setTimeout(function() {
+            that.visibilityChanged(visibility);
+          }, 10);
+          return;
+        }
+
         var $this = this;
 
         if(visibility){
           this.removeAttribute('hidden');
+          var contentElement = this.$$("cc-content-" + this.content.type);
+          contentElement.fitTextToBox();
 
           this.contentTimeout = setTimeout(function(){
             $this.setAttribute('hidden', true);
@@ -63,11 +81,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       contentChanged: function(content){
-        var elem = document.createElement(content.data.renderer);
-        elem.content = content.data;
-        elem.styles = content.getStyles();
+        var elem = document.createElement("cc-content-" + content.type);
+        elem.content = content;
+        elem.styles = content.theme;
 
         this.$.container.appendChild(elem);
+      },
+
+      attached: function() {
+        this.isAttached = true;
       },
 
       ready: function(){

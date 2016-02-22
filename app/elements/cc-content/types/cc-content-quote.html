@@ -20,33 +20,74 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         right: 0;
         bottom: 0;
         display: flex;
+        overflow: hidden;
         justify-content: center;
         align-items: center;
         background-color: var(--var-content-quote-background-color, #FFF);
-        color: var(--var-content-quote-font-color, #000);;
+        color: var(--var-content-quote-font-color, #000);
       }
 
         .container{
           width: 80%;
           margin: 0 auto;
-          text-align: center; 
+          text-align: center;
+          overflow: hidden;
+        }
+        :host[left] .container {
+          text-align: left;
         }
 
-          .quotes{
-            font-size: 70px;
+          .content-text {
+            font-size: 100px;
+            word-wrap: break-word;
+            word-break: break-word;
+          }
+
+          .channel{
+            /* font-size: var(--header-font-size, 40px); */
+            font-size: 0.4em;
+            font-family: var(--header-font-family, 'Roboto Noto sans-serif');
+            background-color: var(--header-background-color, #EE452D);
+            color: var(--header-font-color, #FFF);
+            font-weight: var(--header-font-weight, 400);
+            padding: 16px;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+          }
+
+          .channel {
+            font-size: 0.3em;
           }
 
           .text{
-            font-size: 50px;
+            font-size: 0.5em;
+          }
+
+          .header{
+            font-size: 0.7em;
+          }
+
+          .text.style-scope.cc-content-quote::before {
+              content: '“';
+              margin-right: 5px;
+              font-size: 1.4em;
+              white-space: nowrap;
+          }
+          .text.style-scope.cc-content-quote::after {
+              content: '”';
+              margin-left: 5px;
+              font-size: 1.4em;
+              white-space: nowrap;
           }
     </style>
     
-    <div>
-      <div class="container">
-        <span class="quotes">“</span>
-        <span class="text">{{content.description}}</span>
-        <span class="quotes">”</span>
-      </div>
+    <div class="container">
+      <section class="content-text">
+        <h3 class="channel">{{content.category}}</h3>
+        <h1 hidden="{{!showTitleAsHeader(content.title, content.summary)}}" class="header">{{content.title}}</h1>
+        <h1 hidden="{{!showTitleAsQuote(content.title, content.summary)}}" class="text">{{content.title}}</h1>
+        <h2 hidden="{{!content.summary}}" class="text">{{content.summary}}</h2>
+      </section>
+      <cc-attribution content="{{content}}"></cc-attribution>
     </div>
 
   </template>
@@ -67,17 +108,58 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           notify: true,
           value: {}
+        },
+        left: {
+          type: Boolean
         }
       },
 
+      showTitleAsHeader: function(title, summary) {
+        return title && summary;
+      },
+
+      showTitleAsQuote: function(title, summary) {
+        return title && !summary;
+      },
+
       attached: function(){
-        this.applyNewStyles(this.styles);
+        if (this.content.theme) {
+          this.applyNewStyles(this.content.theme);
+        }
+      },
+
+      fitTextToBox: function() {
+          var innerContent = this.$$(".container");
+          var thresholdBox = this;
+          var responsiveText = this.$$(".content-text");
+          console.log("fitTextToBox", innerContent.clientHeight, thresholdBox.clientHeight);
+          if (innerContent.clientHeight > thresholdBox.clientHeight) {
+            var calls = 0;
+            responsiveText.style.fontSize = "100px";
+            while (calls <= 10) {
+              calls++;
+              var cur = parseInt(responsiveText.style.fontSize);
+              var nex = cur * (1 / (innerContent.clientHeight / thresholdBox.clientHeight));
+              if (cur == nex) {
+                break;
+              }
+              console.log(cur);
+              responsiveText.style.fontSize = nex + "px";
+            }
+          }
       },
 
       applyNewStyles: function(styles){
         this.customStyle['--var-content-quote-background-color'] = styles.accentColor;
         this.customStyle['--var-content-quote-font-color'] = styles.accentFontColor;
         
+        this.customStyle['--header-background-color'] = styles.secondaryColor;
+        this.customStyle['--body-background-color'] = styles.accentColor;
+        this.customStyle['--header-font-family'] = styles.primaryFont;
+        this.customStyle['--header-font-color'] = styles.secondaryFontColor;
+        this.customStyle['--header-font-size'] = '40px';
+        this.customStyle['--header-font-weight'] = '400';
+
         this.updateStyles();
       }
 
