@@ -141,6 +141,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var env = window.Util.getParameterByName('env');
         env = (env == 'dev' ? '-dev' : '');
         this.$.fbListener.location = 'https://co-cast' + env + '.firebaseio.com/live/' + network + '/' + station + '/serverStatus/lastUpdated';
+
+        $(window).on('resize', function() {
+          $('cc-content > #container').filter(':visible').each(function() { $(this).children()[0].fitTextToBox(); })
+        });
       },
 
       applyNewStyles: function(styles){

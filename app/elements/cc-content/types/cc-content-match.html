@@ -212,7 +212,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      isAttached: false,
       attached: function(){
+        this.isAttached = true;
         if (this.content.theme) {
           this.applyNewStyles(this.content.theme);
         }
@@ -232,6 +234,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       fitTextToBox: function() {
+          if (!this.isAttached) {
+            var that = this;
+            setTimeout(function() {
+              that.fitTextToBox();
+            }, 10);
+            return;
+          }
+          
           var innerContent = this.$$(".container");
           var thresholdBox = this;
           var responsiveText = this.$$(".content-text");
