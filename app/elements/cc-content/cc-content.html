@@ -91,19 +91,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.customStyle['--animation-duration'] = (parseInt(this.content.speed - 1000) / 1000) + 's';
           }
 
-          // if (this.content.type == "announcement") {
-          //   this.style = "z-index: 1;";
-          // }
-          // if (this.content.type == "photo") {
-          //   this.style = "z-index: -1;";
-          // }
-          // if (this.content.type == "quote") {
-          //   this.style = "z-index: 2;";
-          // }
-          // if (this.content.type == "match") {
-          //   this.style = "z-index: 2;";
-          // }
-
           this.contentTimeout = setTimeout(function(){
             $this.fire('content.finished.rendering');
             $this.contentTimeout = undefined;
