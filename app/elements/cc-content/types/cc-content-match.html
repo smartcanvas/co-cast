@@ -66,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .logo {
           overflow: hidden;
           position: fixed;
-          top: 10px;
+          top: 25px;
           right: 10%;
           max-width: 250px;
           min-width: 250px;
@@ -99,8 +99,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .container{
           width: 80%;
           margin: 0 auto;
+          position: absolute;
+          padding: 20px 0;
           text-align: left;
           overflow: hidden;
+
+          /* http://stackoverflow.com/a/28456704/1064325 */
+          /* http://stackoverflow.com/a/32333332/1064325 */
+          top: 50%;
+          -webkit-filter: blur(0);
+          transform: translateY(-50%) translateZ(0);
+
           opacity: 0;
           /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
           animation: co-cast-container-text-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
@@ -122,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
           .content-text {
-            font-size: 100px;
+            /* font-size: 100px; */
             word-wrap: break-word;
             word-break: break-word;
           }
@@ -241,32 +250,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }, 10);
             return;
           }
-          
+
           var innerContent = this.$$(".container");
           var thresholdBox = this;
           var responsiveText = this.$$(".content-text");
-          // console.log("fitTextToBox", innerContent.clientHeight, thresholdBox.clientHeight);
-          if (innerContent.clientHeight > thresholdBox.clientHeight) {
-            var calls = 0;
-            responsiveText.style.fontSize = "100px";
-            while (calls <= 10) {
-              calls++;
-              var cur = parseInt(responsiveText.style.fontSize);
-              var nex = parseInt(cur * (1 / (innerContent.clientHeight / thresholdBox.clientHeight)));
-              if (cur == nex) {
-                var calculatedNex = parseInt((nex - 1) * (1 / (innerContent.clientHeight / thresholdBox.clientHeight)));
-                var calculatedUltimateNexNex = parseInt((nex - 2) * (1 / (innerContent.clientHeight / thresholdBox.clientHeight)));
-                if (nex <= calculatedNex) {
-                  responsiveText.style.fontSize = calculatedUltimateNexNex + "px";
-                } else {
-                  responsiveText.style.fontSize = calculatedNex + "px";
-                }
-                break;
-              }
-              // console.log(cur);
-              responsiveText.style.fontSize = nex + "px";
+
+          //console.log(responsiveText);
+          var max = 100;
+          var min = 20;
+          var cur = parseInt((max + min) / 2);
+          //console.log("cur > min && cur < max", cur, min, max);
+          while (cur > min && cur < max) {
+            //console.log("cur > min && cur < max", cur, min, max);
+            responsiveText.style.fontSize = cur + "px";
+
+            if (innerContent.clientHeight >= thresholdBox.clientHeight) {
+              max = cur;
+            } else {
+              min = cur;
             }
+
+            cur = parseInt((max + min) / 2);
+            //console.log("cur", cur);
           }
+          //console.log("responsiveText.style.fontSize", responsiveText.style.fontSize);
       },
 
       applyNewStyles: function(styles){
