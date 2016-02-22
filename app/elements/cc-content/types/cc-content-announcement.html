@@ -25,14 +25,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         overflow: hidden;
       }
 
+      .container {
+        overflow: hidden;
+      }
+
         cc-content-photo {
-          width: 35%;
+          position: fixed;
+          width: 100%;
           right: auto !important;
+          overflow: hidden;
+          /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
+          animation: co-cast-announcement-photo-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
         }
 
         .box{
           position: absolute;
-          background-color: var(--box-background-color, #FFF);
+          /* background-color: var(--box-background-color, #FFF); */
           color: var(--var-font-color, #000);
           top: 0;
           right: 0;
@@ -41,7 +49,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: flex;
           justify-content: flex-start;
           align-items: center;
-          box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+          /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
+          animation: co-cast-announcement-box-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
+        }
+
+        @keyframes co-cast-announcement-box-animation {
+          0%   { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  0; width: 65%; }
+          5%   { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  1; width: 65%; }
+          10%  { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  1; width: 65%; }
+          11%  { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25); opacity:  1; width: 65%; }
+          89%  { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25); opacity:  1; width: 65%; }
+          90%  { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  1; width: 65%; }
+          95%  { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  1; width: 65%; }
+          100% { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  0; width: 65%; }
         }
 
           .text-container{
@@ -50,13 +70,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             font-size: 55px;
             text-align: center;
           }
+
+        @keyframes co-cast-announcement-photo-animation {
+          0%   { width: 100%; }
+          10%  { width: 100%; }
+          90%  { width: 100%; }
+          95%  { width: 0%; }
+          100% { width: 0%; }
+        }
+
     </style>
     
     <div class="container">
-      <cc-content-photo content="{{content}}" styles="{{content.theme}}" no-attribution></cc-content-photo>
+      <cc-content-photo content="{{content}}" styles="{{content.theme}}" no-attribution animate-announcement-img></cc-content-photo>
 
       <div class="box">
-        <cc-content-quote content="{{content}}" styles="{{content.theme}}" left></cc-content-quote>
+        <cc-content-quote content="{{content}}" styles="{{content.theme}}" left ></cc-content-quote>
         <!--div class="text-container">
           <h3>{{content.category}}</h3>
           <p hidden="{{!content.title}}">{{content.title}}</p>
@@ -101,6 +130,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.customStyle['--box-background-color'] = styles.accentColor;
         this.customStyle['--var-font-color'] = styles.accentFontColor;
         this.customStyle['--primary-font-color'] = styles.primaryFontColor;
+
+        this.customStyle['--animation-duration'] = (parseInt(this.content.speed) / 1000) + 's';
         
         this.updateStyles();
       }

@@ -108,8 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       observers: [
-        'contentsChanged(contents)',
-        'visibilityChanged(item, item.visibility)'
+        'contentsChanged(contents)'
       ],
 
       firebaseChanged: function(){
@@ -128,30 +127,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var that = this;
           this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition){
             that.set('contents.'+ atualPosition +'.visibility', true);
-          });
-        }
-      },
-
-      visibilityChanged: function(item, visibility){
-        var $this = this;
-        var styles = item.theme;
-        
-        if(styles){
-          this.applyNewStyles(styles);  
-          item.applyNewStyles(styles);
-        }
-        
-        if(visibility){
-          this.removeAttribute('hidden');
-
-          this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition, restarting){
-            if(restarting){
-              item.hidden = true;
-              item.visibility = false;  
-              $this.fire('channel.finished.rendering');
-            }else{
-              item.visibility = true;
-            }
           });
         }
       },
