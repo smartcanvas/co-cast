@@ -53,8 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           /* http://stackoverflow.com/a/19414020/1064325 */
           margin: auto;
           position: fixed;
-          top: -200%;
-          bottom: -200%;
+          top: 0%;
           right: -200%;
           left: -200%;
           overflow: hidden;
@@ -66,11 +65,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .logo {
           overflow: hidden;
           position: fixed;
-          top: 25px;
+          top: 2em;
           right: 10%;
-          max-width: 250px;
-          min-width: 250px;
-          width: 250px;
+          max-width: 10em;
+          min-width: 10em;
+          width: 10em;
           opacity: 0;
           /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
           animation: co-cast-container-match-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
@@ -146,10 +145,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           .match-avatar {
             border-radius: 50%;
-            min-height: 300px;
-            max-height: 300px;
-            height: 300px;
-            padding: 50px 25px;
+            min-height: 6em;
+            max-height: 6em;
+            height: 6em;
+            padding: 1em 0.5em;
           }
 
           .channel {
