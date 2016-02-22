@@ -120,7 +120,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <h1 hidden="{{!content.title}}"   class="header">{{content.title}}</h1>
         <h2 hidden="{{!content.summary}}" class="text">{{content.summary}}</h2>
       </section>
-      <cc-attribution content="{{content}}"></cc-attribution>
+      <cc-attribution content="{{content}}" responsive-sizing></cc-attribution>
     </div>
 
   </template>
@@ -174,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           var innerContent = this.$$('.container');
           var thresholdBox = this;
-          var responsiveText = this.$$('.content-text');
+          var responsiveText = this.$$('.container');
 
           //console.log(responsiveText);
           var max = 100;
