@@ -117,7 +117,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       contentsChanged: function(contents){
-        var $this = this;
         var contentsLength = contents.length;
 
         if(contentsLength){
@@ -139,11 +138,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var network = window.Util.getParameterByName('network');
         var station = window.Util.getParameterByName('station');
         var env = window.Util.getParameterByName('env');
-        env = (env == 'dev' ? '-dev' : '');
+        env = (env === 'dev' ? '-dev' : '');
         this.$.fbListener.location = 'https://co-cast' + env + '.firebaseio.com/live/' + network + '/' + station + '/serverStatus/lastUpdated';
 
         $(window).on('resize', function() {
-          $('cc-content > #container').filter(':visible').each(function() { $(this).children()[0].fitTextToBox(); })
+          $('cc-content > #container').filter(':visible').each(function() {
+            $(this).children()[0].fitTextToBox();
+          });
         });
       },
 

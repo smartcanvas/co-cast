@@ -230,13 +230,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       urlWithSz: function(avatarURL, sz) {
         if (avatarURL) {
-          var parameterSeparator = undefined;
-          if (avatarURL.indexOf("?") > -1) {
-            parameterSeparator = "&";
+          var parameterSeparator;
+          if (avatarURL.indexOf('?') > -1) {
+            parameterSeparator = '&';
           } else {
-            parameterSeparator = "?";
+            parameterSeparator = '?';
           }
-          avatarURL += parameterSeparator + "sz=" + sz;
+          avatarURL += parameterSeparator + 'sz=' + sz;
         }
         return avatarURL;
       },
@@ -250,9 +250,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             return;
           }
 
-          var innerContent = this.$$(".container");
+          var innerContent = this.$$('.container');
           var thresholdBox = this;
-          var responsiveText = this.$$(".content-text");
+          var responsiveText = this.$$('.content-text');
 
           //console.log(responsiveText);
           var max = 100;
@@ -261,7 +261,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           //console.log("cur > min && cur < max", cur, min, max);
           while (cur > min && cur < max) {
             //console.log("cur > min && cur < max", cur, min, max);
-            responsiveText.style.fontSize = cur + "px";
+            responsiveText.style.fontSize = cur + 'px';
 
             if (innerContent.clientHeight >= thresholdBox.clientHeight) {
               max = cur;

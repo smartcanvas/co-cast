@@ -32,7 +32,7 @@
     }else{
       this.channels = [];
       this.channels.push( new ns.Content({
-        type: "quote",
+        type: 'quote',
         title: 'Co-Cast by Smart Canvas'
       }) );
     }

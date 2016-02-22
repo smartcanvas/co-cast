@@ -11,7 +11,6 @@
   }
 
 }(this, function (ns, $, modelPackage) {
-  var teste = false;
   
   function Station() {
     
