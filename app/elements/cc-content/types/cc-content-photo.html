@@ -60,9 +60,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             max-width: 100%;
           }
 
-          .back {
+          .gradient {
+            background-image: linear-gradient(rgba(0,0,0,0.54), rgba(0,0,0,0.54));
             min-height: 100%;
             min-width: 100%;
+          }
+
+          .back {
+            -webkit-filter: saturate(20%) opacity(0.87);
+            min-height: 100%;
+            min-width: 100%;
+          }
+
+          :host[is-google-image] .back {
+            -webkit-filter: none !important;
           }
 
           :host[animate-announcement-img] .photo {
@@ -161,7 +172,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
     </style>
     
-    <img class="photo back" src="{{content.imageURL}}-fSoften=1,100,0">
+    <img class="photo back" src="{{content.imageURL}}{{imageURLSuffix}}">
+    <div class="photo gradient" hidden="{{isGoogleImage}}"></div>
     <img class="photo front" src="{{content.imageURL}}">
     <div class="header" hidden="{{!content.title}}">
       {{content.title}}
@@ -191,16 +203,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         photoOnly: {
           type: Boolean
+        },
+        isGoogleImage: {
+          type: Boolean,
+          reflectToAttribute: true
+        },
+        imageURLSuffix : {
+          type: String
         }
       },
 
+      isAttached: false,
       attached: function(){
+        this.isAttached = true;
         if (this.content.theme) {
           this.applyNewStyles(this.content.theme);
         }
       },
 
       fitTextToBox: function() {
+        if (!this.isAttached || !this.content || !this.content.imageURL) {
+          var that = this;
+          setTimeout(function() {
+            that.fitTextToBox();
+          }, 10);
+          return;
+        }
+
+        this.isGoogleImage = false;
+        this.imageURLSuffix = '';
+        var googleRegExp = new RegExp('lh(3|4|5|6)\.(googleusercontent|ggpht)\.com');
+        if (googleRegExp.test(this.content.imageURL)) {
+          this.isGoogleImage = true;
+          this.imageURLSuffix = '-fSoften=1,100,0';
+        }
       },
 
       applyNewStyles: function(styles){
