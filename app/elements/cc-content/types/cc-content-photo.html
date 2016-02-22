@@ -10,34 +10,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-<dom-module id="cc-content-announcement">
+<dom-module id="cc-content-photo">
   <template>
     <style>
-      :host {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        overflow: hidden;
-      }
-
-        .img-box {
+        :host {
           position: absolute;
           top: 0;
           left: 0;
+          right: 0;
           bottom: 0;
-          width: 35%;
           display: flex;
           justify-content: flex-start;
           align-items: center;
           box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
         }
 
-          .img-box img {
+          img {
             min-height: 100%;
             min-width: 100%;
             /* http://stackoverflow.com/a/19414020/1064325 */
@@ -49,41 +37,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             left: -9999px;
           }
 
-        .box{
-          position: absolute;
-          background-color: var(--box-background-color, #FFF);
-          color: var(--var-font-color, #000);
-          top: 0;
-          right: 0;
-          bottom: 0;
-          width: 65%;
-          display: flex;
-          justify-content: flex-start;
-          align-items: center;
-          box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
-        }
-
-          .text-container{
-            width: 90%;
-            margin: 0 auto;
-            font-size: 55px;
-            text-align: center;
+          :host[no-attribution] .footer {
+            display: none;
           }
+
+          .footer {
+            bottom: 0;
+            position: absolute;
+            width: 80%;
+            padding: 0 10%;
+            margin-bottom: -16px;
+            background-color: lightblue;
+          }
+
     </style>
     
-    <div class="container">
-      <div class="img-box">
-        <img src="{{content.imageURL}}">
-      </div>
-
-      <div class="box">
-        <cc-content-quote content="{{content}}" styles="{{content.theme}}" left></cc-content-quote>
-        <!--div class="text-container">
-          <h3>{{content.category}}</h3>
-          <p hidden="{{!content.title}}">{{content.title}}</p>
-          <p hidden="{{content.title}}">{{content.summary}}</p>
-        </div-->
-      </div>
+    <img src="{{content.imageURL}}">
+    <div class="footer">
+      <cc-attribution content="{{content}}"></cc-attribution>
     </div>
 
   </template>
@@ -92,7 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     'use strict';
 
     Polymer({
-      is: 'cc-content-announcement',
+      is: 'cc-content-photo',
 
       properties: {
         content: {
@@ -104,6 +75,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           notify: true,
           value: {}
+        },
+        noAuthor: {
+          type: Boolean
         }
       },
 
@@ -114,15 +88,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       fitTextToBox: function() {
-        var quoteElement = this.$$("cc-content-quote");
-        quoteElement.fitTextToBox();
       },
 
       applyNewStyles: function(styles){
-        this.customStyle['--box-background-color'] = styles.accentColor;
-        this.customStyle['--var-font-color'] = styles.accentFontColor;
-        this.customStyle['--primary-font-color'] = styles.primaryFontColor;
+        this.customStyle['--var-content-quote-background-color'] = styles.accentColor;
+        this.customStyle['--var-content-quote-font-color'] = styles.accentFontColor;
         
+        this.customStyle['--header-background-color'] = styles.secondaryColor;
+        this.customStyle['--body-background-color'] = styles.accentColor;
+        this.customStyle['--header-font-family'] = styles.primaryFont;
+        this.customStyle['--header-font-color'] = styles.secondaryFontColor;
+        this.customStyle['--header-font-size'] = '40px';
+        this.customStyle['--header-font-weight'] = '400';
+
         this.updateStyles();
       }
 
