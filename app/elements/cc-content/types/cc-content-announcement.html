@@ -86,11 +86,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <div class="box">
         <cc-content-quote content="{{content}}" styles="{{content.theme}}"></cc-content-quote>
-        <!--div class="text-container">
-          <h3>{{content.category}}</h3>
-          <p hidden="{{!content.title}}">{{content.title}}</p>
-          <p hidden="{{content.title}}">{{content.summary}}</p>
-        </div-->
       </div>
     </div>
 
@@ -124,6 +119,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       fitTextToBox: function() {
         var quoteElement = this.$$('cc-content-quote');
         quoteElement.fitTextToBox();
+        var photoElement = this.$$('cc-content-photo');
+        photoElement.fitTextToBox();
       },
 
       applyNewStyles: function(styles){
