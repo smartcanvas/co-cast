@@ -270,9 +270,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var max = 100;
           var min = 20;
           var cur = parseInt((max + min) / 2);
-          //console.log("cur > min && cur < max", cur, min, max);
+          //console.log('cur > min && cur < max', cur, min, max);
           while (cur > min && cur < max) {
-            //console.log("cur > min && cur < max", cur, min, max);
+            //console.log('cur > min && cur < max', cur, min, max);
             responsiveText.style.fontSize = cur + 'px';
 
             if (innerContent.clientHeight >= thresholdBox.clientHeight) {
@@ -282,9 +282,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             cur = parseInt((max + min) / 2);
-            //console.log("cur", cur);
+            //console.log('cur', cur);
           }
-          //console.log("responsiveText.style.fontSize", responsiveText.style.fontSize);
+          //console.log('responsiveText.style.fontSize', responsiveText.style.fontSize);
       },
 
       applyNewStyles: function(styles){
