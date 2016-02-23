@@ -157,7 +157,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </div>
     <div id="source" hidden="{{disableSourceQrCode}}">
+      <!-- Google Charts API - QR Code -->
       <img id="qrCode" src="https://chart.googleapis.com/chart?cht=qr&amp;chs=80x80&amp;chl={{content.sourceContentURL}}" hidden="{{!content.sourceContentURL}}" />
+
+      <!-- QR Code alternative - no variable margins -->
+      <!-- http://goqr.me/api/doc/create-qr-code/ -->
+      <!--img id="qrCode" src="http://api.qrserver.com/v1/create-qr-code/?data={{content.sourceContentURL}}&size=80x80&margin=10" hidden="{{!content.sourceContentURL}}" /-->
     </div>
 
   </template>
