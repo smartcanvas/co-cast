@@ -33,6 +33,8 @@
       this.speed = 10000;
     }
 
+    this.visibility = false;
+
     if(this.type === 'image'){
       this.data = new ns.ContentImage(raw);
     }else if(this.type === 'quote'){
@@ -46,7 +48,7 @@
   }
 
   Content.prototype.getStyles = function () {
-    return this.styles;
+    return this.theme;
   };
 
   ns.Content = Content;

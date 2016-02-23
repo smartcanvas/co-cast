@@ -29,18 +29,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           animation: co-cast-photo-host-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
         }
 
+        @keyframes co-cast-photo-host-animation {
+          0%   { left:     0%; right:     0%; margin-left:   0%; opacity: 1; }
+          10%  { left:     0%; right:     0%; margin-left:   0%; opacity: 1; }
+          95%  { right:    0%; left:      0%; margin-left:   0%; opacity: 1; }
+          99%  { right:  200%; left:   -200%; margin-left: 200%; opacity: 1; }
+          100% { right:  200%; left:   -200%; margin-left: 200%; opacity: 0; }
+        }
+
         :host[animate-announcement-img] {
           animation: none;
           opacity: 1;
         }
 
-          @keyframes co-cast-photo-host-animation {
-            0%   { left:     0%; right:     0%; margin-left:   0%; opacity: 1; }
-            10%  { left:     0%; right:     0%; margin-left:   0%; opacity: 1; }
-            95%  { right:    0%; left:      0%; margin-left:   0%; opacity: 1; }
-            99%  { right:  200%; left:   -200%; margin-left: 200%; opacity: 1; }
-            100% { right:  200%; left:   -200%; margin-left: 200%; opacity: 0; }
-          }
+        :host[no-animation] {
+          animation: none !important;
+          opacity: 1;
+        }
 
           .photo {
             /* http://stackoverflow.com/a/19414020/1064325 */
@@ -90,6 +95,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             100% { right:  100%; opacity: 0; }
           }
 
+          :host[animate-announcement-img][no-animation] .photo {
+            right: -135%;
+            animation: none !important;
+          }
+
           :host[photo-only] .header,
           :host[photo-only] .footer {
             display: none;
@@ -116,23 +126,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             animation: co-cast-photo-title-header-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running, co-cast-photo-title-header-text-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
           }
 
-        @keyframes co-cast-photo-title-header-animation {
-          0%   { top: -100%; padding-left:  100%; padding-right:   10%; opacity: 1; }
-          5%   { top:    0%; padding-left:  100%; padding-right:   10%; opacity: 1; }
-          10%  { top:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
-          90%  { top:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
-          95%  { top:    0%; padding-left:    0%; padding-right:  100%; opacity: 1; }
-          100% { top: -100%; padding-left:    0%; padding-right:  100%; opacity: 1; }
-        }
+          @keyframes co-cast-photo-title-header-animation {
+            0%   { top: -100%; padding-left:  100%; padding-right:   10%; opacity: 1; }
+            5%   { top:    0%; padding-left:  100%; padding-right:   10%; opacity: 1; }
+            10%  { top:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
+            90%  { top:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
+            95%  { top:    0%; padding-left:    0%; padding-right:  100%; opacity: 1; }
+            100% { top: -100%; padding-left:    0%; padding-right:  100%; opacity: 1; }
+          }
 
-        @keyframes co-cast-photo-title-header-text-animation {
-          0%   { border-left:  100%; margin-left:    0%; opacity: 1; }
-          3%   { border-left:  100%; margin-left:    0%; opacity: 1; }
-          7%   { border-left:    0%; margin-left:    0%; opacity: 1; }
-          93%  { border-left:    0%; margin-left:    0%; opacity: 1; }
-          97%  { border-left:    0%; margin-left: -100%; opacity: 1; }
-          100% { border-left:    0%; margin-left: -100%; opacity: 1; }
-        }
+          @keyframes co-cast-photo-title-header-text-animation {
+            0%   { border-left:  100%; margin-left:    0%; opacity: 1; }
+            3%   { border-left:  100%; margin-left:    0%; opacity: 1; }
+            7%   { border-left:    0%; margin-left:    0%; opacity: 1; }
+            93%  { border-left:    0%; margin-left:    0%; opacity: 1; }
+            97%  { border-left:    0%; margin-left: -100%; opacity: 1; }
+            100% { border-left:    0%; margin-left: -100%; opacity: 1; }
+          }
+
+          :host[no-animation] .header {
+            top: 0%;
+            animation: none !important;
+            opacity: 1;
+          }
 
           .footer {
             bottom: -100%;
@@ -147,14 +163,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             animation: co-cast-photo-attribution-footer-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
           }
 
-        @keyframes co-cast-photo-attribution-footer-animation {
-          0%   { bottom: -100%; padding-left:  100%; padding-right:   10%; opacity: 1; }
-          5%   { bottom:    0%; padding-left:  100%; padding-right:   10%; opacity: 1; }
-          10%  { bottom:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
-          90%  { bottom:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
-          95%  { bottom:    0%; padding-left:    0%; padding-right:  100%; opacity: 1; }
-          100% { bottom: -100%; padding-left:    0%; padding-right:  100%; opacity: 1; }
-        }
+          @keyframes co-cast-photo-attribution-footer-animation {
+            0%   { bottom: -100%; padding-left:  100%; padding-right:   10%; opacity: 1; }
+            5%   { bottom:    0%; padding-left:  100%; padding-right:   10%; opacity: 1; }
+            10%  { bottom:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
+            90%  { bottom:    0%; padding-left:   10%; padding-right:   10%; opacity: 1; }
+            95%  { bottom:    0%; padding-left:    0%; padding-right:  100%; opacity: 1; }
+            100% { bottom: -100%; padding-left:    0%; padding-right:  100%; opacity: 1; }
+          }
+
+          :host[no-animation] .footer {
+            bottom: 0%;
+            animation: none !important;
+            opacity: 1;
+          }
 
           .footer cc-attribution {
             opacity: 0;
@@ -162,14 +184,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             animation: co-cast-photo-attribution-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
           }
 
-        @keyframes co-cast-photo-attribution-animation {
-          0%   { margin-left:  100%; margin-right: -100%; opacity: 1; }
-          3%   { margin-left:  100%; margin-right: -100%; opacity: 1; }
-          7%   { margin-left:    0%; margin-right:    0%; opacity: 1; }
-          93%  { margin-left:    0%; margin-right:    0%; opacity: 1; }
-          97%  { margin-left: -100%; margin-right:  100%; opacity: 1; }
-          100% { margin-left: -100%; margin-right:  100%; opacity: 1; }
-        }
+          @keyframes co-cast-photo-attribution-animation {
+            0%   { margin-left:  100%; margin-right: -100%; opacity: 1; }
+            3%   { margin-left:  100%; margin-right: -100%; opacity: 1; }
+            7%   { margin-left:    0%; margin-right:    0%; opacity: 1; }
+            93%  { margin-left:    0%; margin-right:    0%; opacity: 1; }
+            97%  { margin-left: -100%; margin-right:  100%; opacity: 1; }
+            100% { margin-left: -100%; margin-right:  100%; opacity: 1; }
+          }
+
+          :host[no-animation] .footer cc-attribution {
+            animation: none !important;
+            opacity: 1;
+          }
     </style>
     
     <img class="photo back" src="{{content.imageURL}}{{imageURLSuffix}}">
@@ -179,7 +206,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       {{content.title}}
     </div>
     <div class="footer">
-      <cc-attribution content="{{content}}" accent></cc-attribution>
+      <cc-attribution content="{{content}}" accent no-animation="{{noAnimation}}"></cc-attribution>
     </div>
 
   </template>
@@ -210,6 +237,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         imageURLSuffix : {
           type: String
+        },
+        noAnimation: {
+          type: Boolean,
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
@@ -235,7 +267,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var googleRegExp = new RegExp('lh(3|4|5|6)\.(googleusercontent|ggpht)\.com');
         if (googleRegExp.test(this.content.imageURL)) {
           this.isGoogleImage = true;
-          this.imageURLSuffix = '-fSoften=1,100,0';
+          if (this.content.imageURL.indexOf('=') > -1) {
+            this.imageURLSuffix += '-';
+          } else {
+            this.imageURLSuffix += '=';
+          }
+          this.imageURLSuffix += 'fSoften=1,100,0';
         }
       },
 

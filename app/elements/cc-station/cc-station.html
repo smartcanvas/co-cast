@@ -66,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div class="content">
       <template is="dom-repeat" items="{{contents}}">
-              <cc-content content="{{item}}" hidden></cc-content>
+              <cc-content content="{{item}}" hidden no-animation="{{noAnimation}}"></cc-content>
       </template>
     </div>
     <template is="dom-if" if="{{caption.length}}">
@@ -104,6 +104,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           notify: true,
           value: []
+        },
+        noAnimation: {
+          type: Boolean,
+          notify: true,
+          value: false,
+          reflectToAttribute: true
         }
       },
 
@@ -116,32 +122,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         $(document).trigger('firebase-changed');
       },
 
+      oldContentsLength: 0,
       contentsChanged: function(contents){
         var contentsLength = contents.length;
+
+        if ( (contentsLength - this.oldContentsLength) === 1 ) {
+          this.noAnimation = true;
+          this.contents = this.contents.concat([$.extend(true, {}, contents[contents.length - 1])]);
+          //console.log(this.contents, contents);
+          return;
+        }
+
+        //console.log('CHEGOU', contentsLength, contents);
 
         if(contentsLength){
           var that = this;
           if (!this.carousel) {
             this.carousel = new CoCast.Carousel(contentsLength, function(atualPosition){
+              //console.log('D. carousel', atualPosition);
               that.set('contents.'+ atualPosition +'.visibility', true);
             });
           } else {
             this.carousel.reset(contentsLength);
           }
+          this.oldContentsLength = contentsLength;
         }
       },
 
       attached: function(){
+        this.removeEventListener('content.finished.rendering');
         this.addEventListener('content.finished.rendering', function(){
+          //console.log("B. call next!");
           this.carousel.loadNext();
         });
         var network = window.Util.getParameterByName('network');
         var station = window.Util.getParameterByName('station');
+        var animation = window.Util.getParameterByName('animation');
         var env = window.Util.getParameterByName('env');
         env = (env === 'dev' ? '-dev' : '');
         this.$.fbListener.location = 'https://co-cast' + env + '.firebaseio.com/live/' + network + '/' + station + '/serverStatus/lastUpdated';
 
-        $(window).on('resize', function() {
+        if (animation === 'off') {
+          this.noAnimation = true;
+        }
+
+        $(window).off('resize.fitTextToBox').on('resize.fitTextToBox', function() {
           $('cc-content > #container').filter(':visible').each(function() {
             $(this).children()[0].fitTextToBox();
           });

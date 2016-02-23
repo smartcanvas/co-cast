@@ -59,6 +59,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true,
           value: false,
           reflectToAttribute: true
+        },
+        noAnimation: {
+          type: Boolean,
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
@@ -68,30 +73,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
       isAttached: false,
       visibilityChanged: function(visibility){
-        if (!this.isAttached) {
-          var that = this;
-          setTimeout(function() {
-            that.visibilityChanged(visibility);
-          }, 10);
-          return;
-        }
-
-        var $this = this;
+        //console.log('changed', visibility);
 
         if(visibility){
+          if (!this.isAttached) {
+            var that = this;
+            setTimeout(function() {
+              that.visibilityChanged(visibility);
+            }, 10);
+            return;
+          }
+
+          var $this = this;
+
           this.customStyle['--var-content-background-color'] = this.content.theme.primaryColor;
           this.updateStyles();
 
           this.removeAttribute('hidden');
 
           var contentElement = this.$$('cc-content-' + this.content.type);
+          contentElement.noAnimation = this.noAnimation;
           contentElement.fitTextToBox();
 
           if (this.content.speed) {
             this.customStyle['--animation-duration'] = (parseInt(this.content.speed - 1000) / 1000) + 's';
           }
 
+          //console.log('SPEED', this.content.speed);
           this.contentTimeout = setTimeout(function(){
+            //console.log('A. finished', $this);
             $this.fire('content.finished.rendering');
             $this.contentTimeout = undefined;
             $this.style = 'z-index: 1;';
@@ -110,6 +120,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       contentChanged: function(content){
         this.$.container.innerHTML = '';
         var elem = document.createElement('cc-content-' + content.type);
+        elem.noAnimation = this.noAnimation;
         elem.content = content;
         elem.styles = content.theme;
 

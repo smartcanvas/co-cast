@@ -38,6 +38,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           animation: co-cast-announcement-photo-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
         }
 
+        @keyframes co-cast-announcement-photo-animation {
+          0%   { width: 100%; }
+          10%  { width: 100%; }
+          90%  { width: 100%; }
+          95%  { width:   0%; }
+          100% { width:   0%; }
+        }
+
+        :host[no-animation] cc-content-photo {
+          animation: none !important;
+        }
+
         .box{
           position: absolute;
           /* background-color: var(--box-background-color, #FFF); */
@@ -64,6 +76,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           100% { box-shadow: 0 2px 4px 0 rgba(0,0,0,0.00); opacity:  0; width: 65%; }
         }
 
+        :host[no-animation] .box {
+          animation: none !important;
+        }
+
           .text-container{
             width: 90%;
             margin: 0 auto;
@@ -71,21 +87,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             text-align: center;
           }
 
-        @keyframes co-cast-announcement-photo-animation {
-          0%   { width: 100%; }
-          10%  { width: 100%; }
-          90%  { width: 100%; }
-          95%  { width: 0%; }
-          100% { width: 0%; }
-        }
-
     </style>
     
     <div class="container">
-      <cc-content-photo content="{{content}}" styles="{{content.theme}}" photo-only animate-announcement-img></cc-content-photo>
+      <cc-content-photo content="{{content}}" styles="{{content.theme}}" photo-only animate-announcement-img no-animation="{{noAnimation}}"></cc-content-photo>
 
       <div class="box">
-        <cc-content-quote content="{{content}}" styles="{{content.theme}}"></cc-content-quote>
+        <cc-content-quote content="{{content}}" styles="{{content.theme}}" no-animation="{{noAnimation}}"></cc-content-quote>
       </div>
     </div>
 
@@ -107,6 +115,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           notify: true,
           value: {}
+        },
+        noAnimation: {
+          type: Boolean,
+          notify: true,
+          reflectToAttribute: true
         }
       },
 

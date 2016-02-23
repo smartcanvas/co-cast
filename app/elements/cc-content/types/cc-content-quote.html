@@ -21,19 +21,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         bottom: 0;
         display: flex;
         overflow: hidden;
-        justify-content: center;
+        /* justify-content: center; */
         align-items: center;
         background-color: var(--var-content-quote-background-color, #FFF);
         color: var(--var-content-quote-font-color, #000);
         opacity: 0;
         /* https://developer.mozilla.org/en/docs/Web/CSS/animation */
         animation: co-cast-container-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
-      }
-
-      :host[no-animation] {
-        position: absolute;
-        animation: none !important;
-        opacity: 1;
       }
 
       @keyframes co-cast-container-animation {
@@ -45,14 +39,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         100% { right:  154%; left: -154%; opacity: 1; }
       }
 
-        .container{
+      :host[no-animation] {
+        animation: none !important;
+        opacity: 1;
+      }
+
+        .container {
           width: 80%;
           margin: 0 auto;
           position: absolute;
           text-align: left;
           overflow: hidden;
 
-          padding: 20px 0px;
+          padding: 20px 10%;
 
           /* http://stackoverflow.com/a/28456704/1064325 */
           /* http://stackoverflow.com/a/32333332/1064325 */
@@ -65,12 +64,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           animation: co-cast-container-text-animation var(--animation-duration, 10s) ease-in-out 0s 1 normal forwards running;
         }
 
-        :host[no-animation] {
-          position: absolute;
-          animation: none !important;
-          opacity: 1;
-        }
-
         @keyframes co-cast-container-text-animation {
           0%   { right:  154%; left: -154%; opacity: 1; }
           5%   { right:  154%; left: -154%; opacity: 1; }
@@ -78,6 +71,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           90%  { right:    0%; left:    0%; opacity: 1; }
           95%  { right: -154%; left:  154%; opacity: 1; }
           100% { right: -154%; left:  154%; opacity: 1; }
+        }
+
+        :host[no-animation] .container {
+          animation: none !important;
+          opacity: 1;
         }
 
           .content-text {
@@ -147,7 +145,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <h1 hidden="{{!content.title}}"   class="header">{{content.title}}</h1>
         <h2 hidden="{{!content.summary}}" class="text">{{content.summary}}</h2>
       </section>
-      <cc-attribution content="{{content}}" responsive-sizing></cc-attribution>
+      <cc-attribution content="{{content}}" responsive-sizing no-animation="{{noAnimation}}"></cc-attribution>
     </div>
 
   </template>
@@ -171,6 +169,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         left: {
           type: Boolean
+        },
+        noAnimation: {
+          type: Boolean,
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
