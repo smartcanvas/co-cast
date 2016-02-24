@@ -10,10 +10,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 (function() {
     var loading, station, CoCastInitializer;
     var api = new CoCast.Api.Station();
-    var AUTHENTICATION_TIMEOUT = 500;
-    var AUTHENTICATION_RETRY_DELAY = 2500;
-    var AUTHENTICATION_RETRY_TIMEOUT = 5000;
-    var API_CALL_TIMEOUT = 1500;
+    var AUTHENTICATION_TIMEOUT = 3000;
+    var AUTHENTICATION_RETRY_DELAY = 7500;
+    var AUTHENTICATION_RETRY_TIMEOUT = 15000;
+    var API_CALL_TIMEOUT = 3000;
     var API_CALL_RETRY_DELAY = 7500;
     var API_CALL_RETRY_TIMEOUT = 15000;
 
