@@ -154,6 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             max-height: 5em;
             height: 5em;
             padding: 0.8em 0.5em;
+            background-color: #fff;
           }
 
           .channel {
@@ -285,7 +286,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             //console.log('cur > min && cur < max', cur, min, max);
             responsiveText.style.fontSize = cur + 'px';
 
-            if (innerContent.clientHeight >= thresholdBox.clientHeight) {
+            if (innerContent.clientHeight >= thresholdBox.clientHeight - 50) {
               max = cur;
             } else {
               min = cur;
