@@ -149,12 +149,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      listener: function () {
+        //console.log("B. call next!");
+        this.carousel.loadNext();
+      },
+
       attached: function(){
-        this.removeEventListener('content.finished.rendering');
-        this.addEventListener('content.finished.rendering', function(){
-          //console.log("B. call next!");
-          this.carousel.loadNext();
-        });
+        this.removeEventListener('content.finished.rendering', this.listener);
+        this.addEventListener('content.finished.rendering', this.listener);
         var network = window.Util.getParameterByName('network');
         var station = window.Util.getParameterByName('station');
         var animation = window.Util.getParameterByName('animation');
