@@ -18,8 +18,10 @@
     this.restarting = false;
     this.offset = 0;
     this.resetPosition = undefined;
+    this.debug = 0;
 
     this.loadNext = function(){
+
       //console.log('C. NAO DEVE SER TRUE', this.lastPosition == this.atualPosition, this.lastPosition, this.atualPosition, this.restarting, loadNextCallback);
       if(loadNextCallback){
         loadNextCallback(this.atualPosition, this.restarting, this.lastPosition);  
